@@ -93,3 +93,22 @@ export interface PaymentTransaction {
   referenceCode?: string;
   createdAt: string;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'admin' | 'user';
+  slug?: string;
+  passwordHash: string;
+  createdAt: string;
+}
+
+export interface UserSession {
+  userId: string;
+  email: string;
+  role: 'admin' | 'user';
+  slug?: string;
+  name: string;
+}
+

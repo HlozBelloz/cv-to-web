@@ -24,6 +24,22 @@ export default async function middleware(req: NextRequest) {
   // Check for custom subdomain e.g. mohamed.cvplatform.com or duckdns
   const parts = hostname.split('.');
 
+  // Auth guard: Protect /admin (except /admin/login)
+  const sessionToken = req.cookies.get('cv_auth_session')?.value;
+
+  if (url.pathname === '/admin' || (url.pathname.startsWith('/admin/') && url.pathname !== '/admin/login')) {
+    if (!sessionToken) {
+      return NextResponse.redirect(new URL('/admin/login', req.url));
+    }
+  }
+
+  // Auth guard: Protect /dashboard
+  if (url.pathname.startsWith('/dashboard')) {
+    if (!sessionToken) {
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
+  }
+
   // If someone accesses via a personal custom domain e.g. mohamed.com
   // or a wildcard subdomain e.g. mohamed.yourdomain.com
   if (!isLocalhost && parts.length > 2 && parts[0] !== 'www') {

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   CVProfile, 
   Plan, 
@@ -22,10 +23,12 @@ import {
   TrendingUp,
   CreditCard,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  LogOut
 } from 'lucide-react';
 
 export default function AdminPortalPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'plans' | 'profiles' | 'domains' | 'payments' | 'settings'>('plans');
   const [plans, setPlans] = useState<Plan[]>([]);
   const [profiles, setProfiles] = useState<CVProfile[]>([]);
@@ -48,6 +51,17 @@ export default function AdminPortalPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
+      const authRes = await fetch('/api/auth/me');
+      if (!authRes.ok) {
+        router.push('/admin/login');
+        return;
+      }
+      const authData = await authRes.json();
+      if (!authData.user || authData.user.role !== 'admin') {
+        router.push('/admin/login');
+        return;
+      }
+
       const [plansRes, profilesRes, paymentsRes] = await Promise.all([
         fetch('/api/plans'),
         fetch('/api/profiles'),
@@ -224,6 +238,17 @@ export default function AdminPortalPage() {
           >
             + Upload CV
           </a>
+          <button
+            onClick={async () => {
+              await fetch('/api/auth/logout', { method: 'POST' });
+              router.push('/admin/login');
+              router.refresh();
+            }}
+            className="px-3.5 py-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            Sign Out
+          </button>
         </div>
       </header>
 

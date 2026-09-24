@@ -1,4 +1,4 @@
-import { CVProfile, Plan, PaymentTransaction } from '@/types';
+import { CVProfile, Plan, PaymentTransaction, User } from '@/types';
 import { DEFAULT_PLANS, DEMO_PROFILES } from './default-data';
 import fs from 'fs';
 import path from 'path';
@@ -6,10 +6,31 @@ import path from 'path';
 // Local storage cache file path for server persistence when running in dev/demo mode
 const DATA_FILE = path.join(process.cwd(), '.data-store.json');
 
+export const DEFAULT_USERS: User[] = [
+  {
+    id: 'user-admin',
+    email: 'admin@cvplatform.com',
+    name: 'Platform Administrator',
+    role: 'admin',
+    passwordHash: 'admin123', // In production, bcrypt/argon2
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'user-mazen',
+    email: 'mazeneltelbany78@gmail.com',
+    name: 'Mazen Mohamed Hamdy',
+    role: 'user',
+    slug: 'mazen',
+    passwordHash: 'mazen123',
+    createdAt: new Date().toISOString(),
+  }
+];
+
 interface DatabaseStore {
   profiles: CVProfile[];
   plans: Plan[];
   payments: PaymentTransaction[];
+  users: User[];
 }
 
 function loadLocalStore(): DatabaseStore {
@@ -21,6 +42,7 @@ function loadLocalStore(): DatabaseStore {
         profiles: parsed.profiles || DEMO_PROFILES,
         plans: parsed.plans || DEFAULT_PLANS,
         payments: parsed.payments || [],
+        users: parsed.users || DEFAULT_USERS,
       };
     }
   } catch (err) {
@@ -30,6 +52,7 @@ function loadLocalStore(): DatabaseStore {
     profiles: [...DEMO_PROFILES],
     plans: [...DEFAULT_PLANS],
     payments: [],
+    users: [...DEFAULT_USERS],
   };
 }
 
@@ -136,5 +159,33 @@ export const dataStore = {
 
   async getPayments(): Promise<PaymentTransaction[]> {
     return memoryStore.payments;
+  },
+
+  // --- Users & Authentication ---
+  async getUserByEmail(email: string): Promise<User | null> {
+    const user = memoryStore.users.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase()
+    );
+    return user || null;
+  },
+
+  async getUserById(id: string): Promise<User | null> {
+    return memoryStore.users.find((u) => u.id === id) || null;
+  },
+
+  async saveUser(user: User): Promise<User> {
+    const existingIndex = memoryStore.users.findIndex((u) => u.id === user.id || u.email.toLowerCase() === user.email.toLowerCase());
+    if (existingIndex >= 0) {
+      memoryStore.users[existingIndex] = user;
+    } else {
+      memoryStore.users.push(user);
+    }
+    saveLocalStore(memoryStore);
+    return user;
+  },
+
+  async getUsers(): Promise<User[]> {
+    return memoryStore.users;
   }
 };
+

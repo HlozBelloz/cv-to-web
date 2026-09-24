@@ -45,6 +45,12 @@ export default async function HomePage() {
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">LIVE</span>
             </a>
             <a
+              href="/dashboard"
+              className="text-slate-400 hover:text-white transition-colors"
+            >
+              My Dashboard
+            </a>
+            <a
               href="/admin"
               className="px-3 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white transition-colors"
             >
