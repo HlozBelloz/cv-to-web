@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { 
   UploadCloud, 
   FileText, 
@@ -14,9 +14,18 @@ import {
   Zap,
   Globe
 } from 'lucide-react';
+import { CVProfile } from '@/types';
+
+interface UploadResult {
+  success: boolean;
+  slug: string;
+  url: string;
+  profile: CVProfile;
+  aiSource?: string;
+  message?: string;
+}
 
 export default function UploadPage() {
-  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [file, setFile] = useState<File | null>(null);
@@ -25,7 +34,7 @@ export default function UploadPage() {
   const [loading, setLoading] = useState(false);
   const [stepText, setStepText] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<any | null>(null);
+  const [result, setResult] = useState<UploadResult | null>(null);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -96,9 +105,10 @@ export default function UploadPage() {
 
       setResult(data);
       setLoading(false);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err.message || 'An error occurred during AI extraction.');
+      const message = err instanceof Error ? err.message : 'An error occurred during AI extraction.';
+      setError(message);
       setLoading(false);
     }
   };
@@ -109,19 +119,19 @@ export default function UploadPage() {
         
         {/* Navigation Bar */}
         <div className="flex items-center justify-between pb-6 border-b border-slate-800">
-          <a href="/" className="flex items-center gap-2 font-bold text-lg text-white hover:text-amber-400 transition-colors">
+          <Link href="/" className="flex items-center gap-2 font-bold text-lg text-white hover:text-amber-400 transition-colors">
             <span className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-black">
               CV
             </span>
             CVtoWeb
-          </a>
+          </Link>
           <div className="flex items-center gap-4 text-xs sm:text-sm">
-            <a href="/admin" className="text-slate-400 hover:text-white transition-colors">
+            <Link href="/admin" className="text-slate-400 hover:text-white transition-colors">
               Admin Portal
-            </a>
-            <a href="/cv/mazen" className="text-amber-400 hover:underline">
+            </Link>
+            <Link href="/cv/mazen" className="text-amber-400 hover:underline">
               Live Demo
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -161,7 +171,7 @@ export default function UploadPage() {
                 </div>
               </div>
 
-              <a
+              <Link
                 href={result.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -169,7 +179,7 @@ export default function UploadPage() {
               >
                 View Live Website
                 <ArrowRight className="w-4 h-4" />
-              </a>
+              </Link>
             </div>
 
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-slate-400">
@@ -184,9 +194,9 @@ export default function UploadPage() {
                 Convert Another CV
               </button>
               <span>•</span>
-              <a href="/admin" className="hover:text-amber-400 transition-colors">
+              <Link href="/admin" className="hover:text-amber-400 transition-colors">
                 Manage in Admin Portal
-              </a>
+              </Link>
             </div>
           </div>
         ) : (

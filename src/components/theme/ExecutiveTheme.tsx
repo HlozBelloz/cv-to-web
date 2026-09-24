@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { CVProfile } from '@/types';
 import { 
   Briefcase, 
@@ -437,12 +438,12 @@ export function ExecutiveTheme({ profile }: Props) {
         {/* FOOTER */}
         <footer className="text-center text-xs text-slate-500 pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© {new Date().getFullYear()} {profile.fullName}. All rights reserved.</p>
-          <a 
+          <Link 
             href="/"
             className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5"
           >
             Powered by <strong className="text-slate-300 font-semibold">CVtoWeb</strong> — Convert your CV to a live website
-          </a>
+          </Link>
         </footer>
 
       </div>

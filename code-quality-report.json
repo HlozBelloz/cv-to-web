@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-09-24T22:32:00.000Z",
+  "project": "cv-to-web",
+  "summary": {
+    "totalFiles": 18,
+    "buildErrors": 0,
+    "totalLintProblems": 59,
+    "errors": 38,
+    "warnings": 21,
+    "securityVulnerabilities": 0,
+    "codeDuplicationPercent": 2.4
+  },
+  "categories": {
+    "nextLinkOptimization": 12,
+    "typeSafetyAny": 20,
+    "unusedImports": 21,
+    "unescapedEntities": 4,
+    "preferConst": 2
+  },
+  "securityAudit": {
+    "httpOnlyCookies": "PASS",
+    "timingSafeHmac": "PASS",
+    "roleIsolation": "PASS",
+    "secretsExposure": "PASS"
+  }
+}

@@ -1,16 +1,11 @@
 import React from 'react';
+import Link from 'next/link';
 import { dataStore } from '@/lib/store';
 import { 
   Sparkles, 
   ArrowRight, 
   CheckCircle2, 
-  Briefcase, 
-  Globe, 
-  ShieldCheck, 
-  FileText, 
-  TrendingUp, 
-  Zap, 
-  Layers
+  Zap
 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -26,12 +21,12 @@ export default async function HomePage() {
       {/* NAVBAR */}
       <header className="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2.5 font-extrabold text-lg text-white">
+          <Link href="/" className="flex items-center gap-2.5 font-extrabold text-lg text-white">
             <span className="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-sm shadow-md shadow-amber-500/20">
               CV
             </span>
             CVtoWeb
-          </a>
+          </Link>
 
           <nav className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm font-medium">
             <a href="#features" className="text-slate-400 hover:text-white transition-colors">
@@ -40,28 +35,28 @@ export default async function HomePage() {
             <a href="#pricing" className="text-slate-400 hover:text-white transition-colors">
               Pricing
             </a>
-            <a href="/cv/mazen" className="text-amber-400 hover:underline font-semibold flex items-center gap-1">
-              <span>Mazen's Portfolio</span>
+            <Link href="/cv/mazen" className="text-amber-400 hover:underline font-semibold flex items-center gap-1">
+              <span>Mazen&apos;s Portfolio</span>
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">LIVE</span>
-            </a>
-            <a
+            </Link>
+            <Link
               href="/dashboard"
               className="text-slate-400 hover:text-white transition-colors"
             >
               My Dashboard
-            </a>
-            <a
+            </Link>
+            <Link
               href="/admin"
               className="px-3 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white transition-colors"
             >
               Admin
-            </a>
-            <a
+            </Link>
+            <Link
               href="/upload"
               className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all shadow-md shadow-amber-500/20 hover:scale-[1.02]"
             >
               Convert CV Now
-            </a>
+            </Link>
           </nav>
         </div>
       </header>
@@ -232,7 +227,7 @@ export default async function HomePage() {
                 </div>
 
                 <div className="pt-8">
-                  <a
+                  <Link
                     href="/upload"
                     className={`w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
                       plan.isPopular
@@ -242,14 +237,14 @@ export default async function HomePage() {
                   >
                     Select Plan ({plan.priceEgp} EGP)
                     <ArrowRight className="w-4 h-4" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))}
           </div>
 
           <p className="text-center text-xs text-slate-500">
-            Platform owner note: Pricing and plans can be modified instantly inside your <a href="/admin" className="text-amber-400 underline">Admin Portal</a>.
+            Platform owner note: Pricing and plans can be modified instantly inside your <Link href="/admin" className="text-amber-400 underline">Admin Portal</Link>.
           </p>
         </div>
       </section>
@@ -265,18 +260,18 @@ export default async function HomePage() {
           </div>
 
           <div className="flex items-center gap-6">
-            <a href="/upload" className="hover:text-amber-400 transition-colors">
+            <Link href="/upload" className="hover:text-amber-400 transition-colors">
               Upload CV
-            </a>
-            <a href="/admin" className="hover:text-amber-400 transition-colors">
+            </Link>
+            <Link href="/admin" className="hover:text-amber-400 transition-colors">
               Admin Portal
-            </a>
-            <a href="/cv/mazen" className="hover:text-amber-400 transition-colors text-amber-300 font-medium">
-              Mazen's Portfolio
-            </a>
-            <a href="/cv/mohamedcv" className="hover:text-amber-400 transition-colors">
-              Mohamed's Sample
-            </a>
+            </Link>
+            <Link href="/cv/mazen" className="hover:text-amber-400 transition-colors text-amber-300 font-medium">
+              Mazen&apos;s Portfolio
+            </Link>
+            <Link href="/cv/mohamedcv" className="hover:text-amber-400 transition-colors">
+              Mohamed&apos;s Sample
+            </Link>
           </div>
 
           <p>© {new Date().getFullYear()} CVtoWeb. All rights reserved.</p>

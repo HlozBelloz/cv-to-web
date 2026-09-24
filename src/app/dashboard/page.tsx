@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { 
   Globe, 
-  ExternalLink, 
   Eye, 
   Save, 
   LogOut, 
@@ -12,10 +12,7 @@ import {
   AlertCircle, 
   Loader2, 
   User, 
-  Briefcase, 
-  FileText,
-  Share2,
-  Lock
+  Share2
 } from 'lucide-react';
 import { CVProfile, UserSession } from '@/types';
 
@@ -66,7 +63,7 @@ export default function CandidateDashboard() {
             customDomain: data.profile.customDomain || '',
           });
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(err);
         setError('Failed to load profile data');
       } finally {
@@ -112,8 +109,9 @@ export default function CandidateDashboard() {
       setProfile(updatedProfile);
       setSaveSuccess('Your website settings have been saved successfully!');
       setTimeout(() => setSaveSuccess(null), 3500);
-    } catch (err: any) {
-      setError(err.message || 'Error saving changes');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error saving changes';
+      setError(message);
     } finally {
       setSaving(false);
     }
@@ -148,12 +146,12 @@ export default function CandidateDashboard() {
       {/* Header */}
       <header className="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md px-6 py-4 flex items-center justify-between sticky top-0 z-30">
         <div className="flex items-center gap-3">
-          <a href="/" className="flex items-center gap-2 font-bold text-white">
+          <Link href="/" className="flex items-center gap-2 font-bold text-white">
             <span className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-black text-sm">
               CV
             </span>
             CVtoWeb
-          </a>
+          </Link>
           <span className="text-slate-600">/</span>
           <span className="text-xs font-semibold text-slate-400">My Website Settings</span>
         </div>

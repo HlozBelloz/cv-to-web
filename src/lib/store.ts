@@ -64,7 +64,7 @@ function saveLocalStore(store: DatabaseStore) {
   }
 }
 
-let memoryStore: DatabaseStore = loadLocalStore();
+const memoryStore: DatabaseStore = loadLocalStore();
 
 export const dataStore = {
   // --- Profiles ---

@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, Lock, Mail, AlertCircle, Loader2, ArrowRight, Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import { User, Lock, Mail, AlertCircle, Loader2, ArrowRight } from 'lucide-react';
 
 export default function UserLoginPage() {
   const router = useRouter();
@@ -38,8 +39,9 @@ export default function UserLoginPage() {
 
       router.push('/dashboard');
       router.refresh();
-    } catch (err: any) {
-      setError(err.message || 'Failed to authenticate');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to authenticate';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -51,12 +53,12 @@ export default function UserLoginPage() {
         
         {/* Header */}
         <div className="text-center space-y-3">
-          <a href="/" className="inline-flex items-center gap-2 font-bold text-lg text-white mb-2">
+          <Link href="/" className="inline-flex items-center gap-2 font-bold text-lg text-white mb-2">
             <span className="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-sm">
               CV
             </span>
             CVtoWeb
-          </a>
+          </Link>
           <h1 className="text-2xl font-extrabold text-white tracking-tight">
             {isRegister ? 'Create Your Account' : 'Candidate Portal'}
           </h1>
@@ -172,12 +174,12 @@ export default function UserLoginPage() {
         </div>
 
         <div className="flex items-center justify-between pt-2 text-xs text-slate-500">
-          <a href="/" className="hover:text-slate-300 transition-colors">
+          <Link href="/" className="hover:text-slate-300 transition-colors">
             ← Home
-          </a>
-          <a href="/admin/login" className="hover:text-amber-400 transition-colors">
+          </Link>
+          <Link href="/admin/login" className="hover:text-amber-400 transition-colors">
             Admin Access →
-          </a>
+          </Link>
         </div>
       </div>
     </div>

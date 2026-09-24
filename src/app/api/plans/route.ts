@@ -7,8 +7,9 @@ export async function GET() {
   try {
     const plans = await dataStore.getPlans();
     return NextResponse.json(plans);
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Internal server error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -25,8 +26,9 @@ export async function PATCH(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, plan: updated });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Internal server error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -35,7 +37,8 @@ export async function POST(req: NextRequest) {
     const newPlan = await req.json();
     const saved = await dataStore.savePlan(newPlan);
     return NextResponse.json({ success: true, plan: saved });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Internal server error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

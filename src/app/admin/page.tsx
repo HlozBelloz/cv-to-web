@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { 
   CVProfile, 
   Plan, 
@@ -16,14 +17,9 @@ import {
   Trash2, 
   Eye, 
   Plus, 
-  RefreshCw, 
   ExternalLink,
-  ShieldAlert,
-  ArrowUpRight,
-  TrendingUp,
   CreditCard,
   CheckCircle2,
-  Sparkles,
   LogOut
 } from 'lucide-react';
 
@@ -33,10 +29,11 @@ export default function AdminPortalPage() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [profiles, setProfiles] = useState<CVProfile[]>([]);
   const [payments, setPayments] = useState<PaymentTransaction[]>([]);
-  const [loading, setLoading] = useState(true);
   const [savingPlanId, setSavingPlanId] = useState<string | null>(null);
   const [priceInputs, setPriceInputs] = useState<Record<string, number>>({});
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
+
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // New Plan State
   const [showNewPlanModal, setShowNewPlanModal] = useState(false);
@@ -48,52 +45,54 @@ export default function AdminPortalPage() {
     customDomainAllowed: false
   });
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const authRes = await fetch('/api/auth/me');
-      if (!authRes.ok) {
-        router.push('/admin/login');
-        return;
-      }
-      const authData = await authRes.json();
-      if (!authData.user || authData.user.role !== 'admin') {
-        router.push('/admin/login');
-        return;
-      }
-
-      const [plansRes, profilesRes, paymentsRes] = await Promise.all([
-        fetch('/api/plans'),
-        fetch('/api/profiles'),
-        fetch('/api/payments')
-      ]);
-
-      const plansData = await plansRes.json();
-      const profilesData = await profilesRes.json();
-      const paymentsData = await paymentsRes.json();
-
-      setPlans(Array.isArray(plansData) ? plansData : []);
-      setProfiles(Array.isArray(profilesData) ? profilesData : []);
-      setPayments(Array.isArray(paymentsData) ? paymentsData : []);
-
-      // initialize price inputs
-      const initialPrices: Record<string, number> = {};
-      if (Array.isArray(plansData)) {
-        plansData.forEach((p: Plan) => {
-          initialPrices[p.id] = p.priceEgp;
-        });
-      }
-      setPriceInputs(initialPrices);
-    } catch (err) {
-      console.error('Failed to load admin data:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
-  }, []);
+    let ignore = false;
+    async function loadData() {
+      try {
+        const authRes = await fetch('/api/auth/me');
+        if (!authRes.ok) {
+          router.push('/admin/login');
+          return;
+        }
+        const authData = await authRes.json();
+        if (!authData.user || authData.user.role !== 'admin') {
+          router.push('/admin/login');
+          return;
+        }
+
+        const [plansRes, profilesRes, paymentsRes] = await Promise.all([
+          fetch('/api/plans'),
+          fetch('/api/profiles'),
+          fetch('/api/payments')
+        ]);
+
+        const plansData = await plansRes.json();
+        const profilesData = await profilesRes.json();
+        const paymentsData = await paymentsRes.json();
+
+        if (ignore) return;
+
+        setPlans(Array.isArray(plansData) ? plansData : []);
+        setProfiles(Array.isArray(profilesData) ? profilesData : []);
+        setPayments(Array.isArray(paymentsData) ? paymentsData : []);
+
+        const initialPrices: Record<string, number> = {};
+        if (Array.isArray(plansData)) {
+          plansData.forEach((p: Plan) => {
+            initialPrices[p.id] = p.priceEgp;
+          });
+        }
+        setPriceInputs(initialPrices);
+      } catch (err) {
+        console.error('Failed to load admin data:', err);
+      }
+    }
+
+    loadData();
+    return () => {
+      ignore = true;
+    };
+  }, [router, refreshKey]);
 
   const handleUpdatePrice = async (planId: string) => {
     const newPrice = priceInputs[planId];
@@ -110,7 +109,7 @@ export default function AdminPortalPage() {
       if (data.success) {
         setSaveSuccess(`Price updated to ${newPrice} EGP successfully!`);
         setTimeout(() => setSaveSuccess(null), 3000);
-        fetchData();
+        setRefreshKey(k => k + 1);
       }
     } catch (err) {
       console.error(err);
@@ -141,7 +140,7 @@ export default function AdminPortalPage() {
       if (res.ok) {
         setShowNewPlanModal(false);
         setNewPlan({ name: '', priceEgp: 150, description: '', featuresText: '', customDomainAllowed: false });
-        fetchData();
+        setRefreshKey(k => k + 1);
       }
     } catch (err) {
       console.error('Failed to create plan:', err);
@@ -217,27 +216,27 @@ export default function AdminPortalPage() {
         </div>
 
         <div className="flex items-center gap-3 text-xs sm:text-sm">
-          <a
+          <Link
             href="/cv/mazen"
             target="_blank"
             rel="noreferrer"
             className="px-3.5 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 transition-colors flex items-center gap-1.5"
           >
-            <span>Mazen's Site</span>
+            <span>Mazen&apos;s Site</span>
             <ExternalLink className="w-3.5 h-3.5" />
-          </a>
-          <a
+          </Link>
+          <Link
             href="/"
             className="px-3.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:text-white transition-colors"
           >
             Public Site
-          </a>
-          <a
+          </Link>
+          <Link
             href="/upload"
             className="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all"
           >
             + Upload CV
-          </a>
+          </Link>
           <button
             onClick={async () => {
               await fetch('/api/auth/logout', { method: 'POST' });

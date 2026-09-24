@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import Link from 'next/link';
-import { CheckCircle2, ArrowRight, ShieldCheck, Download, ExternalLink } from 'lucide-react';
+import { CheckCircle2, ArrowRight, ShieldCheck, ExternalLink } from 'lucide-react';
 
 function SuccessContent({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
   const txId = typeof searchParams.txId === 'string' ? searchParams.txId : 'MOCK-TX-DEMO';

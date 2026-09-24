@@ -27,8 +27,9 @@ export async function GET(req: NextRequest) {
 
     const profiles = await dataStore.getProfiles();
     return NextResponse.json(profiles);
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Internal server error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -37,8 +38,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const saved = await dataStore.saveProfile(body);
     return NextResponse.json({ success: true, profile: saved });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Internal server error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -51,7 +53,8 @@ export async function DELETE(req: NextRequest) {
     }
     const success = await dataStore.deleteProfile(id);
     return NextResponse.json({ success });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Internal server error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

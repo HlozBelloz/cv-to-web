@@ -110,9 +110,10 @@ export const paymobService = {
         transactionId: orderId.toString(),
         message: 'Redirecting to secure Egyptian payment gateway...'
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Paymob Live Payment Error:', err);
-      throw new Error(`Paymob connection failed: ${err.message}`);
+      const message = err instanceof Error ? err.message : 'Unknown payment processing error';
+      throw new Error(`Paymob connection failed: ${message}`);
     }
   }
 };

@@ -174,7 +174,7 @@ export async function parsePdfCV(buffer: Buffer, originalFilename?: string): Pro
   };
 }
 
-function sanitizeProfile(data: any, originalFilename?: string): Partial<CVProfile> {
+function sanitizeProfile(data: Partial<CVProfile>, originalFilename?: string): Partial<CVProfile> {
   const fallbackSlug = (data.fullName || originalFilename || 'candidate')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
@@ -322,7 +322,7 @@ export function extractHeuristically(text: string, filename?: string): Partial<C
   const education: Education[] = [];
   const eduLines = sections['EDUCATION'] || [];
   if (eduLines.length > 0) {
-    let institution = eduLines[0] || 'University';
+    const institution = eduLines[0] || 'University';
     let degree = 'Bachelor of Engineering';
     let fieldOfStudy = 'Information Engineering and Technology';
     let honors = '';

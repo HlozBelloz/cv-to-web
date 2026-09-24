@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { ShieldCheck, Lock, Mail, AlertCircle, Loader2, ArrowRight } from 'lucide-react';
 
 export default function AdminLoginPage() {
@@ -35,8 +36,8 @@ export default function AdminLoginPage() {
 
       router.push('/admin');
       router.refresh();
-    } catch (err: any) {
-      setError(err.message || 'Failed to authenticate');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to authenticate');
     } finally {
       setLoading(false);
     }
@@ -123,9 +124,9 @@ export default function AdminLoginPage() {
         </div>
 
         <div className="text-center pt-2">
-          <a href="/" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
+          <Link href="/" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
             ← Return to Public Website
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -94,8 +94,9 @@ export async function POST(req: NextRequest) {
       aiSource: source,
       message: 'CV successfully converted to executive website!'
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Error in /api/upload-cv:', err);
-    return NextResponse.json({ error: err.message || 'Internal server error while processing CV' }, { status: 500 });
+    const message = err instanceof Error ? err.message : 'Internal server error while processing CV';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
