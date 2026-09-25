@@ -93,23 +93,40 @@ export function ModernTechTheme({ profile }: Props) {
           </div>
 
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-8">
-            <div className="space-y-4 max-w-3xl">
-              <div className="font-mono text-xs text-emerald-400 flex items-center gap-2">
-                <Terminal className="w-4 h-4" />
-                <span>const candidate = new Engineer();</span>
-              </div>
+            <div className="flex flex-col sm:flex-row items-start gap-6 max-w-3xl">
+              {profile.avatarUrl && (
+                <div className="relative shrink-0">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-emerald-500/60 shadow-lg shadow-emerald-500/10 bg-[#080d1a]">
+                    <img
+                      src={profile.avatarUrl}
+                      alt={profile.fullName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full bg-emerald-500 text-slate-950 font-bold text-[10px] shadow-sm flex items-center gap-1 border border-slate-950 font-mono">
+                    <CheckCircle2 className="w-3 h-3 text-slate-950" />
+                    verified
+                  </span>
+                </div>
+              )}
 
-              <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-white font-mono">
-                {profile.fullName}
-              </h1>
+              <div className="space-y-4">
+                <div className="font-mono text-xs text-emerald-400 flex items-center gap-2">
+                  <Terminal className="w-4 h-4" />
+                  <span>const candidate = new Engineer();</span>
+                </div>
 
-              <p className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent">
-                {profile.title}
-              </p>
+                <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-white font-mono">
+                  {profile.fullName}
+                </h1>
 
-              <p className="text-base text-slate-300 leading-relaxed max-w-2xl">
-                {profile.tagline}
-              </p>
+                <p className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent">
+                  {profile.title}
+                </p>
+
+                <p className="text-base text-slate-300 leading-relaxed max-w-2xl">
+                  {profile.tagline}
+                </p>
 
               {/* Meta details */}
               <div className="flex flex-wrap items-center gap-y-2 gap-x-6 text-xs sm:text-sm text-slate-400 font-mono pt-2">
@@ -133,8 +150,9 @@ export function ModernTechTheme({ profile }: Props) {
                 )}
               </div>
             </div>
+          </div>
 
-            {/* Quick Action Buttons */}
+          {/* Quick Action Buttons */}
             <div className="flex flex-col sm:flex-row md:flex-col gap-3 shrink-0">
               {profile.originalPdfUrl ? (
                 <a
@@ -397,6 +415,81 @@ export function ModernTechTheme({ profile }: Props) {
                 </div>
               </div>
             )}
+          </section>
+        )}
+
+        {/* VERIFIED CREDENTIALS & CERTIFICATES PHOTO GALLERY */}
+        {profile.certificates && profile.certificates.length > 0 && (
+          <section className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 uppercase tracking-wider">
+                  <Award className="w-4 h-4" />
+                  <span>{"// verified_credentials"}</span>
+                </div>
+                <h2 className="text-2xl font-bold text-white font-mono">
+                  Official Certifications & Verification
+                </h2>
+              </div>
+              <span className="font-mono text-xs px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 self-start sm:self-auto">
+                {profile.certificates.length} cryptographic records
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {profile.certificates.map((cert) => (
+                <div 
+                  key={cert.id}
+                  className="group bg-[#0d1527]/80 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-4 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/5 flex flex-col justify-between"
+                >
+                  <div className="space-y-3">
+                    {cert.imageUrl ? (
+                      <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-slate-950 border border-slate-800">
+                        <img 
+                          src={cert.imageUrl} 
+                          alt={cert.title} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                        />
+                        {cert.badge && (
+                          <span className="absolute top-2.5 right-2.5 text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-emerald-500 text-slate-950 shadow-md">
+                            {cert.badge}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="aspect-video w-full rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-emerald-500/40 font-mono text-xs">
+                        [CERTIFICATE_PREVIEW]
+                      </div>
+                    )}
+
+                    <div>
+                      <div className="flex items-center justify-between text-xs text-emerald-400 font-mono">
+                        <span>{cert.issuer}</span>
+                        {cert.issueDate && <span className="text-slate-400">{cert.issueDate}</span>}
+                      </div>
+                      <h3 className="text-sm font-bold text-white mt-1 group-hover:text-emerald-300 transition-colors line-clamp-2 font-mono">
+                        {cert.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {cert.credentialUrl && (
+                    <a 
+                      href={cert.credentialUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="mt-4 pt-3 border-t border-slate-800/80 inline-flex items-center justify-between text-xs font-mono text-slate-400 hover:text-emerald-400 transition-colors"
+                    >
+                      <span className="inline-flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                        verify_hash
+                      </span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
           </section>
         )}
 

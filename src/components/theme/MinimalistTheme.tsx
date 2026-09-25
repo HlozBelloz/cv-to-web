@@ -10,7 +10,8 @@ import {
   Phone, 
   MapPin, 
   Globe, 
-  ArrowUpRight
+  ArrowUpRight,
+  ExternalLink
 } from 'lucide-react';
 
 function LinkedInIcon({ className }: { className?: string }) {
@@ -69,19 +70,32 @@ export function MinimalistTheme({ profile }: Props) {
         {/* HEADER SECTION */}
         <header className="space-y-8 border-b border-stone-300 pb-12">
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
-            <div className="space-y-3 max-w-2xl">
-              <span className="text-xs uppercase tracking-widest text-stone-500 font-semibold">
-                Curriculum Vitae & Professional Portfolio
-              </span>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-normal tracking-tight text-stone-900">
-                {profile.fullName}
-              </h1>
-              <p className="text-xl sm:text-2xl text-stone-700 font-serif italic">
-                {profile.title}
-              </p>
-              <p className="text-base text-stone-600 leading-relaxed pt-2">
-                {profile.tagline}
-              </p>
+            <div className="flex flex-col sm:flex-row items-start gap-6 max-w-2xl">
+              {profile.avatarUrl && (
+                <div className="relative shrink-0">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border border-stone-300 shadow-sm bg-stone-200">
+                    <img
+                      src={profile.avatarUrl}
+                      alt={profile.fullName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+              <div className="space-y-3">
+                <span className="text-xs uppercase tracking-widest text-stone-500 font-semibold">
+                  Curriculum Vitae & Professional Portfolio
+                </span>
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-normal tracking-tight text-stone-900">
+                  {profile.fullName}
+                </h1>
+                <p className="text-xl sm:text-2xl text-stone-700 font-serif italic">
+                  {profile.title}
+                </p>
+                <p className="text-base text-stone-600 leading-relaxed pt-2">
+                  {profile.tagline}
+                </p>
+              </div>
             </div>
 
             {/* Actions */}
@@ -327,6 +341,57 @@ export function MinimalistTheme({ profile }: Props) {
                 </ul>
               </div>
             )}
+          </section>
+        )}
+
+        {/* VERIFIED CERTIFICATES GALLERY */}
+        {profile.certificates && profile.certificates.length > 0 && (
+          <section className="space-y-6 border-t border-stone-200 pt-12">
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+              <div>
+                <span className="text-xs uppercase tracking-widest text-stone-500 font-bold block mb-1">
+                  Verified Records
+                </span>
+                <h2 className="text-2xl font-serif text-stone-900">
+                  Academic & Professional Credentials
+                </h2>
+              </div>
+              <span className="text-xs text-stone-500 font-mono">
+                [{profile.certificates.length} items verified]
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {profile.certificates.map((cert) => (
+                <div key={cert.id} className="border border-stone-200 rounded-xl p-4 bg-stone-50 space-y-3">
+                  {cert.imageUrl && (
+                    <div className="aspect-video w-full rounded-lg overflow-hidden bg-stone-200 border border-stone-200">
+                      <img src={cert.imageUrl} alt={cert.title} className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                  <div>
+                    <div className="flex items-center justify-between text-[11px] text-stone-500">
+                      <span>{cert.issuer}</span>
+                      {cert.issueDate && <span>{cert.issueDate}</span>}
+                    </div>
+                    <h3 className="text-sm font-serif font-medium text-stone-900 mt-1 line-clamp-2">
+                      {cert.title}
+                    </h3>
+                  </div>
+                  {cert.credentialUrl && (
+                    <a
+                      href={cert.credentialUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-stone-600 hover:text-stone-900 underline underline-offset-4 inline-flex items-center gap-1 font-sans"
+                    >
+                      <span>Verify Credential</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
           </section>
         )}
 

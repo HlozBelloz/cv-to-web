@@ -53,14 +53,37 @@ export const DEMO_PROFILES: CVProfile[] = [
     linkedinUrl: 'https://linkedin.com/in/mohamed-demo',
     githubUrl: 'https://github.com/mohamed-demo',
     portfolioUrl: 'https://mohamedcv.dev',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
+    coverUrl: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1200&q=80',
     summary: 'Decisive technical leader with 9+ years architecting microservices, cloud infrastructure, and mission-critical financial applications. Proven record of scaling platform operations from 10k to 2M+ active transactions per day while slashing infrastructure expenses by 35%. Passionate about engineering excellence, team mentorship, and high-performance engineering culture.',
     originalPdfUrl: '/demo-cv.pdf',
     customDomain: undefined,
     theme: 'executive',
+    accentColor: 'amber',
     isPublished: true,
     viewCount: 428,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    certificates: [
+      {
+        id: 'cert-1',
+        title: 'AWS Certified Solutions Architect – Professional',
+        issuer: 'Amazon Web Services',
+        issueDate: '2024',
+        imageUrl: 'https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?auto=format&fit=crop&w=600&q=80',
+        credentialUrl: 'https://aws.amazon.com/verification',
+        badge: 'Professional Level'
+      },
+      {
+        id: 'cert-2',
+        title: 'Certified Kubernetes Administrator (CKA)',
+        issuer: 'Cloud Native Computing Foundation (CNCF)',
+        issueDate: '2023',
+        imageUrl: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80',
+        credentialUrl: 'https://cncf.io/certification',
+        badge: 'Cloud Native'
+      }
+    ],
     metrics: [
       { label: 'Years Experience', value: '9+', description: 'Enterprise engineering' },
       { label: 'Cloud Architecture', value: '35%', description: 'Infrastructure cost reduction' },
@@ -171,13 +194,45 @@ export const DEMO_PROFILES: CVProfile[] = [
     location: 'Nasr City, Cairo, Egypt',
     linkedinUrl: 'https://www.linkedin.com/in/mazen-eltelbany-8aaab5403/',
     githubUrl: 'https://github.com',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
+    coverUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
     summary: 'Information Engineering & Technology scholar at the German University in Cairo (GUC) with an outstanding A- GPA (1.65). Proficient in Java, Python, Docker containerization, and foundational enterprise networking (TCP/IP, routing, switching, subnetting). Demonstrates hands-on engineering capability across hardware encryption breadboards, modular game engines, and production-grade self-hosted homelab infrastructure.',
     originalPdfUrl: '/mazen-cv.pdf',
     theme: 'executive',
+    accentColor: 'amber',
     isPublished: true,
     viewCount: 142,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    certificates: [
+      {
+        id: 'cert-m-1',
+        title: 'Cisco Certified Network Associate (CCNA Routing & Switching)',
+        issuer: 'Cisco Networking Academy',
+        issueDate: '2025',
+        imageUrl: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80',
+        credentialUrl: 'https://www.cisco.com',
+        badge: 'Enterprise Networking'
+      },
+      {
+        id: 'cert-m-2',
+        title: 'GUC Engineering Academic Excellence Distinction',
+        issuer: 'German University in Cairo (GUC)',
+        issueDate: '2024',
+        imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80',
+        credentialUrl: 'https://www.guc.edu.eg',
+        badge: 'GPA 1.65 (A-)'
+      },
+      {
+        id: 'cert-m-3',
+        title: 'Docker Certified Associate & Homelab Infrastructure',
+        issuer: 'Docker Systems Engineering',
+        issueDate: '2025',
+        imageUrl: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=600&q=80',
+        credentialUrl: 'https://docker.com',
+        badge: 'Container Ops'
+      }
+    ],
     metrics: [
       { label: 'Academic Standing', value: '1.65 (A-)', description: 'GUC Information Engineering' },
       { label: 'Engineering Projects', value: '5+', description: 'Hardware, networks & software' },

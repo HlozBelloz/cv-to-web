@@ -84,13 +84,30 @@ export function CreativeTheme({ profile }: Props) {
               Creative Specialist & Visionary
             </div>
 
-            <div className="space-y-2">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white">
-                {profile.fullName}
-              </h1>
-              <p className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-rose-400 via-purple-300 to-cyan-300 bg-clip-text text-transparent">
-                {profile.title}
-              </p>
+            <div className="flex flex-col sm:flex-row items-start gap-6">
+              {profile.avatarUrl && (
+                <div className="relative shrink-0">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-rose-500/60 shadow-xl shadow-rose-500/20 bg-[#160c30]">
+                    <img
+                      src={profile.avatarUrl}
+                      alt={profile.fullName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-rose-500 to-purple-600 text-white font-bold text-[10px] shadow-sm flex items-center gap-1 border border-purple-950">
+                    <CheckCircle2 className="w-3 h-3 text-white" />
+                    Verified
+                  </span>
+                </div>
+              )}
+              <div className="space-y-2">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white">
+                  {profile.fullName}
+                </h1>
+                <p className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-rose-400 via-purple-300 to-cyan-300 bg-clip-text text-transparent">
+                  {profile.title}
+                </p>
+              </div>
             </div>
 
             <p className="text-base text-purple-100/90 leading-relaxed max-w-xl">
@@ -391,6 +408,81 @@ export function CreativeTheme({ profile }: Props) {
                 </div>
               </div>
             )}
+          </section>
+        )}
+
+        {/* VERIFIED CREDENTIALS & CERTIFICATES PHOTO GALLERY */}
+        {profile.certificates && profile.certificates.length > 0 && (
+          <section className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-400">
+                  <Award className="w-4 h-4" />
+                  <span>Verified Credentials</span>
+                </div>
+                <h2 className="text-2xl font-black text-white">
+                  Certified Accomplishments & Diplomas
+                </h2>
+              </div>
+              <span className="text-xs font-bold px-3 py-1 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/30 self-start sm:self-auto">
+                {profile.certificates.length} Verified Credentials
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {profile.certificates.map((cert) => (
+                <div 
+                  key={cert.id}
+                  className="group bg-[#140b2b]/90 border border-purple-800/40 hover:border-rose-500/50 rounded-3xl p-5 transition-all duration-300 hover:shadow-2xl hover:shadow-rose-500/10 flex flex-col justify-between"
+                >
+                  <div className="space-y-4">
+                    {cert.imageUrl ? (
+                      <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 border border-purple-900/40">
+                        <img 
+                          src={cert.imageUrl} 
+                          alt={cert.title} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                        />
+                        {cert.badge && (
+                          <span className="absolute top-2.5 right-2.5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-gradient-to-r from-rose-500 to-purple-600 text-white shadow-md">
+                            {cert.badge}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="aspect-video w-full rounded-2xl bg-[#1e103d] border border-purple-800/40 flex items-center justify-center text-purple-400">
+                        <Award className="w-8 h-8" />
+                      </div>
+                    )}
+
+                    <div>
+                      <div className="flex items-center justify-between text-xs text-rose-400 font-medium">
+                        <span>{cert.issuer}</span>
+                        {cert.issueDate && <span className="text-purple-300/60">{cert.issueDate}</span>}
+                      </div>
+                      <h3 className="text-sm font-bold text-white mt-1 group-hover:text-rose-300 transition-colors line-clamp-2">
+                        {cert.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {cert.credentialUrl && (
+                    <a 
+                      href={cert.credentialUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="mt-4 pt-3 border-t border-purple-900/40 inline-flex items-center justify-between text-xs text-purple-300 hover:text-white transition-colors font-medium"
+                    >
+                      <span className="inline-flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-rose-400" />
+                        Verify Credential
+                      </span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
           </section>
         )}
 

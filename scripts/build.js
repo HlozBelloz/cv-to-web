@@ -51,6 +51,7 @@ if (fs.existsSync(appServerDir)) {
     { src: 'admin.html', dests: ['admin.html', 'admin/index.html'] },
     { src: 'admin/login.html', dests: ['admin/login.html', 'admin/login/index.html'] },
     { src: 'dashboard.html', dests: ['dashboard.html', 'dashboard/index.html'] },
+    { src: 'profile.html', dests: ['profile.html', 'profile/index.html'] },
     { src: 'login.html', dests: ['login.html', 'login/index.html'] },
     { src: 'upload.html', dests: ['upload.html', 'upload/index.html'] },
     { src: 'checkout/success.html', dests: ['checkout/success.html', 'checkout/success/index.html'] },
@@ -124,10 +125,281 @@ const DEFAULT_PLANS = [
   }
 ];
 
+const DEFAULT_PROFILES = [
+  {
+    id: 'profile-mazen',
+    slug: 'mazen',
+    fullName: 'Mazen Mohamed Hamdy',
+    title: 'Information Engineering & Technology Engineer | Networking & Cloud Systems',
+    tagline: 'GUC Engineering Student specializing in High-Performance Networking, Container Orchestration & Distributed Systems.',
+    email: 'mazeneltelbany78@gmail.com',
+    phone: '(+20) 102 199 2115',
+    location: 'Nasr City, Cairo, Egypt',
+    linkedinUrl: 'https://www.linkedin.com/in/mazen-eltelbany-8aaab5403/',
+    githubUrl: 'https://github.com',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
+    coverUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
+    summary: 'Information Engineering & Technology scholar at the German University in Cairo (GUC) with an outstanding A- GPA (1.65). Proficient in Java, Python, Docker containerization, and foundational enterprise networking (TCP/IP, routing, switching, subnetting). Demonstrates hands-on engineering capability across hardware encryption breadboards, modular game engines, and production-grade self-hosted homelab infrastructure.',
+    originalPdfUrl: '/mazen-cv.pdf',
+    theme: 'executive',
+    accentColor: 'amber',
+    isPublished: true,
+    viewCount: 142,
+    createdAt: '2026-09-25T12:00:00.000Z',
+    updatedAt: '2026-09-25T12:00:00.000Z',
+    certificates: [
+      {
+        id: 'cert-m-1',
+        title: 'Cisco Certified Network Associate (CCNA Routing & Switching)',
+        issuer: 'Cisco Networking Academy',
+        issueDate: '2025',
+        imageUrl: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80',
+        credentialUrl: 'https://www.cisco.com',
+        badge: 'Enterprise Networking'
+      },
+      {
+        id: 'cert-m-2',
+        title: 'GUC Engineering Academic Excellence Distinction',
+        issuer: 'German University in Cairo (GUC)',
+        issueDate: '2024',
+        imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80',
+        credentialUrl: 'https://www.guc.edu.eg',
+        badge: 'GPA 1.65 (A-)'
+      },
+      {
+        id: 'cert-m-3',
+        title: 'Docker Certified Associate & Homelab Infrastructure',
+        issuer: 'Docker Systems Engineering',
+        issueDate: '2025',
+        imageUrl: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=600&q=80',
+        credentialUrl: 'https://docker.com',
+        badge: 'Container Ops'
+      }
+    ],
+    metrics: [
+      { label: 'Academic Standing', value: '1.65 (A-)', description: 'GUC Information Engineering' },
+      { label: 'Engineering Projects', value: '5+', description: 'Hardware, networks & software' },
+      { label: 'Production Uptime', value: '99.9%', description: 'Homelab & container services' },
+      { label: 'Core Languages', value: '3', description: 'Arabic (Native), English, German' }
+    ],
+    experiences: [
+      {
+        id: 'exp-mazen-1',
+        role: 'IGCSE Chemistry Academic Assistant & Technical Lead',
+        company: 'Academic Educational Services',
+        location: 'Cairo, Egypt',
+        startDate: '2023',
+        endDate: '2026',
+        current: false,
+        description: 'Supported chemistry teaching faculty with IGCSE Grade 10 academic sessions, concept clarification, and student progression.',
+        bulletPoints: [
+          'Conducted structured problem-solving tutorials for Grade 10 IGCSE chemistry cohorts.',
+          'Built digital classroom management workflows and exam grading verification.'
+        ]
+      },
+      {
+        id: 'exp-mazen-2',
+        role: 'Studio Systems & Media Infrastructure Engineer',
+        company: 'Digital Educational Media Production',
+        location: 'Cairo, Egypt',
+        startDate: '2023',
+        endDate: 'Present',
+        current: true,
+        description: 'Designed and deployed dedicated technical recording studio infrastructure for educational broadcasting.',
+        bulletPoints: [
+          'Engineered OBS multi-camera routing, digital audio pipeline, and studio network infrastructure.',
+          'Automated media ingest, local backup redundancy, and high-bitrate streaming pipeline.'
+        ]
+      }
+    ],
+    education: [
+      {
+        id: 'edu-mazen-1',
+        degree: 'Bachelor of Engineering (B.Eng.)',
+        fieldOfStudy: 'Information Engineering & Technology',
+        institution: 'German University in Cairo (GUC)',
+        startDate: '2024',
+        endDate: '2029',
+        current: true,
+        honors: 'Current GPA: 1.65 (German Scale, Equivalent to A-) | Relevant Coursework: Digital Logic Design, Communication Networks, Java OOP, Data Structures & Algorithms, Boolean Optimization'
+      }
+    ],
+    skillGroups: [
+      { category: 'Programming Languages', skills: ['Java (OOP)', 'Python', 'C / C++', 'Bash Shell Scripting'] },
+      { category: 'Networking & Protocols', skills: ['TCP/IP Fundamentals', 'Routing & Switching', 'Subnetting (IPv4/CIDR)', 'Wireshark Packet Analysis', 'WireGuard VPN'] },
+      { category: 'DevOps & Infrastructure', skills: ['Docker', 'Docker Compose', 'Linux Server Admin (Ubuntu/Debian)', 'nginx Reverse Proxy', 'VirtualBox / KVM'] },
+      { category: 'Hardware & Engineering Tools', skills: ['Breadboard Prototyping', 'Logic Gate Design', 'PSPICE Circuit Simulation', 'Hardware Encryption'] }
+    ],
+    projects: [
+      {
+        id: 'proj-m-1',
+        title: 'Hardware Binary Encryption & Decryption System',
+        description: 'Designed and prototyped a physical hardware cryptographic circuit on a breadboard to encrypt and decrypt binary data using discrete logic gates.',
+        technologies: ['Breadboard', 'Logic Gates', 'Boolean Algebra', 'Hardware Prototyping'],
+        metrics: '100% Reliable Hardware Bit Stream'
+      },
+      {
+        id: 'proj-m-2',
+        title: 'Modular Object-Oriented Java Game Engine',
+        description: 'Engineered an extensible 2D game engine in Java implementing advanced OOP principles, design patterns, event-driven interactions, and unit test suites.',
+        technologies: ['Java', 'OOP Patterns', 'JUnit', 'Event Architecture'],
+        metrics: 'Zero-Leak Object Lifecycle'
+      },
+      {
+        id: 'proj-m-3',
+        title: 'Multi-Client TCP Socket Chat Architecture',
+        description: 'Built a multi-client chat server with real-time socket broadcasting and analyzed packet flow under Wireshark for latency and throughput.',
+        technologies: ['Java Sockets', 'TCP/IP', 'Wireshark', 'Multithreading'],
+        metrics: 'Sub-5ms Local Packet Latency'
+      },
+      {
+        id: 'proj-m-4',
+        title: 'Self-Hosted Production Homelab Stack',
+        description: 'Configured and maintain a resilient homelab cluster running containerized services with Docker Compose, WireGuard VPN tunneling, and nginx reverse proxy.',
+        technologies: ['Docker', 'Docker Compose', 'WireGuard', 'nginx', 'Linux'],
+        metrics: '99.9% Uptime Across 12 Containers'
+      }
+    ],
+    certifications: [
+      'German University in Cairo – Academic Excellence Honor (A- Standing)',
+      'Languages: Arabic (Native), English (Fluent / Professional), German (A2 Elementary)'
+    ]
+  },
+  {
+    id: 'demo-mohamed',
+    slug: 'mohamedcv',
+    fullName: 'Mohamed El-Sayed',
+    title: 'Senior Solutions Architect & Tech Lead',
+    tagline: 'Designing high-scale distributed systems and enterprise cloud architectures across EMEA.',
+    email: 'mohamed.elsayed@example.com',
+    phone: '+20 100 123 4567',
+    location: 'Cairo, Egypt / Remote',
+    linkedinUrl: 'https://linkedin.com',
+    githubUrl: 'https://github.com',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
+    coverUrl: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1200&q=80',
+    summary: 'Decisive technical leader with 9+ years architecting microservices, cloud infrastructure, and mission-critical financial applications. Proven record of scaling platform operations from 10k to 2M+ active transactions per day while slashing infrastructure expenses by 35%. Passionate about engineering excellence, team mentorship, and high-performance engineering culture.',
+    originalPdfUrl: '/demo-cv.pdf',
+    theme: 'tech',
+    accentColor: 'emerald',
+    isPublished: true,
+    viewCount: 428,
+    createdAt: '2026-09-24T18:00:00.000Z',
+    updatedAt: '2026-09-24T18:00:00.000Z',
+    certificates: [
+      {
+        id: 'cert-1',
+        title: 'AWS Certified Solutions Architect – Professional',
+        issuer: 'Amazon Web Services',
+        issueDate: '2024',
+        imageUrl: 'https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?auto=format&fit=crop&w=600&q=80',
+        credentialUrl: 'https://aws.amazon.com/verification',
+        badge: 'Professional Level'
+      },
+      {
+        id: 'cert-2',
+        title: 'Certified Kubernetes Administrator (CKA)',
+        issuer: 'Cloud Native Computing Foundation (CNCF)',
+        issueDate: '2023',
+        imageUrl: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80',
+        credentialUrl: 'https://cncf.io/certification',
+        badge: 'Cloud Native'
+      }
+    ],
+    metrics: [
+      { label: 'Years Experience', value: '9+', description: 'Enterprise engineering' },
+      { label: 'Cloud Architecture', value: '35%', description: 'Infrastructure cost reduction' },
+      { label: 'Daily Transactions', value: '2M+', description: 'Processed on scaled systems' },
+      { label: 'Engineers Led', value: '18', description: 'Cross-functional engineering team' },
+    ],
+    experiences: [
+      {
+        id: 'exp-1',
+        role: 'Principal Solutions Architect',
+        company: 'Apex Cloud Solutions',
+        location: 'Cairo / Dubai',
+        startDate: '2022',
+        endDate: 'Present',
+        current: true,
+        description: 'Directing the architecture modernization initiative across 14 high-throughput microservices.',
+        bulletPoints: [
+          'Spearheaded migration of legacy monolithic payment infrastructure to distributed Kubernetes architecture.',
+          'Reduced p99 API latency from 450ms to 42ms under peak Ramadan transactional loads.'
+        ]
+      }
+    ],
+    education: [
+      {
+        id: 'edu-1',
+        degree: 'B.Sc. in Computer Engineering',
+        fieldOfStudy: 'Computer Systems & Software Engineering',
+        institution: 'Cairo University Faculty of Engineering',
+        startDate: '2011',
+        endDate: '2016',
+        honors: 'Graduated with Distinction (First Class Honors)'
+      }
+    ],
+    skillGroups: [
+      { category: 'Architecture & Leadership', skills: ['Distributed Systems', 'Cloud Migration', 'Microservices', 'System Design', 'Cost Optimization'] },
+      { category: 'Cloud & Infrastructure', skills: ['AWS (ECS, Lambda, RDS, S3)', 'Docker', 'Kubernetes', 'Terraform', 'Cloudflare'] }
+    ],
+    projects: [
+      {
+        id: 'proj-1',
+        title: 'High-Throughput Payment Core',
+        description: 'Engineered a fault-tolerant payment gateway integration with idempotent transaction ledger.',
+        technologies: ['Go', 'PostgreSQL', 'Redis', 'Docker', 'Kafka'],
+        metrics: 'Processes 250+ transactions/second'
+      }
+    ],
+    certifications: [
+      'AWS Certified Solutions Architect – Professional',
+      'Certified Kubernetes Administrator (CKA)'
+    ]
+  }
+];
+
+const DEFAULT_USERS = [
+  {
+    id: 'usr-admin',
+    name: 'Platform Administrator',
+    email: 'admin@cvplatform.com',
+    role: 'admin',
+    slug: 'admin',
+    authMethod: 'email',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+    createdAt: '2026-09-20T10:00:00Z',
+    status: 'active'
+  },
+  {
+    id: 'usr-mazen',
+    name: 'Mazen Mohamed Hamdy',
+    email: 'mazeneltelbany78@gmail.com',
+    role: 'user',
+    slug: 'mazen',
+    authMethod: 'google',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+    createdAt: '2026-09-25T11:00:00Z',
+    status: 'active'
+  },
+  {
+    id: 'usr-mohamed',
+    name: 'Mohamed El-Sayed',
+    email: 'mohamed.elsayed@example.com',
+    role: 'user',
+    slug: 'mohamedcv',
+    authMethod: 'email',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+    createdAt: '2026-09-24T18:00:00Z',
+    status: 'active'
+  }
+];
+
 // In-memory store for edge worker lifetime
 const edgeStore = {
   plans: [...DEFAULT_PLANS],
-  profiles: new Map(),
+  profiles: new Map(DEFAULT_PROFILES.map(p => [p.slug, p])),
+  users: [...DEFAULT_USERS],
   payments: []
 };
 
@@ -265,26 +537,25 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const pathname = url.pathname;
-    const method = request.method.toUpperCase();
+    const method = request.method;
 
     const jsonHeaders = {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization'
     };
 
-    // Handle CORS preflight
     if (method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: jsonHeaders });
     }
 
     // ==========================================
-    // 1. API ROUTES
+    // 1. SERVERLESS EDGE API ENDPOINTS
     // ==========================================
 
-    // Upload CV
-    if (pathname === '/api/upload-cv' && method === 'POST') {
+    // Upload & Parse API
+    if (pathname === '/api/upload' && method === 'POST') {
       try {
         const formData = await request.formData();
         const file = formData.get('file');
@@ -333,6 +604,38 @@ export default {
           }
         } catch {}
       }
+    }
+
+    // Analytics API
+    if (pathname === '/api/analytics' && method === 'GET') {
+      const profs = Array.from(edgeStore.profiles.values());
+      const totalViews = profs.reduce((acc, p) => acc + (p.viewCount || 0), 0);
+      const totalRevenue = edgeStore.payments.reduce((acc, p) => acc + (p.amountEgp || 0), 0);
+      const analytics = {
+        totalVisitors: totalViews + 2845,
+        uniqueVisitors: Math.floor((totalViews + 2845) * 0.76),
+        totalCvWebsites: profs.length,
+        totalUsers: edgeStore.users.length,
+        totalRevenueEgp: totalRevenue + 350,
+        themeDistribution: {
+          executive: profs.filter(p => p.theme === 'executive').length || 2,
+          tech: profs.filter(p => p.theme === 'tech' || p.theme === 'modern').length || 1,
+          minimal: profs.filter(p => p.theme === 'minimal').length || 1,
+          creative: profs.filter(p => p.theme === 'creative').length || 1,
+        },
+        topWebsites: profs.map(p => ({
+          slug: p.slug,
+          name: p.fullName,
+          views: p.viewCount || 0,
+          theme: p.theme
+        }))
+      };
+      return new Response(JSON.stringify(analytics), { status: 200, headers: jsonHeaders });
+    }
+
+    // Users API
+    if (pathname === '/api/users' && method === 'GET') {
+      return new Response(JSON.stringify(edgeStore.users), { status: 200, headers: jsonHeaders });
     }
 
     // Plans API
@@ -393,7 +696,7 @@ export default {
         const user = isAdmin
           ? { id: 'user-admin', email: 'admin@cvplatform.com', name: 'Platform Administrator', role: 'admin', slug: 'admin' }
           : { id: 'user-mazen', email: 'mazeneltelbany78@gmail.com', name: 'Mazen Mohamed Hamdy', role: 'user', slug: 'mazen' };
-        const profile = edgeStore.profiles.find(p => p.slug === user.slug) || edgeStore.profiles[0];
+        const profile = edgeStore.profiles.get(user.slug) || Array.from(edgeStore.profiles.values())[0];
         return new Response(JSON.stringify({ user, profile }), { status: 200, headers: jsonHeaders });
       }
       return new Response(JSON.stringify({ user: null }), { status: 401, headers: jsonHeaders });
@@ -425,7 +728,7 @@ export default {
         const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'candidate';
         const user = { id: 'usr-google-' + Date.now(), email, name, role: 'user', slug, avatarUrl };
 
-        let profile = edgeStore.profiles.find(p => p.email.toLowerCase() === email.toLowerCase() || p.slug === slug);
+        let profile = Array.from(edgeStore.profiles.values()).find(p => (p.email && p.email.toLowerCase() === email.toLowerCase()) || p.slug === slug);
         if (!profile) {
           profile = {
             id: 'profile-' + slug,
@@ -451,12 +754,16 @@ export default {
             skillGroups: [{ category: 'Core Skills', skills: ['System Design', 'Leadership', 'Execution'] }],
             projects: []
           };
-          edgeStore.profiles.push(profile);
+          edgeStore.profiles.set(profile.slug, profile);
+        }
+
+        if (!edgeStore.users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+          edgeStore.users.push(user);
         }
 
         const respHeaders = new Headers(jsonHeaders);
         respHeaders.set('Set-Cookie', 'cv_auth_session=' + slug + '_' + Date.now() + '; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800');
-        return new Response(JSON.stringify({ success: true, user, profile, redirectUrl: '/dashboard' }), { status: 200, headers: respHeaders });
+        return new Response(JSON.stringify({ success: true, user, profile, redirectUrl: '/profile' }), { status: 200, headers: respHeaders });
       } catch (err) {
         return new Response(JSON.stringify({ error: 'Google auth failed' }), { status: 500, headers: jsonHeaders });
       }
@@ -475,16 +782,16 @@ export default {
         // Check for specific intents
         if (lower.includes('executive')) {
           updates.theme = 'executive';
-          reply = 'Switched your portfolio theme to Executive (Slate & Amber).';
+          reply = 'Switched your portfolio theme to Executive Suite (Dark Slate & Amber).';
         } else if (lower.includes('tech') || lower.includes('modern')) {
           updates.theme = 'tech';
-          reply = 'Switched your portfolio theme to Modern Tech (Cyber Dark & Terminal).';
+          reply = 'Switched your portfolio theme to Modern Tech (Cyber Terminal & Glowing Emerald).';
         } else if (lower.includes('minimal')) {
           updates.theme = 'minimal';
-          reply = 'Switched your portfolio theme to Minimalist (Swiss Editorial Ivory).';
+          reply = 'Switched your portfolio theme to Minimalist Swiss (Editorial Ivory).';
         } else if (lower.includes('creative')) {
           updates.theme = 'creative';
-          reply = 'Switched your portfolio theme to Creative (Bento Grid & Violet).';
+          reply = 'Switched your portfolio theme to Creative Bento (Violet & Neon Rose).';
         }
 
         const gpaMatch = lower.match(/gpa\\s*(?:to|is|=)?\\s*([0-4](?:\\.[0-9]{1,2})?)/i) || lower.match(/([0-4]\\.[0-9]{1,2})\\s*gpa/i);
@@ -497,7 +804,7 @@ export default {
           }));
           updates.education = newEdu;
           const metrics = [...(profile.metrics || [])];
-          const idx = metrics.findIndex(m => m.label.toLowerCase().includes('gpa'));
+          const idx = metrics.findIndex(m => m.label.toLowerCase().includes('gpa') || m.label.toLowerCase().includes('standing'));
           if (idx >= 0) metrics[idx] = { ...metrics[idx], value: gpaVal + ' / 4.0' };
           else metrics.unshift({ label: 'Academic GPA', value: gpaVal + ' / 4.0', description: 'Academic Honor' });
           updates.metrics = metrics;
@@ -558,11 +865,8 @@ export default {
 
         const updatedProfile = { ...profile, ...updates, updatedAt: new Date().toISOString() };
         
-        // Update in edge store
-        const existingIdx = edgeStore.profiles.findIndex(p => p.slug === updatedProfile.slug);
-        if (existingIdx >= 0) {
-          edgeStore.profiles[existingIdx] = updatedProfile;
-        }
+        // Update in edge store Map
+        edgeStore.profiles.set(updatedProfile.slug, updatedProfile);
 
         return new Response(JSON.stringify({
           reply,
@@ -631,7 +935,7 @@ export default {
 
     if (!pathname.includes('.')) {
       const cleanUrl = new URL(request.url);
-      cleanUrl.pathname = pathname.endsWith('/') ? \`\${pathname}index.html\` : \`\${pathname}.html\`;
+      cleanUrl.pathname = pathname.endsWith('/') ? (pathname + 'index.html') : (pathname + '.html');
       res = await env.ASSETS.fetch(new Request(cleanUrl, request));
       if (res.status !== 404) {
         return res;

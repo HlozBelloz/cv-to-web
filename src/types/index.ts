@@ -42,6 +42,26 @@ export interface HighlightMetric {
   description?: string;
 }
 
+export interface CertificateItem {
+  id: string;
+  title: string;
+  issuer: string;
+  issueDate?: string;
+  imageUrl?: string;
+  credentialUrl?: string;
+  badge?: string;
+}
+
+export interface PlatformAnalytics {
+  totalVisitors: number;
+  uniqueVisitors: number;
+  totalCvWebsites: number;
+  totalUsers: number;
+  totalRevenueEgp: number;
+  themeDistribution: Record<string, number>;
+  topWebsites: Array<{ slug: string; name: string; views: number; theme: string }>;
+}
+
 export interface CVProfile {
   id: string;
   slug: string; // e.g. "mohamedcv" or "sarah-ahmed"
@@ -51,6 +71,8 @@ export interface CVProfile {
   email: string;
   phone?: string;
   location?: string;
+  avatarUrl?: string;
+  coverUrl?: string;
   linkedinUrl?: string;
   githubUrl?: string;
   portfolioUrl?: string;
@@ -66,6 +88,7 @@ export interface CVProfile {
   skillGroups: SkillGroup[];
   projects: Project[];
   certifications?: string[];
+  certificates?: CertificateItem[];
   planId?: string;
   isPublished: boolean;
   viewCount: number;
