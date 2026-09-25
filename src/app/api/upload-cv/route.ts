@@ -21,18 +21,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Only PDF files are supported' }, { status: 400 });
     }
 
+    if (file.size > 10 * 1024 * 1024) {
+      return NextResponse.json({ error: 'File size exceeds 10MB limit' }, { status: 400 });
+    }
+
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Persist PDF file locally in public/uploads for instant downloading
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
+    // Persist PDF file locally in public/uploads for instant downloading (if filesystem is writable)
+    let originalPdfUrl = '';
+    try {
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+      const cleanFileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+      const filePath = path.join(uploadsDir, cleanFileName);
+      fs.writeFileSync(filePath, buffer);
+      originalPdfUrl = `/uploads/${cleanFileName}`;
+    } catch (fsErr) {
+      console.warn('Filesystem write skipped (edge/serverless environment):', fsErr);
     }
-    const cleanFileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-    const filePath = path.join(uploadsDir, cleanFileName);
-    fs.writeFileSync(filePath, buffer);
-    const originalPdfUrl = `/uploads/${cleanFileName}`;
 
     // Run AI Extraction Engine
     const { profile: extracted, source } = await parsePdfCV(buffer, file.name);

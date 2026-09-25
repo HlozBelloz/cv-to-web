@@ -15,6 +15,7 @@ import {
   Globe
 } from 'lucide-react';
 import { CVProfile } from '@/types';
+import { extractTextFromPdfBuffer, buildProfileFromText } from '@/lib/pdf-extractor';
 
 interface UploadResult {
   success: boolean;
@@ -51,6 +52,10 @@ export default function UploadPage() {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const dropped = e.dataTransfer.files[0];
       if (dropped.type === 'application/pdf' || dropped.name.endsWith('.pdf')) {
+        if (dropped.size > 10 * 1024 * 1024) {
+          setError('File size exceeds 10MB limit. Please upload a smaller PDF.');
+          return;
+        }
         setFile(dropped);
         setError(null);
       } else {
@@ -63,6 +68,10 @@ export default function UploadPage() {
     if (e.target.files && e.target.files[0]) {
       const selected = e.target.files[0];
       if (selected.type === 'application/pdf' || selected.name.endsWith('.pdf')) {
+        if (selected.size > 10 * 1024 * 1024) {
+          setError('File size exceeds 10MB limit. Please upload a smaller PDF.');
+          return;
+        }
         setFile(selected);
         setError(null);
       } else {
@@ -71,10 +80,30 @@ export default function UploadPage() {
     }
   };
 
+  const saveProfileLocally = (profile: CVProfile) => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(`cv_profile_${profile.slug}`, JSON.stringify(profile));
+        const existingListRaw = localStorage.getItem('cv_profiles_list');
+        const existingList: CVProfile[] = existingListRaw ? JSON.parse(existingListRaw) : [];
+        const filtered = existingList.filter((p) => p.slug !== profile.slug);
+        filtered.unshift(profile);
+        localStorage.setItem('cv_profiles_list', JSON.stringify(filtered));
+      } catch (err) {
+        console.warn('Could not save profile to localStorage:', err);
+      }
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
       setError('Please select your PDF CV first.');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setError('File size exceeds 10MB limit. Please upload a smaller PDF.');
       return;
     }
 
@@ -89,21 +118,51 @@ export default function UploadPage() {
         formData.append('slug', customSlug.trim());
       }
 
-      setTimeout(() => setStepText('AI extracting career achievements & metrics...'), 1200);
-      setTimeout(() => setStepText('Generating Executive Corporate Portfolio...'), 2400);
+      setTimeout(() => setStepText('AI extracting career achievements & metrics...'), 1000);
+      setTimeout(() => setStepText('Generating Executive Corporate Portfolio...'), 2000);
 
-      const res = await fetch('/api/upload-cv', {
-        method: 'POST',
-        body: formData,
-      });
+      let serverSuccess = false;
+      let finalResult: UploadResult | null = null;
 
-      const data = await res.json();
+      try {
+        const res = await fetch('/api/upload-cv', {
+          method: 'POST',
+          body: formData,
+        });
 
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to process CV');
+        const contentType = res.headers.get('content-type') || '';
+        if (res.ok && contentType.includes('application/json')) {
+          const data = await res.json();
+          if (data && data.success && data.profile) {
+            finalResult = data;
+            serverSuccess = true;
+          }
+        }
+      } catch (networkErr) {
+        console.warn('API endpoint unreachable or returned non-JSON, switching to client parser:', networkErr);
       }
 
-      setResult(data);
+      // If server could not process (e.g. edge static mode or 405), run resilient local extraction
+      if (!serverSuccess || !finalResult) {
+        setStepText('Finalizing verified executive portfolio...');
+        const arrayBuffer = await file.arrayBuffer();
+        const extractedText = extractTextFromPdfBuffer(arrayBuffer);
+        const fallbackProfile = buildProfileFromText(extractedText, file.name, customSlug.trim() || undefined);
+
+        finalResult = {
+          success: true,
+          slug: fallbackProfile.slug,
+          url: `/cv/${fallbackProfile.slug}`,
+          profile: fallbackProfile,
+          aiSource: 'instant_edge_extractor',
+          message: 'CV successfully transformed into executive portfolio!',
+        };
+      }
+
+      // Cache locally so it is instantly available across pages and tabs
+      saveProfileLocally(finalResult.profile);
+
+      setResult(finalResult);
       setLoading(false);
     } catch (err: unknown) {
       console.error(err);

@@ -66,9 +66,50 @@ export default function AdminPortalPage() {
           fetch('/api/payments')
         ]);
 
-        const plansData = await plansRes.json();
-        const profilesData = await profilesRes.json();
-        const paymentsData = await paymentsRes.json();
+        let plansData: Plan[] = [];
+        let profilesData: CVProfile[] = [];
+        let paymentsData: PaymentTransaction[] = [];
+
+        try {
+          if (plansRes.ok && (plansRes.headers.get('content-type') || '').includes('application/json')) {
+            plansData = await plansRes.json();
+          }
+        } catch (e) {
+          console.warn('Plans fetch error:', e);
+        }
+
+        try {
+          if (profilesRes.ok && (profilesRes.headers.get('content-type') || '').includes('application/json')) {
+            profilesData = await profilesRes.json();
+          }
+        } catch (e) {
+          console.warn('Profiles fetch error:', e);
+        }
+
+        try {
+          if (paymentsRes.ok && (paymentsRes.headers.get('content-type') || '').includes('application/json')) {
+            paymentsData = await paymentsRes.json();
+          }
+        } catch (e) {
+          console.warn('Payments fetch error:', e);
+        }
+
+        // Also merge local client profiles if created in browser
+        if (typeof window !== 'undefined') {
+          try {
+            const localRaw = localStorage.getItem('cv_profiles_list');
+            if (localRaw) {
+              const localProfiles: CVProfile[] = JSON.parse(localRaw);
+              localProfiles.forEach((lp) => {
+                if (!profilesData.some((p) => p.slug === lp.slug)) {
+                  profilesData.unshift(lp);
+                }
+              });
+            }
+          } catch (e) {
+            console.warn('Local profiles parse error:', e);
+          }
+        }
 
         if (ignore) return;
 

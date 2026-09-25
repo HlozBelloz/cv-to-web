@@ -57,7 +57,7 @@ export interface CVProfile {
   originalPdfUrl?: string;
   customDomain?: string; // e.g. "mohamed.com"
   customDomainStatus?: 'pending' | 'verified' | 'failed';
-  theme: 'executive' | 'modern' | 'minimal';
+  theme: 'executive' | 'modern' | 'minimal' | 'tech' | 'creative';
   metrics: HighlightMetric[];
   experiences: Experience[];
   education: Education[];
