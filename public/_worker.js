@@ -342,17 +342,17 @@ export default {
     // 2. DYNAMIC CV ROUTING (/cv/:slug)
     // ==========================================
     if (pathname.startsWith('/cv/')) {
-      const slug = pathname.replace('/cv/', '').replace(/\/$/, '');
+      const slug = pathname.replace('/cv/', '').replace(//$/, '');
       if (slug) {
-        // Try specific pre-rendered static page first (e.g. cv/mazen.html)
-        const specificReq = new Request(new URL('/cv/' + slug + '.html', request.url), request);
+        // Try specific pre-rendered static page first (e.g. /cv/mazen, /cv/mohamedcv)
+        const specificReq = new Request(new URL('/cv/' + slug, request.url), request);
         let specRes = await env.ASSETS.fetch(specificReq);
         if (specRes.status === 200) {
           return specRes;
         }
 
-        // For any other dynamic slug, serve cv/mazen.html as the dynamic SPA host template
-        const spaHostReq = new Request(new URL('/cv/mazen.html', request.url), request);
+        // For any other dynamic slug, serve /cv/mazen as the dynamic SPA host template
+        const spaHostReq = new Request(new URL('/cv/mazen', request.url), request);
         let spaRes = await env.ASSETS.fetch(spaHostReq);
         if (spaRes.status === 200) {
           return spaRes;
@@ -385,7 +385,7 @@ export default {
     }
 
     // Fallback 404
-    const notFoundUrl = new URL('/404.html', request.url);
+    const notFoundUrl = new URL('/404', request.url);
     return env.ASSETS.fetch(new Request(notFoundUrl, request));
   }
 };
