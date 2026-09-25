@@ -342,7 +342,8 @@ export default {
     // 2. DYNAMIC CV ROUTING (/cv/:slug)
     // ==========================================
     if (pathname.startsWith('/cv/')) {
-      const slug = pathname.replace('/cv/', '').replace(//$/, '');
+      const parts = pathname.split('/').filter(Boolean);
+      const slug = parts[1];
       if (slug) {
         // Try specific pre-rendered static page first (e.g. /cv/mazen, /cv/mohamedcv)
         const specificReq = new Request(new URL('/cv/' + slug, request.url), request);
@@ -376,8 +377,9 @@ export default {
         return res;
       }
 
+      const cleanPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
       const subUrl = new URL(request.url);
-      subUrl.pathname = `${pathname.replace(/\/$/, '')}/index.html`;
+      subUrl.pathname = cleanPath + '/index.html';
       res = await env.ASSETS.fetch(new Request(subUrl, request));
       if (res.status !== 404) {
         return res;
