@@ -13,7 +13,6 @@ import {
   CheckCircle2, 
   Star, 
   ShieldCheck, 
-  Globe, 
   Sparkles, 
   Eye, 
   EyeOff,
@@ -126,79 +125,78 @@ export default function PerfectLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center selection:bg-amber-500/30 selection:text-amber-200 font-sans">
+    <div className="min-h-screen bg-[#F2F0F1] text-black flex flex-col justify-center selection:bg-black selection:text-white font-sans relative py-12 px-4 sm:px-6 lg:px-8">
       
       {/* Top back navigation */}
       <div className="absolute top-6 left-6 z-20">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors p-2 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-md"
+          className="inline-flex items-center gap-2 text-xs font-bold text-black hover:text-neutral-600 transition-colors px-4 py-2 rounded-full bg-white border border-black/10 shadow-sm"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Marketplace</span>
         </Link>
       </div>
 
-      {/* FIGMA SPLIT-SCREEN CONTAINER (Figma 1050476989533233612 Reference) */}
-      <div className="max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 rounded-3xl bg-slate-900/80 border border-slate-800 shadow-2xl overflow-hidden backdrop-blur-xl">
+      {/* FIGMA SPLIT-SCREEN CONTAINER (Figma 1050476989533233612 blended with Shop.co) */}
+      <div className="max-w-6xl w-full mx-auto my-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 rounded-3xl bg-white border border-black/10 shadow-2xl overflow-hidden">
           
           {/* LEFT COLUMN: EDITORIAL SHOWCASE & VALUE PROPOSITION */}
-          <div className="lg:col-span-5 bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/40 p-8 sm:p-12 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-slate-800 relative overflow-hidden">
+          <div className="lg:col-span-5 bg-[#FAFAFA] p-8 sm:p-12 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-black/10 relative overflow-hidden">
             
-            {/* Background ambient lighting */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+            {/* Background decorative starburst */}
+            <span className="absolute -top-4 -right-4 text-black/5 text-9xl font-serif select-none pointer-events-none">
+              ✦
+            </span>
 
-            <div className="space-y-6 relative">
-              <Link href="/" className="inline-flex items-center gap-2.5 font-black text-xl text-white">
-                <span className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-sm shadow-md shadow-amber-500/20">
-                  CV
-                </span>
-                <span>CVtoWeb</span>
+            <div className="space-y-6 relative z-10">
+              <Link href="/" className="inline-flex items-center gap-2.5 font-black text-2xl tracking-tighter text-black uppercase">
+                CVTO.WEB
               </Link>
 
-              <div className="space-y-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
-                  <Sparkles className="w-3.5 h-3.5" />
+              <div className="space-y-3">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black text-white text-[10px] font-black uppercase tracking-wider">
+                  <Sparkles className="w-3 h-3 text-amber-400" />
                   Candidate Control Center
                 </span>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
-                  Manage Your Live Executive Portfolio
+                <h1 className="text-2xl sm:text-3xl font-black text-black uppercase tracking-tight leading-tight">
+                  MANAGE YOUR LIVE EXECUTIVE PORTFOLIO
                 </h1>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                <p className="text-xs sm:text-sm text-black/60 leading-relaxed">
                   Sign in to edit your academic GPA, lock your preferred theme for all visitors, manage certificate photos, and consult your personal OpenRouter AI CV Advisor.
                 </p>
               </div>
 
               {/* Value proposition badges */}
               <div className="space-y-3 pt-2">
-                <div className="flex items-center gap-3 text-xs text-slate-200">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <div className="flex items-center gap-3 text-xs font-semibold text-black/80">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 fill-emerald-500 shrink-0" />
                   <span>Lock your chosen theme & accent colors for all visitors</span>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-slate-200">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <div className="flex items-center gap-3 text-xs font-semibold text-black/80">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 fill-emerald-500 shrink-0" />
                   <span>Showcase verified certificate photos and portrait</span>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-slate-200">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <div className="flex items-center gap-3 text-xs font-semibold text-black/80">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 fill-emerald-500 shrink-0" />
                   <span>Real-time recruiter visitor counts and analytics</span>
                 </div>
               </div>
             </div>
 
             {/* Recruiter Testimonial Card */}
-            <div className="mt-8 p-5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3 relative">
-              <div className="flex text-amber-400">
+            <div className="mt-8 p-5 rounded-2xl bg-white border border-black/10 space-y-3 relative shadow-sm">
+              <div className="flex text-amber-500">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                  <Star key={i} className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
                 ))}
               </div>
-              <p className="text-xs text-slate-300 italic leading-relaxed">
+              <p className="text-xs text-black/70 italic leading-relaxed">
                 &ldquo;Seeing a candidate with an interactive portfolio, verified certificate badges, and high-performance edge availability instantly sets them apart from 99% of applicants.&rdquo;
               </p>
-              <div className="flex items-center gap-2 pt-1 border-t border-slate-800/80 text-[11px] text-slate-400">
-                <span className="font-bold text-white">Tarek Mansour</span>
+              <div className="flex items-center gap-2 pt-1 border-t border-black/10 text-[11px] text-black/50">
+                <span className="font-bold text-black">Tarek Mansour</span>
                 <span>•</span>
                 <span>Head of Tech Talent, Cairo & Dubai</span>
               </div>
@@ -206,25 +204,25 @@ export default function PerfectLoginPage() {
           </div>
 
           {/* RIGHT COLUMN: PERFECT UI AUTH CARD */}
-          <div className="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-center space-y-6">
+          <div className="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-center space-y-6 bg-white">
             
             {/* Tab Switcher: Sign In vs Create Account */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white">
+                <h2 className="text-2xl font-black text-black uppercase tracking-tight">
                   {isRegister ? 'Create Your Account' : 'Welcome Back'}
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-black/50 mt-1">
                   {isRegister ? 'Start building and customizing your executive website' : 'Sign in to access your portfolio editor and analytics'}
                 </p>
               </div>
 
-              <div className="flex items-center p-1 rounded-xl bg-slate-950 border border-slate-800 text-xs font-semibold">
+              <div className="flex items-center p-1 rounded-full bg-[#F0F0F0] border border-black/5 text-xs font-bold shrink-0 self-start sm:self-auto">
                 <button
                   type="button"
                   onClick={() => setIsRegister(false)}
-                  className={`px-3 py-1.5 rounded-lg transition-colors ${
-                    !isRegister ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
+                  className={`px-4 py-2 rounded-full transition-all ${
+                    !isRegister ? 'bg-black text-white shadow-sm' : 'text-black/60 hover:text-black'
                   }`}
                 >
                   Sign In
@@ -232,8 +230,8 @@ export default function PerfectLoginPage() {
                 <button
                   type="button"
                   onClick={() => setIsRegister(true)}
-                  className={`px-3 py-1.5 rounded-lg transition-colors ${
-                    isRegister ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
+                  className={`px-4 py-2 rounded-full transition-all ${
+                    isRegister ? 'bg-black text-white shadow-sm' : 'text-black/60 hover:text-black'
                   }`}
                 >
                   Register
@@ -243,8 +241,8 @@ export default function PerfectLoginPage() {
 
             {/* Error banner */}
             {error && (
-              <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-3">
-                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+              <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-3">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
                 <span>{error}</span>
               </div>
             )}
@@ -254,76 +252,82 @@ export default function PerfectLoginPage() {
               type="button"
               onClick={handleGoogleAuth}
               disabled={googleLoading}
-              className="w-full py-3 px-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs sm:text-sm flex items-center justify-center gap-3 transition-all shadow-md hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+              className="w-full py-3.5 px-4 rounded-full bg-white hover:bg-neutral-50 text-black font-bold text-xs sm:text-sm flex items-center justify-center gap-3 transition-all border border-black/15 shadow-sm hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
             >
-              {googleLoading ? <Loader2 className="w-4 h-4 animate-spin text-slate-900" /> : <GoogleIcon />}
+              {googleLoading ? <Loader2 className="w-4 h-4 animate-spin text-black" /> : <GoogleIcon />}
               <span>{isRegister ? 'Sign up with Google One-Tap' : 'Continue with Google Account'}</span>
             </button>
 
             {/* Divider */}
-            <div className="flex items-center gap-4 text-xs text-slate-500">
-              <div className="flex-1 h-px bg-slate-800" />
+            <div className="flex items-center gap-4 text-xs text-black/40">
+              <div className="flex-1 h-px bg-black/10" />
               <span>or continue with credentials</span>
-              <div className="flex-1 h-px bg-slate-800" />
+              <div className="flex-1 h-px bg-black/10" />
             </div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               {isRegister && (
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1.5">Full Name</label>
+                  <label className="text-xs font-bold text-black uppercase tracking-wider block mb-1.5">
+                    Full Name
+                  </label>
                   <div className="relative">
-                    <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <User className="w-4 h-4 text-black/40 absolute left-4 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       required
                       placeholder="e.g. Mazen Mohamed Hamdy"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-xs sm:text-sm placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors"
+                      className="w-full pl-11 pr-4 py-3 rounded-full bg-[#F9F9F9] border border-black/15 text-black text-xs sm:text-sm placeholder:text-black/40 focus:outline-none focus:border-black focus:bg-white transition-colors"
                     />
                   </div>
                 </div>
               )}
 
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1.5">Email Address</label>
+                <label className="text-xs font-bold text-black uppercase tracking-wider block mb-1.5">
+                  Email Address
+                </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Mail className="w-4 h-4 text-black/40 absolute left-4 top-1/2 -translate-y-1/2" />
                   <input
                     type="email"
                     required
                     placeholder="candidate@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-xs sm:text-sm placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors"
+                    className="w-full pl-11 pr-4 py-3 rounded-full bg-[#F9F9F9] border border-black/15 text-black text-xs sm:text-sm placeholder:text-black/40 focus:outline-none focus:border-black focus:bg-white transition-colors"
                   />
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-semibold text-slate-300">Password</label>
+                  <label className="text-xs font-bold text-black uppercase tracking-wider">
+                    Password
+                  </label>
                   {!isRegister && (
-                    <span className="text-[11px] text-amber-400 hover:underline cursor-pointer">
+                    <span className="text-[11px] font-semibold text-black/60 hover:text-black hover:underline cursor-pointer">
                       Forgot password?
                     </span>
                   )}
                 </div>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Lock className="w-4 h-4 text-black/40 absolute left-4 top-1/2 -translate-y-1/2" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
                     placeholder="••••••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-xs sm:text-sm placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors font-mono"
+                    className="w-full pl-11 pr-11 py-3 rounded-full bg-[#F9F9F9] border border-black/15 text-black text-xs sm:text-sm placeholder:text-black/40 focus:outline-none focus:border-black focus:bg-white transition-colors font-mono"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="p-1 rounded text-slate-500 hover:text-slate-300 absolute right-3 top-1/2 -translate-y-1/2"
+                    className="p-1 rounded text-black/40 hover:text-black absolute right-4 top-1/2 -translate-y-1/2"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -331,32 +335,32 @@ export default function PerfectLoginPage() {
               </div>
 
               <div className="flex items-center justify-between text-xs pt-1">
-                <label className="flex items-center gap-2 text-slate-400 cursor-pointer">
+                <label className="flex items-center gap-2 text-black/70 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-3.5 h-3.5 rounded border-slate-800 bg-slate-950 text-amber-500 focus:ring-0"
+                    className="w-4 h-4 rounded border-black/20 text-black focus:ring-black accent-black"
                   />
                   <span>Remember my session</span>
                 </label>
-                <span className="text-slate-500">Secure PBKDF2</span>
+                <span className="text-black/40 text-[11px] font-semibold">Secure PBKDF2</span>
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+                className="w-full py-3.5 px-4 rounded-full bg-black hover:bg-neutral-800 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
               >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin text-slate-950" /> : <ArrowRight className="w-4 h-4" />}
+                {loading ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <ArrowRight className="w-4 h-4" />}
                 <span>{isRegister ? 'Create Candidate Account' : 'Sign In to Dashboard'}</span>
               </button>
             </form>
 
             {/* Quick Demo Credentials Tip */}
-            <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-[11px] text-slate-400 space-y-1">
-              <span className="font-bold text-amber-400 block">Candidate Demo Login:</span>
-              <p>Email: <code className="text-slate-200">mazeneltelbany78@gmail.com</code> | Password: <code className="text-slate-200">mazen123</code></p>
+            <div className="p-4 rounded-2xl bg-[#F0F0F0] border border-black/10 text-[11px] text-black/70 space-y-1">
+              <span className="font-bold text-black block">Candidate Demo Login:</span>
+              <p>Email: <code className="text-black font-semibold bg-white px-1.5 py-0.5 rounded border border-black/10">mazeneltelbany78@gmail.com</code> | Password: <code className="text-black font-semibold bg-white px-1.5 py-0.5 rounded border border-black/10">mazen123</code></p>
             </div>
 
           </div>

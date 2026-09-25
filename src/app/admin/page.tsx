@@ -150,43 +150,42 @@ export default function AdminPortalPage() {
         profilesData = [...DEMO_PROFILES];
       }
 
+      // Guarantee plans fallback
       if (!Array.isArray(plansData) || plansData.length === 0) {
         plansData = [...DEFAULT_PLANS];
       }
 
+      // Guarantee users fallback
       if (!Array.isArray(usersData) || usersData.length === 0) {
         usersData = [
           {
-            id: 'usr-admin',
-            name: 'Platform Administrator',
-            email: 'admin@cvplatform.com',
+            id: 'usr_mazen',
+            name: 'Mazen Mohamed Hamdy',
+            email: 'mazeneltelbany78@gmail.com',
+            role: 'candidate',
+            slug: 'mazen',
+            authMethod: 'google',
+            createdAt: '2026-09-25T10:00:00.000Z',
+            status: 'active'
+          },
+          {
+            id: 'usr_mohamed',
+            name: 'Mohamed Hamdy',
+            email: 'mohamed@example.com',
+            role: 'candidate',
+            slug: 'mohamedcv',
+            authMethod: 'email',
+            createdAt: '2026-09-24T14:30:00.000Z',
+            status: 'active'
+          },
+          {
+            id: 'usr_admin',
+            name: 'System Administrator',
+            email: 'admin@cvtoweb.com',
             role: 'admin',
             slug: 'admin',
             authMethod: 'email',
-            avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-            createdAt: '2026-09-20T10:00:00Z',
-            status: 'active'
-          },
-          {
-            id: 'usr-mazen',
-            name: 'Mazen Mohamed Hamdy',
-            email: 'mazeneltelbany78@gmail.com',
-            role: 'user',
-            slug: 'mazen',
-            authMethod: 'google',
-            avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-            createdAt: '2026-09-25T11:00:00Z',
-            status: 'active'
-          },
-          {
-            id: 'usr-mohamed',
-            name: 'Mohamed El-Sayed',
-            email: 'mohamed.elsayed@example.com',
-            role: 'user',
-            slug: 'mohamedcv',
-            authMethod: 'email',
-            avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-            createdAt: '2026-09-24T18:00:00Z',
+            createdAt: '2026-09-20T08:00:00.000Z',
             status: 'active'
           }
         ];
@@ -194,8 +193,8 @@ export default function AdminPortalPage() {
 
       setPlans(plansData);
       setProfiles(profilesData);
-      setPayments(Array.isArray(paymentsData) ? paymentsData : []);
       setUsers(usersData);
+      setPayments(paymentsData);
 
       // Compute analytics if endpoint didn't provide
       const totalViews = profilesData.reduce((acc, p) => acc + (p.viewCount || 0), 0);
@@ -334,23 +333,21 @@ export default function AdminPortalPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500/30 selection:text-amber-200">
+    <div className="min-h-screen bg-[#F2F0F1] text-black font-sans selection:bg-black selection:text-white">
       
-      {/* ADMIN HEADER */}
-      <header className="border-b border-slate-800 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      {/* ADMIN HEADER (Shop.co Clean White Header) */}
+      <header className="border-b border-black/10 bg-white sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 font-black flex items-center justify-center text-sm shadow-md shadow-amber-500/20">
-              CV
-            </span>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-white text-base">CVtoWeb Control Center</span>
-                <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-bold border border-amber-500/20">
-                  ADMIN PORTAL
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-400">Enterprise edge analytics & platform operations</p>
+            <Link href="/" className="font-black text-2xl tracking-tighter text-black uppercase">
+              CVTO.WEB
+            </Link>
+            <span className="hidden sm:inline-block h-5 w-px bg-black/15" />
+            <div className="hidden sm:flex items-center gap-2">
+              <span className="font-bold text-black text-sm uppercase">Admin Control Center</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-black text-white text-[10px] font-black uppercase">
+                PORTAL
+              </span>
             </div>
           </div>
 
@@ -358,21 +355,21 @@ export default function AdminPortalPage() {
             <button
               onClick={loadData}
               disabled={refreshing}
-              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-400 hover:text-white transition-colors"
+              className="p-2.5 rounded-full bg-[#F0F0F0] hover:bg-[#E5E5E5] text-black transition-colors"
               title="Refresh Data"
             >
-              <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-amber-400' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             </button>
             <Link
               href="/"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-800 text-xs font-semibold text-slate-300 transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-black/20 text-xs font-bold text-black hover:bg-black hover:text-white transition-all"
             >
-              <Eye className="w-3.5 h-3.5 text-amber-400" />
+              <Eye className="w-3.5 h-3.5" />
               <span>Public Site</span>
             </Link>
             <button
               onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-400 text-xs font-semibold transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-bold transition-colors"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Exit</span>
@@ -380,14 +377,14 @@ export default function AdminPortalPage() {
           </div>
         </div>
 
-        {/* PRIMARY TABS */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 overflow-x-auto py-2 border-t border-slate-900 text-xs font-semibold">
+        {/* PRIMARY TABS (Shop.co Rounded Pill Tabs) */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 overflow-x-auto py-2.5 border-t border-black/5 text-xs font-bold">
           <button
             onClick={() => setActiveTab('analytics')}
-            className={`px-3.5 py-1.5 rounded-lg flex items-center gap-2 transition-all ${
+            className={`px-4 py-2 rounded-full flex items-center gap-2 transition-all shrink-0 ${
               activeTab === 'analytics'
-                ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-900'
+                ? 'bg-black text-white shadow-sm'
+                : 'text-black/60 hover:text-black hover:bg-[#F0F0F0]'
             }`}
           >
             <BarChart3 className="w-3.5 h-3.5" />
@@ -395,10 +392,10 @@ export default function AdminPortalPage() {
           </button>
           <button
             onClick={() => setActiveTab('profiles')}
-            className={`px-3.5 py-1.5 rounded-lg flex items-center gap-2 transition-all ${
+            className={`px-4 py-2 rounded-full flex items-center gap-2 transition-all shrink-0 ${
               activeTab === 'profiles'
-                ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-900'
+                ? 'bg-black text-white shadow-sm'
+                : 'text-black/60 hover:text-black hover:bg-[#F0F0F0]'
             }`}
           >
             <Globe className="w-3.5 h-3.5" />
@@ -406,10 +403,10 @@ export default function AdminPortalPage() {
           </button>
           <button
             onClick={() => setActiveTab('users')}
-            className={`px-3.5 py-1.5 rounded-lg flex items-center gap-2 transition-all ${
+            className={`px-4 py-2 rounded-full flex items-center gap-2 transition-all shrink-0 ${
               activeTab === 'users'
-                ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-900'
+                ? 'bg-black text-white shadow-sm'
+                : 'text-black/60 hover:text-black hover:bg-[#F0F0F0]'
             }`}
           >
             <Users className="w-3.5 h-3.5" />
@@ -417,10 +414,10 @@ export default function AdminPortalPage() {
           </button>
           <button
             onClick={() => setActiveTab('plans')}
-            className={`px-3.5 py-1.5 rounded-lg flex items-center gap-2 transition-all ${
+            className={`px-4 py-2 rounded-full flex items-center gap-2 transition-all shrink-0 ${
               activeTab === 'plans'
-                ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-900'
+                ? 'bg-black text-white shadow-sm'
+                : 'text-black/60 hover:text-black hover:bg-[#F0F0F0]'
             }`}
           >
             <Coins className="w-3.5 h-3.5" />
@@ -428,10 +425,10 @@ export default function AdminPortalPage() {
           </button>
           <button
             onClick={() => setActiveTab('payments')}
-            className={`px-3.5 py-1.5 rounded-lg flex items-center gap-2 transition-all ${
+            className={`px-4 py-2 rounded-full flex items-center gap-2 transition-all shrink-0 ${
               activeTab === 'payments'
-                ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-900'
+                ? 'bg-black text-white shadow-sm'
+                : 'text-black/60 hover:text-black hover:bg-[#F0F0F0]'
             }`}
           >
             <CreditCard className="w-3.5 h-3.5" />
@@ -445,65 +442,65 @@ export default function AdminPortalPage() {
 
         {/* 1. TOP ANALYTICS KPI SUMMARY CARDS */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 relative overflow-hidden shadow-lg">
-            <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div className="bg-white border border-black/10 rounded-3xl p-6 shadow-sm relative overflow-hidden">
+            <div className="flex items-center justify-between text-black/50 text-xs font-bold uppercase tracking-wider">
               <span>Total Platform Visitors</span>
-              <span className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+              <span className="p-1.5 rounded-full bg-emerald-50 text-emerald-600">
                 <TrendingUp className="w-4 h-4" />
               </span>
             </div>
-            <div className="text-3xl font-extrabold text-white mt-2">
+            <div className="text-3xl font-black text-black mt-2">
               {(analytics?.totalVisitors || 2845).toLocaleString()}
             </div>
-            <div className="flex items-center gap-2 text-[11px] text-emerald-400 font-semibold mt-2">
-              <span>+18.4% this week</span>
-              <span className="text-slate-500">•</span>
-              <span className="text-slate-400">{analytics?.uniqueVisitors || 2162} unique</span>
+            <div className="flex items-center gap-2 text-[11px] font-bold mt-2">
+              <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">+18.4% this week</span>
+              <span className="text-black/30">•</span>
+              <span className="text-black/50 font-medium">{analytics?.uniqueVisitors || 2162} unique</span>
             </div>
           </div>
 
-          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 relative overflow-hidden shadow-lg">
-            <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div className="bg-white border border-black/10 rounded-3xl p-6 shadow-sm relative overflow-hidden">
+            <div className="flex items-center justify-between text-black/50 text-xs font-bold uppercase tracking-wider">
               <span>Active CV Portfolios</span>
-              <span className="p-1.5 rounded-lg bg-amber-500/10 text-amber-400">
+              <span className="p-1.5 rounded-full bg-black/5 text-black">
                 <Globe className="w-4 h-4" />
               </span>
             </div>
-            <div className="text-3xl font-extrabold text-white mt-2">
+            <div className="text-3xl font-black text-black mt-2">
               {profiles.length}
             </div>
-            <div className="flex items-center gap-2 text-[11px] text-emerald-400 font-semibold mt-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="flex items-center gap-2 text-[11px] text-emerald-700 font-bold mt-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>100% Edge Availability</span>
             </div>
           </div>
 
-          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 relative overflow-hidden shadow-lg">
-            <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div className="bg-white border border-black/10 rounded-3xl p-6 shadow-sm relative overflow-hidden">
+            <div className="flex items-center justify-between text-black/50 text-xs font-bold uppercase tracking-wider">
               <span>Registered Accounts</span>
-              <span className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
+              <span className="p-1.5 rounded-full bg-black/5 text-black">
                 <Users className="w-4 h-4" />
               </span>
             </div>
-            <div className="text-3xl font-extrabold text-white mt-2">
+            <div className="text-3xl font-black text-black mt-2">
               {users.length}
             </div>
-            <div className="text-[11px] text-slate-400 mt-2">
+            <div className="text-[11px] text-black/50 font-medium mt-2">
               <span>Google GIS: 67% • Direct Email: 33%</span>
             </div>
           </div>
 
-          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 relative overflow-hidden shadow-lg">
-            <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div className="bg-white border border-black/10 rounded-3xl p-6 shadow-sm relative overflow-hidden">
+            <div className="flex items-center justify-between text-black/50 text-xs font-bold uppercase tracking-wider">
               <span>Platform Revenue (EGP)</span>
-              <span className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400">
+              <span className="p-1.5 rounded-full bg-black/5 text-black">
                 <Coins className="w-4 h-4" />
               </span>
             </div>
-            <div className="text-3xl font-extrabold text-amber-400 mt-2">
+            <div className="text-3xl font-black text-black mt-2">
               {(analytics?.totalRevenueEgp || 350).toLocaleString()} EGP
             </div>
-            <div className="text-[11px] text-slate-400 mt-2">
+            <div className="text-[11px] text-black/50 font-medium mt-2">
               <span>Paymob Sandbox & Mock Mode Active</span>
             </div>
           </div>
@@ -516,104 +513,104 @@ export default function AdminPortalPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               
               {/* Traffic by Theme Distribution */}
-              <div className="lg:col-span-2 bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+              <div className="lg:col-span-2 bg-white border border-black/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
                 <div>
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <Layout className="w-5 h-5 text-amber-400" />
+                  <h3 className="text-lg font-black text-black uppercase flex items-center gap-2">
+                    <Layout className="w-5 h-5 text-black" />
                     Visitor Distribution Across CV Themes
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-black/50 mt-1">
                     Recruiter traffic share based on candidate chosen themes.
                   </p>
                 </div>
 
                 <div className="space-y-4 pt-2">
                   <div>
-                    <div className="flex items-center justify-between text-xs font-semibold mb-1">
-                      <span className="text-amber-400">Executive Corporate (Slate & Amber)</span>
-                      <span className="text-slate-300">55% (1,564 visits)</span>
+                    <div className="flex items-center justify-between text-xs font-bold mb-1.5">
+                      <span className="text-black">Executive Corporate (Slate & Amber)</span>
+                      <span className="text-black/60">55% (1,564 visits)</span>
                     </div>
-                    <div className="w-full h-3 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
-                      <div className="h-full bg-amber-500 rounded-full" style={{ width: '55%' }} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between text-xs font-semibold mb-1">
-                      <span className="text-emerald-400">Modern Tech (Terminal & Cyber Emerald)</span>
-                      <span className="text-slate-300">28% (796 visits)</span>
-                    </div>
-                    <div className="w-full h-3 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
-                      <div className="h-full bg-emerald-500 rounded-full" style={{ width: '28%' }} />
+                    <div className="w-full h-3 rounded-full bg-[#F0F0F0] overflow-hidden">
+                      <div className="h-full bg-black rounded-full" style={{ width: '55%' }} />
                     </div>
                   </div>
 
                   <div>
-                    <div className="flex items-center justify-between text-xs font-semibold mb-1">
-                      <span className="text-purple-400">Creative Bento (Violet & Neon Rose)</span>
-                      <span className="text-slate-300">12% (341 visits)</span>
+                    <div className="flex items-center justify-between text-xs font-bold mb-1.5">
+                      <span className="text-black">Modern Tech (Terminal & Cyber Emerald)</span>
+                      <span className="text-black/60">28% (796 visits)</span>
                     </div>
-                    <div className="w-full h-3 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
-                      <div className="h-full bg-purple-500 rounded-full" style={{ width: '12%' }} />
+                    <div className="w-full h-3 rounded-full bg-[#F0F0F0] overflow-hidden">
+                      <div className="h-full bg-neutral-700 rounded-full" style={{ width: '28%' }} />
                     </div>
                   </div>
 
                   <div>
-                    <div className="flex items-center justify-between text-xs font-semibold mb-1">
-                      <span className="text-stone-300">Minimalist Swiss (Editorial Ivory)</span>
-                      <span className="text-slate-300">5% (144 visits)</span>
+                    <div className="flex items-center justify-between text-xs font-bold mb-1.5">
+                      <span className="text-black">Creative Bento (Violet & Neon Rose)</span>
+                      <span className="text-black/60">12% (341 visits)</span>
                     </div>
-                    <div className="w-full h-3 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
-                      <div className="h-full bg-stone-400 rounded-full" style={{ width: '5%' }} />
+                    <div className="w-full h-3 rounded-full bg-[#F0F0F0] overflow-hidden">
+                      <div className="h-full bg-neutral-500 rounded-full" style={{ width: '12%' }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between text-xs font-bold mb-1.5">
+                      <span className="text-black">Minimalist Swiss (Editorial Ivory)</span>
+                      <span className="text-black/60">5% (144 visits)</span>
+                    </div>
+                    <div className="w-full h-3 rounded-full bg-[#F0F0F0] overflow-hidden">
+                      <div className="h-full bg-neutral-300 rounded-full" style={{ width: '5%' }} />
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Edge Infrastructure Health */}
-              <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4 shadow-xl">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-emerald-400" />
+              <div className="bg-white border border-black/10 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
+                <h3 className="text-lg font-black text-black uppercase flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-emerald-600" />
                   Cloudflare Edge Health
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-black/50">
                   Global serverless delivery status across 300+ edge points of presence.
                 </p>
 
                 <div className="space-y-3 pt-2">
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800/80 text-xs">
-                    <span className="text-slate-300">Cloudflare Pages Worker</span>
-                    <span className="text-emerald-400 font-bold flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#F9F9F9] border border-black/5 text-xs">
+                    <span className="font-semibold text-black">Cloudflare Pages Worker</span>
+                    <span className="text-emerald-700 font-bold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                       Operational
                     </span>
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800/80 text-xs">
-                    <span className="text-slate-300">OpenRouter AI Gateway</span>
-                    <span className="text-emerald-400 font-bold">Connected</span>
+                  <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#F9F9F9] border border-black/5 text-xs">
+                    <span className="font-semibold text-black">OpenRouter AI Gateway</span>
+                    <span className="text-emerald-700 font-bold">Connected</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800/80 text-xs">
-                    <span className="text-slate-300">Paymob EGP Sandbox</span>
-                    <span className="text-amber-400 font-bold">Mock Active</span>
+                  <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#F9F9F9] border border-black/5 text-xs">
+                    <span className="font-semibold text-black">Paymob EGP Sandbox</span>
+                    <span className="text-amber-700 font-bold">Mock Active</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800/80 text-xs">
-                    <span className="text-slate-300">SSL Edge Termination</span>
-                    <span className="text-emerald-400 font-bold">TLS 1.3 Strict</span>
+                  <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#F9F9F9] border border-black/5 text-xs">
+                    <span className="font-semibold text-black">SSL Edge Termination</span>
+                    <span className="text-emerald-700 font-bold">TLS 1.3 Strict</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Top Performing CV Websites Table Preview */}
-            <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4 shadow-xl">
+            <div className="bg-white border border-black/10 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-white">Top Performing Candidate Portfolios</h3>
-                  <p className="text-xs text-slate-400">Candidates receiving the highest recruiter pageviews.</p>
+                  <h3 className="text-lg font-black text-black uppercase">Top Performing Candidate Portfolios</h3>
+                  <p className="text-xs text-black/50">Candidates receiving the highest recruiter pageviews.</p>
                 </div>
                 <button
                   onClick={() => setActiveTab('profiles')}
-                  className="text-xs text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1"
+                  className="text-xs text-black hover:text-neutral-600 font-bold flex items-center gap-1"
                 >
                   <span>View All in Data Table</span>
                   <ChevronRight className="w-4 h-4" />
@@ -625,29 +622,29 @@ export default function AdminPortalPage() {
                   <div
                     key={p.slug}
                     onClick={() => setPreviewProfile(p)}
-                    className="p-4 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500/50 cursor-pointer transition-all flex items-center justify-between group"
+                    className="p-4 rounded-2xl bg-[#F9F9F9] border border-black/10 hover:border-black cursor-pointer transition-all flex items-center justify-between group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-800 border border-slate-700 shrink-0">
+                      <div className="w-12 h-12 rounded-2xl overflow-hidden bg-white border border-black/10 shrink-0">
                         {p.avatarUrl ? (
                           <img src={p.avatarUrl} alt={p.fullName} className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-amber-400 font-bold">
+                          <div className="w-full h-full flex items-center justify-center font-bold text-black">
                             {p.fullName.charAt(0)}
                           </div>
                         )}
                       </div>
                       <div>
-                        <h4 className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors">
+                        <h4 className="text-sm font-bold text-black group-hover:text-neutral-700 transition-colors">
                           {p.fullName}
                         </h4>
-                        <p className="text-xs text-slate-400 line-clamp-1">{p.title}</p>
-                        <span className="text-[10px] font-mono text-amber-400/80">/cv/{p.slug}</span>
+                        <p className="text-xs text-black/50 line-clamp-1">{p.title}</p>
+                        <span className="text-[10px] font-mono text-black/60">/cv/{p.slug}</span>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-lg font-extrabold text-white">{p.viewCount || 142}</div>
-                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Views</span>
+                      <div className="text-lg font-black text-black">{p.viewCount || 142}</div>
+                      <span className="text-[10px] text-black/40 uppercase font-bold">Views</span>
                     </div>
                   </div>
                 ))}
@@ -661,25 +658,25 @@ export default function AdminPortalPage() {
           <div className="space-y-6">
             
             {/* Table Control Bar */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-900/80 border border-slate-800 p-4 rounded-2xl">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white border border-black/10 p-4 rounded-3xl shadow-sm">
               <div className="flex flex-1 items-center gap-3">
                 <div className="relative flex-1 max-w-md">
-                  <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Search className="w-4 h-4 text-black/40 absolute left-4 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search candidates, roles, slugs, or emails..."
-                    className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                    className="w-full pl-11 pr-4 py-2.5 rounded-full bg-[#F9F9F9] border border-black/10 text-xs text-black placeholder:text-black/40 focus:outline-none focus:border-black focus:bg-white"
                   />
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Filter className="w-4 h-4 text-slate-400 hidden sm:inline" />
+                  <Filter className="w-4 h-4 text-black/40 hidden sm:inline" />
                   <select
                     value={themeFilter}
                     onChange={(e) => setThemeFilter(e.target.value)}
-                    className="px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 focus:outline-none focus:border-amber-400"
+                    className="px-4 py-2.5 rounded-full bg-[#F9F9F9] border border-black/10 text-xs font-semibold text-black focus:outline-none focus:border-black"
                   >
                     <option value="all">All Themes</option>
                     <option value="executive">Executive Theme</option>
@@ -691,17 +688,17 @@ export default function AdminPortalPage() {
               </div>
 
               <div className="flex items-center gap-2 self-end sm:self-auto">
-                <span className="text-xs text-slate-400 font-medium">
+                <span className="text-xs text-black/60 font-medium">
                   Showing <strong>{filteredProfiles.length}</strong> of <strong>{profiles.length}</strong> portfolios
                 </span>
               </div>
             </div>
 
             {/* FIGMA DATA TABLE */}
-            <div className="bg-slate-900/90 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+            <div className="bg-white border border-black/10 rounded-3xl overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-950/80 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+                  <thead className="bg-[#FAFAFA] text-black/60 uppercase tracking-wider font-black text-[10px] border-b border-black/10">
                     <tr>
                       <th className="py-4 px-6">Candidate</th>
                       <th className="py-4 px-6">Professional Title</th>
@@ -712,37 +709,37 @@ export default function AdminPortalPage() {
                       <th className="py-4 px-6 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60 font-medium text-slate-300">
+                  <tbody className="divide-y divide-black/5 font-medium text-black">
                     {filteredProfiles.map((p) => (
                       <tr 
                         key={p.slug}
-                        className="hover:bg-slate-850/50 transition-colors group cursor-pointer"
+                        className="hover:bg-[#F9F9F9] transition-colors group cursor-pointer"
                         onClick={() => setPreviewProfile(p)}
                       >
                         {/* Candidate Avatar & Details */}
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-800 border border-slate-700 shrink-0">
+                            <div className="w-10 h-10 rounded-2xl overflow-hidden bg-[#F0EEED] border border-black/10 shrink-0">
                               {p.avatarUrl ? (
                                 <img src={p.avatarUrl} alt={p.fullName} className="w-full h-full object-cover" />
                               ) : (
-                                <div className="w-full h-full flex items-center justify-center font-bold text-amber-400">
+                                <div className="w-full h-full flex items-center justify-center font-bold text-black">
                                   {p.fullName.charAt(0)}
                                 </div>
                               )}
                             </div>
                             <div>
-                              <div className="font-bold text-white text-sm group-hover:text-amber-400 transition-colors">
+                              <div className="font-bold text-black text-sm group-hover:text-neutral-700 transition-colors">
                                 {p.fullName}
                               </div>
-                              <div className="text-[11px] text-slate-400">{p.email || 'candidate@example.com'}</div>
+                              <div className="text-[11px] text-black/50">{p.email || 'candidate@example.com'}</div>
                             </div>
                           </div>
                         </td>
 
                         {/* Title */}
                         <td className="py-4 px-6">
-                          <span className="line-clamp-1 max-w-[200px] text-slate-200">
+                          <span className="line-clamp-1 max-w-[200px] text-black/80 font-medium">
                             {p.title}
                           </span>
                         </td>
@@ -754,42 +751,37 @@ export default function AdminPortalPage() {
                               href={`/cv/${p.slug}`}
                               target="_blank"
                               rel="noreferrer"
-                              className="font-mono text-amber-400 hover:underline flex items-center gap-1"
+                              className="font-mono text-black font-bold hover:underline flex items-center gap-1"
                             >
                               <span>/cv/{p.slug}</span>
-                              <ExternalLink className="w-3 h-3" />
+                              <ExternalLink className="w-3 h-3 text-black/40" />
                             </a>
                             <button
                               onClick={() => handleCopyLink(p.slug)}
-                              className="p-1 rounded text-slate-500 hover:text-white transition-colors"
+                              className="p-1 rounded text-black/40 hover:text-black transition-colors"
                               title="Copy URL"
                             >
-                              {copiedSlug === p.slug ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                              {copiedSlug === p.slug ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                             </button>
                           </div>
                         </td>
 
                         {/* Theme Badge */}
                         <td className="py-4 px-6">
-                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
-                            p.theme === 'executive' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                            p.theme === 'tech' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                            p.theme === 'creative' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' :
-                            'bg-stone-500/10 text-stone-300 border border-stone-500/20'
-                          }`}>
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-black text-white">
                             {p.theme || 'executive'}
                           </span>
                         </td>
 
                         {/* Views */}
-                        <td className="py-4 px-6 text-center font-bold text-white">
+                        <td className="py-4 px-6 text-center font-bold text-black">
                           {p.viewCount || 142}
                         </td>
 
                         {/* Status */}
                         <td className="py-4 px-6">
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-semibold">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                             Live Edge
                           </span>
                         </td>
@@ -801,14 +793,14 @@ export default function AdminPortalPage() {
                               href={`/cv/${p.slug}`}
                               target="_blank"
                               rel="noreferrer"
-                              className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+                              className="p-2 rounded-full bg-[#F0F0F0] hover:bg-black hover:text-white text-black transition-colors"
                               title="View Public CV"
                             >
                               <Eye className="w-3.5 h-3.5" />
                             </a>
                             <button
                               onClick={() => setPreviewProfile(p)}
-                              className="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-400 text-xs font-bold transition-colors"
+                              className="px-3 py-1.5 rounded-full border border-black/20 hover:bg-black hover:text-white text-black text-xs font-bold transition-colors"
                             >
                               Inspect
                             </button>
@@ -828,28 +820,28 @@ export default function AdminPortalPage() {
           <div className="space-y-6">
             
             {/* User Search Bar */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-900/80 border border-slate-800 p-4 rounded-2xl">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white border border-black/10 p-4 rounded-3xl shadow-sm">
               <div className="relative flex-1 max-w-md">
-                <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-black/40 absolute left-4 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={userSearchQuery}
                   onChange={(e) => setUserSearchQuery(e.target.value)}
                   placeholder="Search user accounts by name, email, or role..."
-                  className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                  className="w-full pl-11 pr-4 py-2.5 rounded-full bg-[#F9F9F9] border border-black/10 text-xs text-black placeholder:text-black/40 focus:outline-none focus:border-black focus:bg-white"
                 />
               </div>
 
-              <div className="text-xs text-slate-400 font-medium">
+              <div className="text-xs text-black/60 font-medium">
                 Total Registered Users: <strong>{users.length}</strong>
               </div>
             </div>
 
             {/* USERS DATA TABLE */}
-            <div className="bg-slate-900/90 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+            <div className="bg-white border border-black/10 rounded-3xl overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-950/80 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+                  <thead className="bg-[#FAFAFA] text-black/60 uppercase tracking-wider font-black text-[10px] border-b border-black/10">
                     <tr>
                       <th className="py-4 px-6">User Account</th>
                       <th className="py-4 px-6">Login Provider</th>
@@ -859,12 +851,12 @@ export default function AdminPortalPage() {
                       <th className="py-4 px-6 text-right">Joined</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60 font-medium text-slate-300">
+                  <tbody className="divide-y divide-black/5 font-medium text-black">
                     {filteredUsers.map((u) => (
-                      <tr key={u.id} className="hover:bg-slate-850/50 transition-colors">
+                      <tr key={u.id} className="hover:bg-[#F9F9F9] transition-colors">
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-xl overflow-hidden bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-amber-400">
+                            <div className="w-9 h-9 rounded-2xl overflow-hidden bg-[#F0EEED] border border-black/10 flex items-center justify-center font-bold text-black">
                               {u.avatarUrl ? (
                                 <img src={u.avatarUrl} alt={u.name} className="w-full h-full object-cover" />
                               ) : (
@@ -872,27 +864,27 @@ export default function AdminPortalPage() {
                               )}
                             </div>
                             <div>
-                              <div className="font-bold text-white text-sm">{u.name}</div>
-                              <div className="text-[11px] text-slate-400">{u.email}</div>
+                              <div className="font-bold text-black text-sm">{u.name}</div>
+                              <div className="text-[11px] text-black/50">{u.email}</div>
                             </div>
                           </div>
                         </td>
 
                         <td className="py-4 px-6">
                           {u.authMethod === 'google' ? (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[11px] font-semibold">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-bold">
                               <span>Google GIS</span>
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700 text-[11px] font-semibold">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F0F0F0] text-black border border-black/10 text-[11px] font-bold">
                               <span>Email & PBKDF2</span>
                             </span>
                           )}
                         </td>
 
                         <td className="py-4 px-6">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                            u.role === 'admin' ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-300'
+                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${
+                            u.role === 'admin' ? 'bg-black text-white' : 'bg-[#F0F0F0] text-black'
                           }`}>
                             {u.role}
                           </span>
@@ -903,21 +895,21 @@ export default function AdminPortalPage() {
                             href={`/cv/${u.slug}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="font-mono text-amber-400 hover:underline flex items-center gap-1"
+                            className="font-mono text-black font-bold hover:underline flex items-center gap-1"
                           >
                             <span>/cv/{u.slug}</span>
-                            <ExternalLink className="w-3 h-3" />
+                            <ExternalLink className="w-3 h-3 text-black/40" />
                           </a>
                         </td>
 
                         <td className="py-4 px-6">
-                          <span className="inline-flex items-center gap-1 text-emerald-400 text-xs">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                          <span className="inline-flex items-center gap-1 text-emerald-700 font-bold text-xs">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                             Active
                           </span>
                         </td>
 
-                        <td className="py-4 px-6 text-right text-slate-400">
+                        <td className="py-4 px-6 text-right text-black/50">
                           {new Date(u.createdAt).toLocaleDateString()}
                         </td>
                       </tr>
@@ -934,12 +926,12 @@ export default function AdminPortalPage() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-white">Dynamic EGP Pricing & Tier Configurations</h3>
-                <p className="text-xs text-slate-400">Modify launch pricing live on Cloudflare Edge with 0 downtime.</p>
+                <h3 className="text-lg font-black text-black uppercase">Dynamic EGP Pricing & Tier Configurations</h3>
+                <p className="text-xs text-black/50">Modify launch pricing live on Cloudflare Edge with 0 downtime.</p>
               </div>
               <button
                 onClick={() => setShowNewPlanModal(true)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md transition-colors"
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-black hover:bg-neutral-800 text-white font-bold text-xs shadow-md transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 <span>Create New Plan</span>
@@ -948,21 +940,21 @@ export default function AdminPortalPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {plans.map((plan) => (
-                <div key={plan.id} className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+                <div key={plan.id} className="bg-white border border-black/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-xl font-bold text-white">{plan.name}</h4>
-                      <p className="text-xs text-slate-400 mt-1">{plan.description}</p>
+                      <h4 className="text-xl font-black text-black uppercase">{plan.name}</h4>
+                      <p className="text-xs text-black/50 mt-1">{plan.description}</p>
                     </div>
                     {plan.isPopular && (
-                      <span className="px-3 py-1 rounded-full bg-amber-500 text-slate-950 font-bold text-[10px] shadow-sm">
+                      <span className="px-3 py-1 rounded-full bg-black text-white font-black text-[10px] uppercase shadow-sm">
                         POPULAR
                       </span>
                     )}
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/80 space-y-3">
-                    <label className="text-xs font-semibold text-slate-400 block">
+                  <div className="p-4 rounded-2xl bg-[#F9F9F9] border border-black/10 space-y-3">
+                    <label className="text-xs font-bold text-black uppercase tracking-wider block">
                       Base Price (Egyptian Pounds - EGP)
                     </label>
                     <div className="flex items-center gap-3">
@@ -971,16 +963,16 @@ export default function AdminPortalPage() {
                           type="number"
                           value={priceInputs[plan.id] !== undefined ? priceInputs[plan.id] : plan.priceEgp}
                           onChange={(e) => setPriceInputs({ ...priceInputs, [plan.id]: Number(e.target.value) })}
-                          className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold text-lg focus:outline-none focus:border-amber-400"
+                          className="w-full px-4 py-2.5 rounded-full bg-white border border-black/20 text-black font-black text-lg focus:outline-none focus:border-black"
                         />
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-amber-400">
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-black/60">
                           EGP
                         </span>
                       </div>
                       <button
                         onClick={() => handleUpdatePrice(plan.id)}
                         disabled={savingPlanId === plan.id}
-                        className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-all disabled:opacity-50"
+                        className="px-5 py-2.5 rounded-full bg-black hover:bg-neutral-800 text-white font-bold text-xs transition-all disabled:opacity-50"
                       >
                         {savingPlanId === plan.id ? 'Saving...' : saveSuccess === plan.id ? 'Updated!' : 'Update Price'}
                       </button>
@@ -988,11 +980,11 @@ export default function AdminPortalPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Features</span>
+                    <span className="text-xs font-bold text-black uppercase tracking-wider block">Features</span>
                     <ul className="space-y-2">
                       {plan.features.map((f, i) => (
-                        <li key={i} className="flex items-center gap-2 text-xs text-slate-300">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                        <li key={i} className="flex items-center gap-2 text-xs text-black/80 font-medium">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                           <span>{f}</span>
                         </li>
                       ))}
@@ -1006,13 +998,13 @@ export default function AdminPortalPage() {
 
         {/* 6. TAB CONTENT: PAYMENTS & TRANSACTIONS */}
         {activeTab === 'payments' && (
-          <div className="bg-slate-900/90 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl p-6 sm:p-8 space-y-4">
-            <h3 className="text-lg font-bold text-white">Verified Payment Ledger</h3>
-            <p className="text-xs text-slate-400">Paymob Egyptian card transactions and sandbox checkouts.</p>
+          <div className="bg-white border border-black/10 rounded-3xl overflow-hidden shadow-sm p-6 sm:p-8 space-y-4">
+            <h3 className="text-lg font-black text-black uppercase">Verified Payment Ledger</h3>
+            <p className="text-xs text-black/50">Paymob Egyptian card transactions and sandbox checkouts.</p>
 
             <div className="overflow-x-auto pt-2">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-950 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                <thead className="bg-[#FAFAFA] text-black/60 uppercase font-black text-[10px] border-b border-black/10">
                   <tr>
                     <th className="py-3 px-4">Transaction ID</th>
                     <th className="py-3 px-4">Customer Email</th>
@@ -1023,27 +1015,27 @@ export default function AdminPortalPage() {
                     <th className="py-3 px-4 text-right">Timestamp</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-black/5">
                   {payments.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-8 text-center text-slate-500">
+                      <td colSpan={7} className="py-8 text-center text-black/40">
                         No transactions recorded yet. Test checkouts will appear here instantly.
                       </td>
                     </tr>
                   ) : (
                     payments.map((tx) => (
-                      <tr key={tx.id} className="hover:bg-slate-850/40">
-                        <td className="py-3 px-4 font-mono text-slate-300">{tx.id}</td>
-                        <td className="py-3 px-4 text-white font-medium">{tx.userEmail}</td>
-                        <td className="py-3 px-4 text-amber-400 font-semibold">{tx.planId}</td>
-                        <td className="py-3 px-4 font-bold text-white">{tx.amountEgp} EGP</td>
-                        <td className="py-3 px-4 text-slate-400 uppercase">{tx.paymentMethod}</td>
+                      <tr key={tx.id} className="hover:bg-[#F9F9F9]">
+                        <td className="py-3 px-4 font-mono text-black font-semibold">{tx.id}</td>
+                        <td className="py-3 px-4 text-black font-medium">{tx.userEmail}</td>
+                        <td className="py-3 px-4 text-black font-bold">{tx.planId}</td>
+                        <td className="py-3 px-4 font-black text-black">{tx.amountEgp} EGP</td>
+                        <td className="py-3 px-4 text-black/60 uppercase font-bold text-[10px]">{tx.paymentMethod}</td>
                         <td className="py-3 px-4">
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">
+                          <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold">
                             {tx.status}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-right text-slate-400">
+                        <td className="py-3 px-4 text-right text-black/50">
                           {new Date(tx.createdAt).toLocaleDateString()}
                         </td>
                       </tr>
@@ -1057,90 +1049,90 @@ export default function AdminPortalPage() {
 
       </main>
 
-      {/* SLIDE-OUT QUICK PREVIEW DRAWER */}
+      {/* SLIDE-OUT QUICK PREVIEW DRAWER (Shop.co Clean White Drawer) */}
       {previewProfile && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm transition-opacity">
-          <div className="w-full max-w-lg bg-slate-900 border-l border-slate-800 h-full overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Candidate Quick Inspector</span>
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm transition-opacity">
+          <div className="w-full max-w-lg bg-white border-l border-black/10 h-full overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-black/10 pb-4">
+              <span className="text-xs font-black text-black uppercase tracking-wider">Candidate Quick Inspector</span>
               <button
                 onClick={() => setPreviewProfile(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800 transition-colors"
+                className="p-1.5 rounded-full text-black/50 hover:text-black bg-[#F0F0F0] transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-800 border-2 border-amber-500/50 shrink-0">
+              <div className="w-16 h-16 rounded-2xl overflow-hidden bg-[#F0EEED] border border-black/10 shrink-0">
                 {previewProfile.avatarUrl ? (
                   <img src={previewProfile.avatarUrl} alt={previewProfile.fullName} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center font-bold text-amber-400 text-xl">
+                  <div className="w-full h-full flex items-center justify-center font-bold text-black text-xl">
                     {previewProfile.fullName.charAt(0)}
                   </div>
                 )}
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">{previewProfile.fullName}</h3>
-                <p className="text-xs font-semibold text-amber-400">{previewProfile.title}</p>
-                <p className="text-xs text-slate-400">{previewProfile.location}</p>
+                <h3 className="text-lg font-black text-black">{previewProfile.fullName}</h3>
+                <p className="text-xs font-semibold text-black/70">{previewProfile.title}</p>
+                <p className="text-xs text-black/50">{previewProfile.location}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-center">
-                <span className="text-[11px] text-slate-400 block">Total Recruiter Views</span>
-                <span className="text-base font-bold text-white">{previewProfile.viewCount || 142}</span>
+              <div className="p-4 rounded-2xl bg-[#F9F9F9] border border-black/10 text-center">
+                <span className="text-[11px] text-black/50 block font-medium">Total Recruiter Views</span>
+                <span className="text-xl font-black text-black">{previewProfile.viewCount || 142}</span>
               </div>
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-center">
-                <span className="text-[11px] text-slate-400 block">Active Theme</span>
-                <span className="text-base font-bold text-amber-400 uppercase">{previewProfile.theme}</span>
+              <div className="p-4 rounded-2xl bg-[#F9F9F9] border border-black/10 text-center">
+                <span className="text-[11px] text-black/50 block font-medium">Active Theme</span>
+                <span className="text-base font-black text-black uppercase">{previewProfile.theme}</span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <h4 className="text-xs font-bold text-slate-400 uppercase">Executive Summary</h4>
-              <p className="text-xs text-slate-300 leading-relaxed bg-slate-950 p-4 rounded-xl border border-slate-800">
+              <span className="text-xs font-bold text-black uppercase tracking-wider block">Executive Summary</span>
+              <p className="text-xs text-black/70 leading-relaxed bg-[#F9F9F9] p-4 rounded-2xl border border-black/5">
                 {previewProfile.summary}
               </p>
             </div>
 
-            {previewProfile.certificates && previewProfile.certificates.length > 0 && (
-              <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-400 uppercase">Verified Credentials ({previewProfile.certificates.length})</h4>
-                <div className="space-y-2">
-                  {previewProfile.certificates.map((c) => (
-                    <div key={c.id} className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
-                      <div>
-                        <div className="font-bold text-white">{c.title}</div>
-                        <div className="text-[11px] text-slate-400">{c.issuer}</div>
-                      </div>
-                      {c.badge && (
-                        <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-bold">
-                          {c.badge}
-                        </span>
-                      )}
+            {/* Certificates Preview */}
+            <div className="space-y-2">
+              <span className="text-xs font-bold text-black uppercase tracking-wider block">
+                Verified Certificates ({previewProfile.certificates?.length || 0})
+              </span>
+              <div className="space-y-2">
+                {(previewProfile.certificates || []).map((c) => (
+                  <div key={c.id} className="p-3 rounded-2xl bg-[#F9F9F9] border border-black/5 flex items-center justify-between text-xs">
+                    <div>
+                      <div className="font-bold text-black">{c.title}</div>
+                      <div className="text-[11px] text-black/50">{c.issuer} • {c.issueDate}</div>
                     </div>
-                  ))}
-                </div>
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+                      Verified
+                    </span>
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
 
-            <div className="pt-4 border-t border-slate-800 flex items-center gap-3">
+            <div className="pt-4 border-t border-black/10 flex items-center gap-3">
               <a
                 href={`/cv/${previewProfile.slug}`}
                 target="_blank"
                 rel="noreferrer"
-                className="flex-1 py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs text-center transition-colors"
+                className="flex-1 py-3 text-center rounded-full bg-black text-white text-xs font-bold hover:bg-neutral-800 transition-all flex items-center justify-center gap-1.5"
               >
-                Open Live Portfolio Website
+                <span>Open Live CV</span>
+                <ExternalLink className="w-3.5 h-3.5" />
               </a>
               <button
-                onClick={() => setPreviewProfile(null)}
-                className="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition-colors"
+                onClick={() => handleCopyLink(previewProfile.slug)}
+                className="px-4 py-3 rounded-full border border-black/20 text-xs font-bold text-black hover:bg-black hover:text-white transition-all"
               >
-                Close
+                Copy Link
               </button>
             </div>
           </div>
@@ -1149,64 +1141,88 @@ export default function AdminPortalPage() {
 
       {/* CREATE NEW PLAN MODAL */}
       {showNewPlanModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-lg font-bold text-white">Create New EGP Plan</h3>
-            <form onSubmit={handleCreatePlan} className="space-y-3 text-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-white border border-black/10 rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-black/10 pb-3">
+              <h3 className="text-base font-black text-black uppercase">Create New EGP Plan</h3>
+              <button
+                onClick={() => setShowNewPlanModal(false)}
+                className="p-1.5 rounded-full text-black/40 hover:text-black bg-[#F0F0F0]"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreatePlan} className="space-y-4 text-xs">
               <div>
-                <label className="text-slate-400 block mb-1">Plan Name</label>
+                <label className="font-bold text-black uppercase block mb-1">Plan Name</label>
                 <input
                   type="text"
                   required
+                  placeholder="e.g. VIP Founder Edition"
                   value={newPlan.name}
                   onChange={(e) => setNewPlan({ ...newPlan, name: e.target.value })}
-                  placeholder="e.g. VIP Candidate Launch"
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                  className="w-full px-4 py-2.5 rounded-full bg-[#F9F9F9] border border-black/15 text-black focus:outline-none focus:border-black"
                 />
               </div>
+
               <div>
-                <label className="text-slate-400 block mb-1">Price in EGP</label>
+                <label className="font-bold text-black uppercase block mb-1">Price in EGP</label>
                 <input
                   type="number"
                   required
+                  placeholder="150"
                   value={newPlan.priceEgp}
                   onChange={(e) => setNewPlan({ ...newPlan, priceEgp: Number(e.target.value) })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                  className="w-full px-4 py-2.5 rounded-full bg-[#F9F9F9] border border-black/15 text-black focus:outline-none focus:border-black"
                 />
               </div>
+
               <div>
-                <label className="text-slate-400 block mb-1">Description</label>
+                <label className="font-bold text-black uppercase block mb-1">Short Description</label>
                 <input
                   type="text"
                   required
+                  placeholder="e.g. For senior engineers who need custom subdomains"
                   value={newPlan.description}
                   onChange={(e) => setNewPlan({ ...newPlan, description: e.target.value })}
-                  placeholder="Brief description..."
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                  className="w-full px-4 py-2.5 rounded-full bg-[#F9F9F9] border border-black/15 text-black focus:outline-none focus:border-black"
                 />
               </div>
+
               <div>
-                <label className="text-slate-400 block mb-1">Features (One per line)</label>
+                <label className="font-bold text-black uppercase block mb-1">Features (One per line)</label>
                 <textarea
-                  rows={4}
-                  required
+                  rows={3}
+                  placeholder="Feature 1&#10;Feature 2&#10;Feature 3"
                   value={newPlan.featuresText}
                   onChange={(e) => setNewPlan({ ...newPlan, featuresText: e.target.value })}
-                  placeholder="Custom Domain&#10;Verified Badge&#10;Priority AI"
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                  className="w-full px-4 py-2.5 rounded-2xl bg-[#F9F9F9] border border-black/15 text-black focus:outline-none focus:border-black"
                 />
               </div>
-              <div className="flex justify-end gap-2 pt-2">
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="customDomain"
+                  checked={newPlan.customDomainAllowed}
+                  onChange={(e) => setNewPlan({ ...newPlan, customDomainAllowed: e.target.checked })}
+                  className="w-4 h-4 rounded border-black/20 text-black focus:ring-black accent-black"
+                />
+                <label htmlFor="customDomain" className="text-black font-semibold">Allow Custom Domain</label>
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setShowNewPlanModal(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300"
+                  className="px-4 py-2 rounded-full border border-black/15 text-black font-bold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold"
+                  className="px-5 py-2 rounded-full bg-black text-white font-bold hover:bg-neutral-800 transition-colors"
                 >
                   Create Plan
                 </button>

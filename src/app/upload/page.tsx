@@ -12,7 +12,8 @@ import {
   Loader2,
   ShieldCheck,
   Zap,
-  Globe
+  Globe,
+  ArrowLeft
 } from 'lucide-react';
 import { CVProfile } from '@/types';
 import { extractTextFromPdfBuffer, buildProfileFromText } from '@/lib/pdf-extractor';
@@ -98,97 +99,96 @@ export default function UploadPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      setError('Please select your PDF CV first.');
-      return;
-    }
-
-    if (file.size > 10 * 1024 * 1024) {
-      setError('File size exceeds 10MB limit. Please upload a smaller PDF.');
+      setError('Please select a PDF CV to convert');
       return;
     }
 
     setLoading(true);
     setError(null);
-    setStepText('Uploading document to secure cloud storage...');
+    setStepText('Extracting professional achievements from PDF...');
 
     try {
+      // 1. Try server-side upload API first
       const formData = new FormData();
       formData.append('file', file);
       if (customSlug.trim()) {
-        formData.append('slug', customSlug.trim());
+        formData.append('slug', customSlug.trim().toLowerCase());
       }
 
-      setTimeout(() => setStepText('AI extracting career achievements & metrics...'), 1000);
-      setTimeout(() => setStepText('Generating Executive Corporate Portfolio...'), 2000);
+      setStepText('Synthesizing executive summary and career metrics with AI...');
 
-      let serverSuccess = false;
-      let finalResult: UploadResult | null = null;
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-      try {
-        const res = await fetch('/api/upload-cv', {
-          method: 'POST',
-          body: formData,
-        });
-
-        const contentType = res.headers.get('content-type') || '';
-        if (res.ok && contentType.includes('application/json')) {
-          const data = await res.json();
-          if (data && data.success && data.profile) {
-            finalResult = data;
-            serverSuccess = true;
-          }
-        }
-      } catch (networkErr) {
-        console.warn('API endpoint unreachable or returned non-JSON, switching to client parser:', networkErr);
+      if (response.ok) {
+        const data: UploadResult = await response.json();
+        saveProfileLocally(data.profile);
+        setResult(data);
+        return;
       }
 
-      // If server could not process (e.g. edge static mode or 405), run resilient local extraction
-      if (!serverSuccess || !finalResult) {
-        setStepText('Finalizing verified executive portfolio...');
-        const arrayBuffer = await file.arrayBuffer();
-        const extractedText = extractTextFromPdfBuffer(arrayBuffer);
-        const fallbackProfile = buildProfileFromText(extractedText, file.name, customSlug.trim() || undefined);
+      // 2. If server API fails (e.g. on static edge worker without Node runtime), run client-side extraction fallback
+      console.warn('Server upload failed, using high-res client-side extraction fallback');
+      setStepText('Parsing PDF text locally in browser...');
 
-        finalResult = {
-          success: true,
-          slug: fallbackProfile.slug,
-          url: `/cv/${fallbackProfile.slug}`,
-          profile: fallbackProfile,
-          aiSource: 'instant_edge_extractor',
-          message: 'CV successfully transformed into executive portfolio!',
-        };
+      const arrayBuffer = await file.arrayBuffer();
+      const text = await extractTextFromPdfBuffer(arrayBuffer);
+
+      if (!text || text.trim().length === 0) {
+        throw new Error('Could not read text from this PDF. Please ensure it contains selectable text.');
       }
 
-      // Cache locally so it is instantly available across pages and tabs
-      saveProfileLocally(finalResult.profile);
+      setStepText('Generating candidate profile with fallback AI heuristics...');
+      const fallbackProfile = await buildProfileFromText(text, file.name);
 
-      setResult(finalResult);
-      setLoading(false);
+      // Apply custom slug if provided
+      if (customSlug.trim()) {
+        const cleanSlug = customSlug.toLowerCase().replace(/[^a-z0-9-]/g, '');
+        fallbackProfile.slug = cleanSlug;
+      }
+
+      // Save locally
+      saveProfileLocally(fallbackProfile);
+
+      setResult({
+        success: true,
+        slug: fallbackProfile.slug,
+        url: `/cv/${fallbackProfile.slug}`,
+        profile: fallbackProfile,
+        aiSource: 'browser-parser',
+        message: 'Successfully generated profile from PDF document',
+      });
     } catch (err: unknown) {
-      console.error(err);
-      const message = err instanceof Error ? err.message : 'An error occurred during AI extraction.';
+      console.error('Conversion error:', err);
+      const message = err instanceof Error ? err.message : 'Failed to convert CV. Please try again.';
       setError(message);
+    } finally {
       setLoading(false);
+      setStepText('');
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 py-12 px-4 sm:px-6 lg:px-8 selection:bg-amber-500/30">
+    <div className="min-h-screen bg-[#F2F0F1] text-black font-sans selection:bg-black selection:text-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto space-y-8">
         
         {/* Navigation Bar */}
-        <div className="flex items-center justify-between pb-6 border-b border-slate-800">
-          <Link href="/" className="flex items-center gap-2 font-bold text-lg text-white hover:text-amber-400 transition-colors">
-            <span className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-black">
-              CV
-            </span>
-            CVtoWeb
+        <div className="flex items-center justify-between">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-xs font-bold text-black hover:text-neutral-600 transition-colors px-4 py-2 rounded-full bg-white border border-black/10 shadow-sm"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to Marketplace</span>
           </Link>
-          <div className="flex items-center gap-4 text-xs sm:text-sm">
-            <Link href="/admin" className="text-slate-400 hover:text-white transition-colors">
-              Admin Portal
+
+          <div className="flex items-center gap-4 text-xs font-bold">
+            <Link href="/login" className="text-black/60 hover:text-black transition-colors">
+              Candidate Login
             </Link>
-            <Link href="/cv/mazen" className="text-amber-400 hover:underline">
+            <Link href="/cv/mazen" className="text-black underline">
               Live Demo
             </Link>
           </div>
@@ -196,36 +196,38 @@ export default function UploadPage() {
 
         {/* Title */}
         <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black text-white text-[10px] font-black uppercase tracking-wider">
+            <Sparkles className="w-3 h-3 text-amber-400" />
             AI-Powered CV to Executive Website
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Turn Your PDF CV into a High-Converting Website
+          <h1 className="text-3xl sm:text-5xl font-black text-black uppercase tracking-tight">
+            TURN YOUR PDF CV INTO A HIGH-CONVERTING WEBSITE
           </h1>
-          <p className="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">
+          <p className="text-black/60 text-xs sm:text-sm max-w-xl mx-auto font-medium">
             Upload your resume. Our AI instantly formats your experience, leadership milestones, and impact metrics into an executive portfolio.
           </p>
         </div>
 
         {/* Success Modal / State */}
         {result ? (
-          <div className="bg-slate-900 border border-emerald-500/30 rounded-3xl p-8 sm:p-10 shadow-2xl text-center space-y-6">
-            <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto text-emerald-400">
+          <div className="bg-white border border-black/10 rounded-3xl p-8 sm:p-12 shadow-xl text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto text-emerald-600">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold text-white">Your Executive Website is Live!</h2>
-              <p className="text-sm text-slate-300">
-                Created for <strong className="text-amber-400">{result.profile?.fullName}</strong> ({result.profile?.title})
+              <h2 className="text-2xl font-black text-black uppercase tracking-tight">
+                Your Executive Website is Live!
+              </h2>
+              <p className="text-xs sm:text-sm text-black/70">
+                Created for <strong className="text-black font-bold">{result.profile?.fullName}</strong> ({result.profile?.title})
               </p>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="p-4 rounded-2xl bg-[#F9F9F9] border border-black/10 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-left">
-                <div className="text-xs text-slate-500">Your Permanent Hosted Link</div>
-                <div className="text-sm font-mono text-amber-300 truncate max-w-xs sm:max-w-md">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-black/50">Your Permanent Hosted Link</div>
+                <div className="text-sm font-mono text-black font-bold truncate max-w-xs sm:max-w-md">
                   {typeof window !== 'undefined' ? `${window.location.origin}${result.url}` : result.url}
                 </div>
               </div>
@@ -234,26 +236,26 @@ export default function UploadPage() {
                 href={result.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition-all shrink-0"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-black hover:bg-neutral-800 text-white font-bold rounded-full text-xs transition-all shrink-0 shadow-md"
               >
-                View Live Website
+                <span>View Live Website</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-slate-400">
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-black/60 font-medium">
               <button
                 onClick={() => {
                   setResult(null);
                   setFile(null);
                   setCustomSlug('');
                 }}
-                className="hover:text-white transition-colors underline"
+                className="hover:text-black transition-colors underline font-bold"
               >
                 Convert Another CV
               </button>
               <span>•</span>
-              <Link href="/admin" className="hover:text-amber-400 transition-colors">
+              <Link href="/admin" className="hover:text-black transition-colors font-bold">
                 Manage in Admin Portal
               </Link>
             </div>
@@ -262,8 +264,8 @@ export default function UploadPage() {
           /* Upload Form */
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm flex items-center gap-3">
-                <AlertCircle className="w-5 h-5 shrink-0 text-rose-400" />
+              <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 shrink-0 text-rose-500" />
                 <span>{error}</span>
               </div>
             )}
@@ -274,10 +276,10 @@ export default function UploadPage() {
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`border-2 border-dashed rounded-3xl p-8 sm:p-12 text-center cursor-pointer transition-all ${
+              className={`border-2 border-dashed rounded-3xl p-8 sm:p-14 text-center cursor-pointer transition-all ${
                 isDragging
-                  ? 'border-amber-400 bg-amber-500/5 scale-[1.01]'
-                  : 'border-slate-800 hover:border-slate-700 bg-slate-900/60'
+                  ? 'border-black bg-neutral-100 scale-[1.01]'
+                  : 'border-black/20 hover:border-black bg-white shadow-sm'
               }`}
             >
               <input
@@ -290,12 +292,12 @@ export default function UploadPage() {
 
               {file ? (
                 <div className="space-y-4">
-                  <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
+                  <div className="w-16 h-16 rounded-2xl bg-[#F0EEED] border border-black/10 flex items-center justify-center mx-auto text-black">
                     <FileText className="w-8 h-8" />
                   </div>
                   <div>
-                    <div className="font-bold text-white text-lg">{file.name}</div>
-                    <div className="text-xs text-slate-400 mt-1">
+                    <div className="font-bold text-black text-lg">{file.name}</div>
+                    <div className="text-xs text-black/50 mt-1 font-medium">
                       {(file.size / 1024 / 1024).toFixed(2)} MB • Ready for AI conversion
                     </div>
                   </div>
@@ -305,21 +307,21 @@ export default function UploadPage() {
                       e.stopPropagation();
                       setFile(null);
                     }}
-                    className="text-xs text-rose-400 hover:underline"
+                    className="text-xs text-rose-600 hover:underline font-bold"
                   >
                     Change Document
                   </button>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center mx-auto text-slate-400">
+                  <div className="w-16 h-16 rounded-2xl bg-[#F0EEED] flex items-center justify-center mx-auto text-black/60">
                     <UploadCloud className="w-8 h-8" />
                   </div>
                   <div className="space-y-1">
-                    <div className="text-base font-semibold text-white">
+                    <div className="text-base font-bold text-black uppercase">
                       Click to upload or drag & drop your CV
                     </div>
-                    <div className="text-xs text-slate-400">
+                    <div className="text-xs text-black/50 font-medium">
                       Standard PDF files (up to 15MB)
                     </div>
                   </div>
@@ -328,12 +330,12 @@ export default function UploadPage() {
             </div>
 
             {/* Slug / Subdomain customization */}
-            <div className="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-6 space-y-3">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+            <div className="bg-white border border-black/10 rounded-3xl p-6 sm:p-8 space-y-3 shadow-sm">
+              <label className="block text-xs font-bold uppercase tracking-wider text-black">
                 Choose Your Preferred URL Name (Optional)
               </label>
-              <div className="flex rounded-xl bg-slate-800/80 border border-slate-700 overflow-hidden focus-within:border-amber-400">
-                <span className="px-4 py-3 text-xs sm:text-sm text-slate-400 bg-slate-800 select-none border-r border-slate-700">
+              <div className="flex rounded-full bg-[#F9F9F9] border border-black/15 overflow-hidden focus-within:border-black focus-within:bg-white">
+                <span className="px-5 py-3 text-xs sm:text-sm text-black/50 bg-[#F0F0F0] select-none border-r border-black/10 font-mono">
                   yoursite.com/cv/
                 </span>
                 <input
@@ -341,10 +343,10 @@ export default function UploadPage() {
                   placeholder="mohamedcv"
                   value={customSlug}
                   onChange={(e) => setCustomSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-                  className="w-full bg-transparent px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none"
+                  className="w-full bg-transparent px-4 py-3 text-xs sm:text-sm text-black placeholder:text-black/40 focus:outline-none"
                 />
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-black/50 font-medium">
                 You can also connect your own custom domain (e.g. <code>mohamed.com</code>) anytime.
               </p>
             </div>
@@ -353,15 +355,15 @@ export default function UploadPage() {
             <button
               type="submit"
               disabled={loading || !file}
-              className={`w-full py-4 rounded-2xl font-bold text-base flex items-center justify-center gap-2 transition-all shadow-xl ${
+              className={`w-full py-4 rounded-full font-bold text-sm sm:text-base flex items-center justify-center gap-2 transition-all shadow-md ${
                 loading || !file
-                  ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                  : 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20 hover:scale-[1.01]'
+                  ? 'bg-neutral-200 text-neutral-400 cursor-not-allowed'
+                  : 'bg-black hover:bg-neutral-800 text-white hover:scale-[1.01]'
               }`}
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2 className="w-5 h-5 animate-spin text-white" />
                   <span>{stepText || 'Processing CV...'}</span>
                 </>
               ) : (
@@ -374,16 +376,16 @@ export default function UploadPage() {
 
             {/* Trust features */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 text-center">
-              <div className="flex items-center justify-center gap-2 text-xs text-slate-400">
-                <Zap className="w-4 h-4 text-amber-400" />
+              <div className="flex items-center justify-center gap-2 text-xs font-semibold text-black/70">
+                <Zap className="w-4 h-4 text-amber-500" />
                 <span>Instant 15-second generation</span>
               </div>
-              <div className="flex items-center justify-center gap-2 text-xs text-slate-400">
-                <Globe className="w-4 h-4 text-emerald-400" />
+              <div className="flex items-center justify-center gap-2 text-xs font-semibold text-black/70">
+                <Globe className="w-4 h-4 text-emerald-600" />
                 <span>Free Cloud Edge Hosting</span>
               </div>
-              <div className="flex items-center justify-center gap-2 text-xs text-slate-400">
-                <ShieldCheck className="w-4 h-4 text-cyan-400" />
+              <div className="flex items-center justify-center gap-2 text-xs font-semibold text-black/70">
+                <ShieldCheck className="w-4 h-4 text-black" />
                 <span>Private & Secure Processing</span>
               </div>
             </div>

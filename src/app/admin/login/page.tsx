@@ -44,54 +44,61 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 selection:bg-amber-500/30">
-      <div className="w-full max-w-md space-y-8 bg-slate-900/80 border border-slate-800 rounded-3xl p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
+    <div className="min-h-screen bg-[#F2F0F1] text-black flex items-center justify-center p-4 selection:bg-black selection:text-white font-sans">
+      <div className="w-full max-w-md space-y-8 bg-white border border-black/10 rounded-3xl p-8 sm:p-10 shadow-xl">
         <div className="text-center space-y-3">
-          <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
-            <ShieldCheck className="w-7 h-7" />
+          <Link href="/" className="inline-block font-black text-2xl tracking-tighter text-black uppercase">
+            CVTO.WEB
+          </Link>
+          <div className="w-12 h-12 rounded-2xl bg-[#F0EEED] border border-black/10 flex items-center justify-center mx-auto text-black mt-2">
+            <ShieldCheck className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-black uppercase tracking-tight">
             Administrator Gateway
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-black/50 font-medium">
             Restricted access. Authenticate to manage pricing, users, and platform infrastructure.
           </p>
         </div>
 
         {error && (
-          <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2.5">
-            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5">
+            <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         <form onSubmit={handleLogin} className="space-y-4">
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-300">Admin Email</label>
-            <div className="flex items-center gap-2 px-3.5 py-3 rounded-xl bg-slate-800/80 border border-slate-700 focus-within:border-amber-400 text-sm">
-              <Mail className="w-4 h-4 text-slate-500" />
+          <div>
+            <label className="text-xs font-bold text-black uppercase tracking-wider block mb-1.5">
+              Admin Email
+            </label>
+            <div className="relative">
+              <Mail className="w-4 h-4 text-black/40 absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 required
                 placeholder="admin@cvplatform.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-transparent w-full text-white placeholder-slate-500 focus:outline-none text-sm"
+                className="w-full pl-11 pr-4 py-3 rounded-full bg-[#F9F9F9] border border-black/15 text-black text-xs sm:text-sm placeholder:text-black/40 focus:outline-none focus:border-black focus:bg-white transition-colors"
               />
             </div>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-300">Password</label>
-            <div className="flex items-center gap-2 px-3.5 py-3 rounded-xl bg-slate-800/80 border border-slate-700 focus-within:border-amber-400 text-sm">
-              <Lock className="w-4 h-4 text-slate-500" />
+          <div>
+            <label className="text-xs font-bold text-black uppercase tracking-wider block mb-1.5">
+              Password
+            </label>
+            <div className="relative">
+              <Lock className="w-4 h-4 text-black/40 absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="password"
                 required
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-transparent w-full text-white placeholder-slate-500 focus:outline-none text-sm"
+                className="w-full pl-11 pr-4 py-3 rounded-full bg-[#F9F9F9] border border-black/15 text-black text-xs sm:text-sm placeholder:text-black/40 focus:outline-none focus:border-black focus:bg-white transition-colors font-mono"
               />
             </div>
           </div>
@@ -100,11 +107,11 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-500/20 disabled:opacity-50"
+              className="w-full py-3.5 rounded-full bg-black hover:bg-neutral-800 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md disabled:opacity-50"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
                   <span>Verifying Credentials...</span>
                 </>
               ) : (
@@ -118,7 +125,7 @@ export default function AdminLoginPage() {
         </form>
 
         <div className="text-center pt-2">
-          <Link href="/" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
+          <Link href="/" className="text-xs font-bold text-black/60 hover:text-black transition-colors">
             ← Return to Public Website
           </Link>
         </div>

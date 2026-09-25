@@ -6,23 +6,15 @@ import {
   Sparkles, 
   ArrowRight, 
   CheckCircle2, 
-  Zap, 
   Star, 
-  Globe, 
-  ShieldCheck, 
-  Award, 
-  Eye, 
-  Download, 
-  Layout, 
-  TrendingUp, 
-  Laptop, 
-  Terminal, 
-  FileText, 
-  Check, 
-  ShoppingBag,
-  Search,
-  User,
-  ExternalLink
+  Search, 
+  User, 
+  ExternalLink,
+  ShieldCheck,
+  Award,
+  Download,
+  Mail,
+  ArrowUpRight
 } from 'lucide-react';
 
 export const revalidate = 60;
@@ -35,17 +27,16 @@ const TEMPLATES = [
     rating: 4.98,
     reviewsCount: 382,
     badge: 'BESTSELLER',
-    price: 'Free with Standard Launch',
+    price: 100,
+    originalPrice: 250,
+    discount: '-60%',
     demoSlug: 'mazen',
-    accentColor: 'from-amber-500/20 via-slate-900 to-slate-950',
-    borderColor: 'border-amber-500/40',
-    tagColor: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+    bgPreview: 'from-slate-900 to-amber-950/40 text-amber-400',
     description: 'Dark slate with warm amber/gold accents, designed for C-suite leaders, solutions architects, and engineering directors.',
     features: [
       'Verified Candidate Portrait Avatar',
       'Verified Certificate Photo Gallery',
       'Executive Leadership Scope & Summary',
-      'Interactive Metric Cards (GPA, Projects)',
       '1-Click Recruiter Inquiry Dispatch'
     ]
   },
@@ -56,18 +47,17 @@ const TEMPLATES = [
     rating: 4.95,
     reviewsCount: 294,
     badge: 'TRENDING',
-    price: 'Free with Standard Launch',
+    price: 100,
+    originalPrice: 250,
+    discount: '-60%',
     demoSlug: 'mohamedcv',
-    accentColor: 'from-emerald-500/20 via-[#070b14] to-slate-950',
-    borderColor: 'border-emerald-500/40',
-    tagColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+    bgPreview: 'from-[#070b14] to-emerald-950/40 text-emerald-400',
     description: 'Cyber terminal dark aesthetic with glowing emerald highlights, live status pulses, and monospace code blocks.',
     features: [
       'Interactive Terminal Hero Header',
       'System Architecture & Skill Matrix',
       'Cryptographic Certificate Verification',
-      'Docker & Cloudflare Metrics Breakdown',
-      'Instant Terminal Dispatch Form'
+      'Docker & Cloudflare Metrics Breakdown'
     ]
   },
   {
@@ -77,17 +67,16 @@ const TEMPLATES = [
     rating: 4.92,
     reviewsCount: 215,
     badge: 'FEATURED',
-    price: 'Free with Standard Launch',
+    price: 100,
+    originalPrice: 250,
+    discount: '-60%',
     demoSlug: 'mazen',
-    accentColor: 'from-purple-500/20 via-[#100722] to-slate-950',
-    borderColor: 'border-purple-500/40',
-    tagColor: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
+    bgPreview: 'from-purple-950 to-rose-950/50 text-rose-400',
     description: 'Vibrant violet-rose gradients with interactive bento grid modules, ideal for visionary designers, specialists, and founders.',
     features: [
       'Multi-column Bento Grid Layout',
       'Diploma & Visual Achievement Cards',
       'Dynamic Accent Color Customizer',
-      'Mobile-Optimized Touch Carousel',
       'Recruiter Collaboration Form'
     ]
   },
@@ -98,547 +87,742 @@ const TEMPLATES = [
     rating: 4.89,
     reviewsCount: 168,
     badge: 'ELEGANT',
-    price: 'Free with Standard Launch',
-    demoSlug: 'mohamedcv',
-    accentColor: 'from-stone-500/10 via-slate-900 to-slate-950',
-    borderColor: 'border-stone-500/40',
-    tagColor: 'bg-stone-500/10 text-stone-300 border-stone-500/30',
-    description: 'Swiss editorial layout with warm ivory tones, serif headings, and structured typographic hierarchy.',
+    price: 100,
+    originalPrice: 250,
+    discount: '-60%',
+    demoSlug: 'mazen',
+    bgPreview: 'from-stone-100 to-stone-200 text-stone-900',
+    description: 'High-contrast typography, ivory background, and clean editorial columns inspired by classic Swiss graphic design.',
     features: [
-      'Editorial Serif Typography',
-      'Clean Chronological Career Tree',
-      'Academic Distinction & GPA Highlighting',
-      'Distraction-Free Recruiter Reading',
-      'Verified Credential Badges'
+      'Editorial Ivory Background',
+      'Print-ready Clean CSS Layout',
+      'Fast 1-Click PDF Resume Download',
+      'Academic Publication Timeline'
     ]
   }
 ];
 
-export default async function HomePage() {
-  let plans = await dataStore.getPlans();
-  let profiles = await dataStore.getProfiles();
+const REVIEWS = [
+  {
+    name: 'Sarah Jenkins',
+    role: 'Principal Recruiter at Meta',
+    text: 'CVtoWeb completely transformed how we evaluate candidates. Opening a live, verified portfolio with certificates instead of parsing another PDF is night and day.',
+    rating: 5,
+    verified: true
+  },
+  {
+    name: 'Tarek Mansour',
+    role: 'Staff Infrastructure Engineer',
+    text: 'I converted my resume using the Modern Tech theme. Within two weeks, I had four recruiter outreaches on WhatsApp and LinkedIn referencing my live website.',
+    rating: 5,
+    verified: true
+  },
+  {
+    name: 'Elena Rostova',
+    role: 'VP of Product Design',
+    text: 'The Creative Bento theme let me show off my design awards and high-res certificate scans seamlessly. Worth 10x the price!',
+    rating: 5,
+    verified: true
+  }
+];
 
-  if (!plans || plans.length === 0) plans = [...DEFAULT_PLANS];
+export default async function HomePage() {
+  let profiles = await dataStore.getProfiles().catch(() => []);
   if (!profiles || profiles.length === 0) profiles = [...DEMO_PROFILES];
 
   const mazenProfile = profiles.find(p => p.slug === 'mazen') || profiles[0];
   const mohamedProfile = profiles.find(p => p.slug === 'mohamedcv') || profiles[1] || profiles[0];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-amber-500/30 selection:text-amber-200 font-sans">
+    <div className="min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white">
       
-      {/* 1. TOP ANNOUNCEMENT BANNER (E-Commerce Style) */}
-      <div className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 text-xs font-bold py-2 px-4 text-center">
-        <div className="max-w-7xl mx-auto flex items-center justify-center gap-3">
-          <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-slate-950 text-amber-400 text-[10px] uppercase tracking-wider">
-            NEW RELEASE
-          </span>
-          <span>
-            ⚡ Free Cloudflare Edge Hosting, AI CV Customizer & Verified Certificate Photo Gallery Included!
-          </span>
-          <a href="#templates" className="underline underline-offset-2 hover:text-white transition-colors">
-            Browse Templates →
-          </a>
+      {/* 1. TOP PROMO BANNER (Shop.co Signature) */}
+      <div className="bg-black text-white text-xs sm:text-sm py-2.5 px-4 text-center">
+        <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
+          <span>Sign up and launch your verified executive CV website in 60 seconds.</span>
+          <Link href="/upload" className="underline font-bold hover:text-neutral-300 ml-1">
+            Convert Your CV Now →
+          </Link>
         </div>
       </div>
 
-      {/* 2. E-COMMERCE MARKETPLACE NAVIGATION BAR */}
-      <header className="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+      {/* 2. NAVBAR (Shop.co Minimalist High-Fashion Layout) */}
+      <header className="border-b border-black/10 bg-white sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-6">
           
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 font-extrabold text-xl text-white">
-            <span className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-sm shadow-md shadow-amber-500/20">
-              CV
-            </span>
-            <span className="tracking-tight">CVtoWeb</span>
+          <Link href="/" className="font-black text-2xl sm:text-3xl tracking-tighter text-black uppercase">
+            CVTO.WEB
           </Link>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-            <a href="#templates" className="hover:text-amber-400 transition-colors">
+          <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-black/80">
+            <a href="#templates" className="hover:text-black transition-colors">
               Templates Marketplace
             </a>
-            <a href="#showcase" className="hover:text-amber-400 transition-colors">
+            <a href="#showcase" className="hover:text-black transition-colors">
               Candidate Showcase
             </a>
-            <a href="#how-it-works" className="hover:text-amber-400 transition-colors">
-              How It Works
+            <a href="#styles" className="hover:text-black transition-colors">
+              Portfolio Styles
             </a>
-            <a href="#pricing" className="hover:text-amber-400 transition-colors">
+            <a href="#pricing" className="hover:text-black transition-colors">
               Pricing (EGP)
             </a>
           </nav>
 
-          {/* User & Action Buttons */}
+          {/* Search Bar (Shop.co Signature Pill Search) */}
+          <div className="hidden md:flex items-center gap-3 bg-[#F0F0F0] rounded-full px-4 py-2.5 flex-1 max-w-sm">
+            <Search className="w-4 h-4 text-black/40" />
+            <input 
+              type="text" 
+              placeholder="Search templates, roles, or skills..." 
+              className="bg-transparent text-xs text-black placeholder:text-black/40 focus:outline-none w-full"
+            />
+          </div>
+
+          {/* Right Action Icons & Pill Button */}
           <div className="flex items-center gap-3">
             <Link
               href="/profile"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-slate-300 transition-colors"
+              className="p-2.5 rounded-full hover:bg-neutral-100 text-black transition-colors"
+              title="User Profile & Settings"
             >
-              <User className="w-3.5 h-3.5 text-amber-400" />
-              <span>My Profile</span>
+              <User className="w-5 h-5" />
             </Link>
 
             <Link
               href="/admin"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+              className="hidden sm:inline-flex px-3.5 py-1.5 rounded-full border border-black/20 text-xs font-semibold text-black hover:bg-black hover:text-white transition-all"
             >
-              <span>Admin</span>
+              Admin Portal
             </Link>
 
             <Link
               href="/upload"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="bg-black text-white px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold hover:bg-neutral-800 transition-all shadow-sm"
             >
-              <Zap className="w-4 h-4 fill-slate-950" />
-              <span>Convert CV Now</span>
+              Upload CV
             </Link>
           </div>
         </div>
       </header>
 
-      {/* 3. HERO SECTION (E-Commerce Luxury & High-Converting) */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-32 overflow-hidden">
-        {/* Background glow effects */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none" />
+      {/* 3. HERO SECTION (Shop.co Exact Layout & Typography) */}
+      <section className="bg-[#F2F0F1] pt-12 sm:pt-16 pb-16 sm:pb-24 relative overflow-hidden">
+        {/* Floating Starburst Icons (Shop.co Signature) */}
+        <span className="absolute top-10 right-12 text-black text-4xl sm:text-6xl font-serif select-none pointer-events-none animate-pulse">
+          ✦
+        </span>
+        <span className="absolute top-44 left-6 text-black text-2xl sm:text-4xl font-serif select-none pointer-events-none">
+          ✦
+        </span>
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative">
-          
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold shadow-inner">
-            <Sparkles className="w-3.5 h-3.5" />
-            The #1 Executive Portfolio Marketplace for Senior Professionals
-          </div>
-
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.1]">
-            Turn Your Static PDF CV into a <br className="hidden sm:inline" />
-            <span className="bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent">
-              High-Converting Website
-            </span>
-          </h1>
-
-          <p className="text-base sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            Stop sending lifeless PDF attachments that get buried in recruiter mailboxes. Give hiring directors, HR executives, and clients an interactive, verified website hosted on Cloudflare Edge with certificate photo galleries and your personal URL.
-          </p>
-
-          {/* Primary Action Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Link
-              href="/upload"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-base shadow-xl shadow-amber-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <Zap className="w-5 h-5 fill-slate-950" />
-              <span>Upload PDF & Preview Live (Free)</span>
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-
-            <a
-              href="#templates"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-200 font-bold text-base transition-colors"
-            >
-              <Layout className="w-5 h-5 text-amber-400" />
-              <span>Explore 4 Executive Templates</span>
-            </a>
-          </div>
-
-          {/* Social Proof & Trust Metrics Bar */}
-          <div className="pt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-xs font-medium text-slate-400">
-            <div className="flex items-center gap-2">
-              <div className="flex text-amber-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-amber-400" />
-                ))}
-              </div>
-              <span className="text-white font-bold">4.9/5 Rating</span>
-              <span>(1,200+ Recruiters)</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-emerald-400" />
-              <span className="text-white font-bold">100% Free Edge Hosting</span>
-              <span>(Cloudflare CDN)</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-amber-400" />
-              <span className="text-white font-bold">Egyptian Gateways</span>
-              <span>(Vodafone Cash & InstaPay)</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. TEMPLATES MARKETPLACE PRODUCT GRID (Figma 1273571982885059508 Reference) */}
-      <section id="templates" className="py-20 bg-slate-950/60 border-t border-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400 mb-2">
-                <ShoppingBag className="w-4 h-4" />
-                <span>Executive Template Catalog</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-                Choose Your Locked Public Theme
-              </h2>
-              <p className="text-sm text-slate-400 mt-1 max-w-xl">
-                Each theme is crafted with precision to convert recruiters into interview invitations. You choose one theme and it locks as the permanent presentation for all visitors.
-              </p>
-            </div>
-
-            <Link
-              href="/upload"
-              className="inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-bold self-start md:self-auto"
-            >
-              <span>Upload PDF to Auto-Apply Theme</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          {/* TEMPLATE PRODUCT CARDS GRID */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {TEMPLATES.map((tmpl) => (
-              <div 
-                key={tmpl.id}
-                className={`bg-slate-900/90 border ${tmpl.borderColor} rounded-3xl p-5 flex flex-col justify-between space-y-5 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/5 group`}
-              >
-                <div className="space-y-4">
-                  {/* Mockup Preview Card */}
-                  <div className={`aspect-video w-full rounded-2xl bg-gradient-to-br ${tmpl.accentColor} border border-slate-800 p-4 flex flex-col justify-between relative overflow-hidden`}>
-                    <div className="flex items-center justify-between">
-                      <span className="px-2 py-0.5 rounded-full bg-slate-950/80 text-[10px] font-bold text-white border border-slate-700">
-                        {tmpl.badge}
-                      </span>
-                      <div className="flex items-center gap-1 text-[11px] font-bold text-amber-400 bg-slate-950/80 px-2 py-0.5 rounded-full">
-                        <Star className="w-3 h-3 fill-amber-400" />
-                        <span>{tmpl.rating}</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <div className="w-16 h-2 rounded bg-white/40" />
-                      <div className="w-28 h-3 rounded bg-white/80 font-bold" />
-                      <div className="w-20 h-2 rounded bg-amber-400/80" />
-                    </div>
-                  </div>
-
-                  {/* Title & Info */}
-                  <div>
-                    <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full border ${tmpl.tagColor} mb-1.5`}>
-                      {tmpl.category}
-                    </span>
-                    <h3 className="text-lg font-bold text-white group-hover:text-amber-300 transition-colors">
-                      {tmpl.name}
-                    </h3>
-                    <p className="text-xs text-slate-400 mt-1 line-clamp-2">
-                      {tmpl.description}
-                    </p>
-                  </div>
-
-                  {/* Features list */}
-                  <ul className="space-y-1.5 pt-2 border-t border-slate-800/80">
-                    {tmpl.features.map((feat, i) => (
-                      <li key={i} className="flex items-center gap-2 text-[11px] text-slate-300">
-                        <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* CTAs */}
-                <div className="pt-4 border-t border-slate-800/80 space-y-2">
-                  <Link
-                    href={`/cv/${tmpl.demoSlug}`}
-                    target="_blank"
-                    className="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 hover:text-white border border-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
-                  >
-                    <Eye className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Live Interactive Demo</span>
-                  </Link>
-
-                  <Link
-                    href={`/upload?theme=${tmpl.id}`}
-                    className="w-full py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-amber-500/10 hover:scale-[1.02]"
-                  >
-                    <span>Use This Template</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. LIVE CANDIDATE SHOWCASE (MAZEN & MOHAMED) */}
-      <section id="showcase" className="py-20 border-t border-slate-900 bg-slate-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
-          <div className="text-center max-w-2xl mx-auto space-y-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Verified Portfolios</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-              Featured Live Candidate Websites
-            </h2>
-            <p className="text-sm text-slate-400">
-              Explore actual live portfolios deployed to Cloudflare Pages edge network with real verified certificate photo galleries.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
-            {/* Candidate 1: Mazen Mohamed Hamdy */}
-            {mazenProfile && (
-              <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 hover:border-amber-500/50 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl transition-all">
-                <div className="flex items-start gap-4">
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-slate-800 border-2 border-amber-500/50 shadow-md shrink-0">
+            {/* Left Content */}
+            <div className="lg:col-span-7 space-y-6">
+              <h1 className="text-4xl sm:text-6xl md:text-7xl font-black text-black tracking-tight leading-[1.05] uppercase">
+                FIND A PORTFOLIO THAT MATCHES YOUR CAREER STYLE
+              </h1>
+
+              <p className="text-black/60 text-sm sm:text-base max-w-xl leading-relaxed">
+                Browse through our diverse range of meticulously crafted portfolio themes, designed to showcase your verified credentials, highlight career impact, and impress executive recruiters.
+              </p>
+
+              <div>
+                <Link
+                  href="/upload"
+                  className="inline-block bg-black hover:bg-neutral-800 text-white rounded-full px-12 py-4 font-bold text-sm sm:text-base transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Convert CV Now
+                </Link>
+              </div>
+
+              {/* Stats Counters with Dividers */}
+              <div className="pt-8 grid grid-cols-3 divide-x divide-black/15 max-w-lg">
+                <div className="pr-4">
+                  <div className="text-2xl sm:text-4xl font-black text-black">200+</div>
+                  <div className="text-xs text-black/60 mt-0.5">Verified CVs</div>
+                </div>
+                <div className="px-4">
+                  <div className="text-2xl sm:text-4xl font-black text-black">2,000+</div>
+                  <div className="text-xs text-black/60 mt-0.5">Recruiter Views</div>
+                </div>
+                <div className="pl-4">
+                  <div className="text-2xl sm:text-4xl font-black text-black">30,000+</div>
+                  <div className="text-xs text-black/60 mt-0.5">Impressions</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Visual: Candidate Dossier Card */}
+            <div className="lg:col-span-5 relative">
+              <div className="bg-white rounded-3xl p-6 shadow-2xl border border-black/10 space-y-5">
+                <div className="flex items-center justify-between border-b border-black/10 pb-4">
+                  <div className="flex items-center gap-3">
                     <img 
-                      src={mazenProfile.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'} 
+                      src={mazenProfile.avatarUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80"}
                       alt={mazenProfile.fullName}
-                      className="w-full h-full object-cover"
+                      className="w-14 h-14 rounded-2xl object-cover border border-black/10 shadow-sm"
                     />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-xl font-bold text-white">{mazenProfile.fullName}</h3>
-                      <span className="p-1 rounded-full bg-emerald-500 text-slate-950" title="Verified Candidate">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                      </span>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="font-bold text-base text-black">{mazenProfile.fullName}</h3>
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500 fill-emerald-500" />
+                      </div>
+                      <p className="text-xs text-black/60">{mazenProfile.title}</p>
                     </div>
-                    <p className="text-xs font-semibold text-amber-400">{mazenProfile.title}</p>
-                    <p className="text-xs text-slate-400">{mazenProfile.location}</p>
-                    <span className="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">
-                      GPA 1.65 (A-) • GUC Engineering
-                    </span>
                   </div>
+                  <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">
+                    Active
+                  </span>
                 </div>
 
-                <p className="text-xs text-slate-300 leading-relaxed line-clamp-3 bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                <p className="text-xs text-black/70 leading-relaxed line-clamp-3">
                   {mazenProfile.summary}
                 </p>
 
-                {/* Certificate badges count */}
-                <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-800/80">
-                  <span className="text-slate-400 flex items-center gap-1.5">
-                    <Award className="w-4 h-4 text-amber-400" />
-                    <strong>{mazenProfile.certificates?.length || 3} Verified Certificates</strong>
-                  </span>
-                  <a
-                    href={`/cv/${mazenProfile.slug}`}
-                    target="_blank"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors"
-                  >
-                    <span>View Mazen&apos;s Portfolio</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {/* Candidate 2: Mohamed El-Sayed */}
-            {mohamedProfile && (
-              <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 hover:border-amber-500/50 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl transition-all">
-                <div className="flex items-start gap-4">
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-slate-800 border-2 border-amber-500/50 shadow-md shrink-0">
-                    <img 
-                      src={mohamedProfile.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80'} 
-                      alt={mohamedProfile.fullName}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-xl font-bold text-white">{mohamedProfile.fullName}</h3>
-                      <span className="p-1 rounded-full bg-emerald-500 text-slate-950" title="Verified Candidate">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                      </span>
+                {/* Verified Certificate Thumbnail */}
+                <div className="bg-[#F0EEED] rounded-2xl p-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <Award className="w-5 h-5 text-amber-500" />
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-black/50 block">Verified Credential</span>
+                      <span className="text-xs font-bold text-black">AWS Solutions Architect Professional</span>
                     </div>
-                    <p className="text-xs font-semibold text-amber-400">{mohamedProfile.title}</p>
-                    <p className="text-xs text-slate-400">{mohamedProfile.location}</p>
-                    <span className="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">
-                      9+ Years Experience • AWS Pro
-                    </span>
                   </div>
+                  <span className="text-[10px] font-bold bg-black text-white px-2 py-0.5 rounded">Verified</span>
                 </div>
 
-                <p className="text-xs text-slate-300 leading-relaxed line-clamp-3 bg-slate-950/60 p-4 rounded-xl border border-slate-800">
-                  {mohamedProfile.summary}
-                </p>
-
-                {/* Certificate badges count */}
-                <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-800/80">
-                  <span className="text-slate-400 flex items-center gap-1.5">
-                    <Award className="w-4 h-4 text-amber-400" />
-                    <strong>{mohamedProfile.certificates?.length || 2} Verified Credentials</strong>
-                  </span>
-                  <a
-                    href={`/cv/${mohamedProfile.slug}`}
-                    target="_blank"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors"
+                {/* Actions */}
+                <div className="flex items-center gap-2 pt-1">
+                  <Link
+                    href={`/cv/${mazenProfile.slug}`}
+                    className="flex-1 py-2.5 text-center bg-black hover:bg-neutral-800 text-white rounded-full font-bold text-xs transition-colors"
                   >
-                    <span>View Mohamed&apos;s Portfolio</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
+                    View Live Portfolio →
+                  </Link>
+                  <Link
+                    href="/profile"
+                    className="py-2.5 px-4 rounded-full border border-black/20 text-xs font-semibold hover:bg-neutral-50 transition-colors"
+                  >
+                    Edit CV
+                  </Link>
                 </div>
               </div>
-            )}
+            </div>
 
           </div>
         </div>
       </section>
 
-      {/* 6. HOW IT WORKS (3-Step E-Commerce Fulfillment Flow) */}
-      <section id="how-it-works" className="py-20 border-t border-slate-900 bg-slate-950/60">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
-          <div className="text-center max-w-xl mx-auto space-y-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Streamlined Process</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-              Instant 3-Step Fulfillment
-            </h2>
-            <p className="text-sm text-slate-400">
-              From PDF to live edge deployment in under 60 seconds.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 font-extrabold text-lg flex items-center justify-center mx-auto border border-amber-500/20">
-                1
-              </div>
-              <h3 className="text-lg font-bold text-white">Upload Your PDF CV</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Drag and drop your standard resume or curriculum vitae. Our edge parser reads your academic history, projects, and contact info instantly.
-              </p>
-            </div>
-
-            <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 font-extrabold text-lg flex items-center justify-center mx-auto border border-amber-500/20">
-                2
-              </div>
-              <h3 className="text-lg font-bold text-white">AI Customizer & Themes</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Choose your locked theme, upload your certificate photos and avatar, or chat with AI to polish your summary and academic GPA.
-              </p>
-            </div>
-
-            <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 font-extrabold text-lg flex items-center justify-center mx-auto border border-amber-500/20">
-                3
-              </div>
-              <h3 className="text-lg font-bold text-white">Publish to Edge Link</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Your portfolio is live immediately on your personal link (e.g. cvplatform.com/cv/yourname) or connected to your own custom domain.
-              </p>
-            </div>
-          </div>
+      {/* 4. HIRING GIANTS MARQUEE RIBBON (Shop.co Black Band) */}
+      <section className="bg-black py-9 px-4 text-white overflow-hidden">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-around gap-8 text-center">
+          <span className="font-black text-xl sm:text-2xl md:text-3xl tracking-widest uppercase opacity-90">GOOGLE</span>
+          <span className="font-black text-xl sm:text-2xl md:text-3xl tracking-widest uppercase opacity-90">MICROSOFT</span>
+          <span className="font-black text-xl sm:text-2xl md:text-3xl tracking-widest uppercase opacity-90">AMAZON</span>
+          <span className="font-black text-xl sm:text-2xl md:text-3xl tracking-widest uppercase opacity-90">META</span>
+          <span className="font-black text-xl sm:text-2xl md:text-3xl tracking-widest uppercase opacity-90">APPLE</span>
+          <span className="font-black text-xl sm:text-2xl md:text-3xl tracking-widest uppercase opacity-90">SPOTIFY</span>
         </div>
       </section>
 
-      {/* 7. DYNAMIC EGP PRICING CARDS */}
-      <section id="pricing" className="py-20 border-t border-slate-900 bg-slate-950">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
-          <div className="text-center max-w-xl mx-auto space-y-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Egyptian Pricing</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-              Transparent EGP Investment
-            </h2>
-            <p className="text-sm text-slate-400">
-              No hidden fees or subscriptions. Pay once in Egyptian Pounds, hosted forever on Cloudflare.
-            </p>
-          </div>
+      {/* 5. NEW ARRIVALS — TEMPLATES MARKETPLACE */}
+      <section id="templates" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center space-y-2 mb-14">
+          <h2 className="text-3xl sm:text-5xl font-black text-black uppercase tracking-tight">
+            NEW ARRIVALS
+          </h2>
+          <p className="text-black/60 text-sm">
+            Curated executive and modern design systems ready for instant deployment
+          </p>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {plans.map((p) => (
-              <div
-                key={p.id}
-                className={`bg-slate-900/90 border-2 rounded-3xl p-8 sm:p-10 space-y-6 flex flex-col justify-between shadow-2xl relative ${
-                  p.isPopular ? 'border-amber-500 bg-amber-500/5' : 'border-slate-800'
-                }`}
-              >
-                {p.isPopular && (
-                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-amber-500 text-slate-950 font-black text-[11px] shadow-md">
-                    MOST POPULAR
-                  </span>
-                )}
-
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-2xl font-bold text-white">{p.name}</h3>
-                    <p className="text-xs text-slate-400 mt-1">{p.description}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {TEMPLATES.map((tmpl) => (
+            <div key={tmpl.id} className="group flex flex-col justify-between space-y-3">
+              <div>
+                {/* Image / Preview Box (Shop.co style #F0EEED) */}
+                <div className="bg-[#F0EEED] rounded-3xl p-6 aspect-[4/3] flex flex-col justify-between relative overflow-hidden transition-all duration-300 group-hover:shadow-xl">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-black text-white">
+                      {tmpl.badge}
+                    </span>
+                    <span className="text-xs font-bold text-black/60">{tmpl.category}</span>
                   </div>
 
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-5xl font-black text-amber-400">{p.priceEgp}</span>
-                    <span className="text-base font-bold text-slate-300">EGP</span>
-                    <span className="text-xs text-slate-500">/ one-time</span>
+                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${tmpl.bgPreview} shadow-md`}>
+                    <h4 className="font-black text-lg text-white">{tmpl.name}</h4>
+                    <p className="text-[11px] text-white/80 line-clamp-2 mt-1">
+                      {tmpl.description}
+                    </p>
                   </div>
+                </div>
 
-                  <ul className="space-y-3 pt-4 border-t border-slate-800">
-                    {p.features.map((feat, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-xs text-slate-300">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                        <span>{feat}</span>
-                      </li>
+                {/* Title & Star Rating */}
+                <h3 className="font-bold text-lg text-black mt-3 group-hover:text-neutral-700 transition-colors">
+                  {tmpl.name}
+                </h3>
+
+                <div className="flex items-center gap-1.5 mt-1 text-xs">
+                  <div className="flex text-amber-500">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
                     ))}
-                  </ul>
+                  </div>
+                  <span className="font-bold text-black">{tmpl.rating}</span>
+                  <span className="text-black/40">({tmpl.reviewsCount})</span>
                 </div>
 
+                {/* Price (Shop.co Signature Strike-through & Discount Pill) */}
+                <div className="flex items-center gap-2.5 mt-2">
+                  <span className="text-xl font-bold text-black">{tmpl.price} EGP</span>
+                  <span className="text-lg font-bold text-black/40 line-through">{tmpl.originalPrice} EGP</span>
+                  <span className="text-xs font-bold text-rose-600 bg-rose-100 px-2 py-0.5 rounded-full">
+                    {tmpl.discount}
+                  </span>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-2 pt-2">
+                <Link
+                  href={`/cv/${tmpl.demoSlug}`}
+                  className="flex-1 py-2.5 text-center rounded-full border border-black/20 text-xs font-bold text-black hover:bg-black hover:text-white transition-all"
+                >
+                  Live Demo
+                </Link>
                 <Link
                   href="/upload"
-                  className={`w-full py-4 rounded-2xl font-bold text-sm text-center transition-all ${
-                    p.isPopular
-                      ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg shadow-amber-500/20 hover:scale-[1.02]'
-                      : 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-700'
-                  }`}
+                  className="py-2.5 px-4 rounded-full bg-black text-white text-xs font-bold hover:bg-neutral-800 transition-all"
                 >
-                  Get Started with {p.name}
+                  Select
                 </Link>
               </div>
-            ))}
-          </div>
-
-          {/* Egyptian Payment Badge Strip */}
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 text-center space-y-3">
-            <span className="text-xs text-slate-400 font-medium">
-              Supported Egyptian Local Payment Gateways
-            </span>
-            <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-bold text-slate-300">
-              <span className="px-3 py-1 rounded-lg bg-slate-800 border border-slate-700 text-rose-400">Vodafone Cash</span>
-              <span className="px-3 py-1 rounded-lg bg-slate-800 border border-slate-700 text-cyan-400">InstaPay Egypt</span>
-              <span className="px-3 py-1 rounded-lg bg-slate-800 border border-slate-700 text-amber-400">Fawry Pay</span>
-              <span className="px-3 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-200">Visa / Mastercard (EGP)</span>
             </div>
+          ))}
+        </div>
+
+        <div className="text-center mt-12">
+          <Link
+            href="/upload"
+            className="inline-block border border-black/20 text-black hover:bg-black hover:text-white rounded-full px-14 py-3.5 font-medium text-sm transition-all"
+          >
+            View All Templates
+          </Link>
+        </div>
+      </section>
+
+      {/* 5.5. TOP SELLING — LIVE CANDIDATE CV WEBSITES (Shop.co Exact Layout) */}
+      <section id="showcase" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-black/10">
+        <div className="text-center space-y-2 mb-14">
+          <h2 className="text-3xl sm:text-5xl font-black text-black uppercase tracking-tight">
+            TOP SELLING CV WEBSITES
+          </h2>
+          <p className="text-black/60 text-sm">
+            Live executive websites built with CVtoWeb, featuring verified certificate galleries and high-speed edge delivery
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {profiles.map((prof) => (
+            <div 
+              key={prof.id || prof.slug}
+              className="bg-white border border-black/10 rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-5 shadow-sm hover:shadow-xl transition-all duration-300 group"
+            >
+              <div className="space-y-4">
+                {/* Header: Avatar, Name, Verified Status */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-14 h-14 rounded-2xl overflow-hidden bg-[#F0EEED] border border-black/10 shrink-0 relative">
+                      {prof.avatarUrl ? (
+                        <img 
+                          src={prof.avatarUrl} 
+                          alt={prof.fullName} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-black/40">
+                          <User className="w-6 h-6" />
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="font-bold text-base text-black group-hover:text-neutral-700 transition-colors">
+                          {prof.fullName}
+                        </h3>
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500 fill-emerald-500 shrink-0" />
+                      </div>
+                      <span className="text-[11px] font-medium text-black/50 block line-clamp-1">
+                        {prof.title || 'Executive Leader'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-black text-white shrink-0">
+                    {prof.theme || 'executive'}
+                  </span>
+                </div>
+
+                {/* Star rating & views badge */}
+                <div className="flex items-center justify-between text-xs pt-1 border-t border-black/5">
+                  <div className="flex items-center gap-1.5">
+                    <div className="flex text-amber-500">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                      ))}
+                    </div>
+                    <span className="font-bold text-black">5.0</span>
+                    <span className="text-black/40">({prof.viewCount || 142} views)</span>
+                  </div>
+                  <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                    Live Edge
+                  </span>
+                </div>
+
+                {/* Candidate Summary / Tagline */}
+                <p className="text-xs text-black/70 leading-relaxed line-clamp-3">
+                  {prof.summary || prof.tagline || 'Specialized professional portfolio with verified qualifications.'}
+                </p>
+
+                {/* Certificate Count & Verification Badge */}
+                <div className="bg-[#F0EEED] rounded-2xl p-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Award className="w-4 h-4 text-amber-500 shrink-0" />
+                    <span className="text-xs font-bold text-black">
+                      {prof.certificates && prof.certificates.length > 0
+                        ? `${prof.certificates.length} Verified Certificates`
+                        : 'Accredited Credentials'}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-bold uppercase text-black/60 bg-white px-2 py-0.5 rounded border border-black/10">
+                    Verified
+                  </span>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-2 pt-2">
+                <Link
+                  href={`/cv/${prof.slug}`}
+                  className="flex-1 py-3 text-center rounded-full bg-black text-white text-xs font-bold hover:bg-neutral-800 transition-all shadow-sm flex items-center justify-center gap-1.5"
+                >
+                  <span>Visit Website</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  href="/profile"
+                  className="py-3 px-4 rounded-full border border-black/20 text-xs font-semibold text-black hover:bg-black hover:text-white transition-all"
+                >
+                  Edit
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center mt-12">
+          <Link
+            href="/upload"
+            className="inline-block bg-black text-white hover:bg-neutral-800 rounded-full px-12 py-3.5 font-bold text-sm transition-all shadow-md"
+          >
+            Launch Your Website in 60 Seconds →
+          </Link>
+        </div>
+      </section>
+
+      {/* 6. BROWSE BY PORTFOLIO STYLE (Shop.co Bento Grid) */}
+      <section id="styles" className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-[#F0F0F0] rounded-3xl p-8 sm:p-14 space-y-10">
+          <h2 className="text-3xl sm:text-5xl font-black text-black text-center uppercase tracking-tight">
+            BROWSE BY PORTFOLIO STYLE
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            {/* Card 1 (Span 1) */}
+            <Link 
+              href="/cv/mazen"
+              className="bg-white rounded-3xl p-8 min-h-[220px] flex flex-col justify-between group hover:shadow-xl transition-all relative overflow-hidden"
+            >
+              <div>
+                <span className="text-xs font-bold text-black/50 uppercase tracking-wider block mb-1">Executive</span>
+                <h3 className="text-2xl font-black text-black group-hover:translate-x-1 transition-transform">
+                  Leadership & Corporate
+                </h3>
+              </div>
+              <div className="flex items-center justify-between text-xs font-bold text-black pt-4">
+                <span>View Live Demo</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Card 2 (Span 2) */}
+            <Link 
+              href="/cv/mohamedcv"
+              className="md:col-span-2 bg-[#0d1527] text-white rounded-3xl p-8 min-h-[220px] flex flex-col justify-between group hover:shadow-xl transition-all relative overflow-hidden"
+            >
+              <div>
+                <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-1">{"// devops_and_code"}</span>
+                <h3 className="text-2xl sm:text-3xl font-black text-white group-hover:translate-x-1 transition-transform">
+                  Modern Tech & Infrastructure
+                </h3>
+              </div>
+              <div className="flex items-center justify-between text-xs font-mono text-emerald-400 pt-4">
+                <span>EXPLORE_TERMINAL_DOSSIER()</span>
+                <ArrowUpRight className="w-4 h-4 text-emerald-400 group-hover:rotate-45 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Card 3 (Span 2) */}
+            <Link 
+              href="/cv/mazen"
+              className="md:col-span-2 bg-gradient-to-r from-[#1b0d38] to-[#120726] text-white rounded-3xl p-8 min-h-[220px] flex flex-col justify-between group hover:shadow-xl transition-all relative overflow-hidden"
+            >
+              <div>
+                <span className="text-xs font-bold text-rose-400 uppercase tracking-wider block mb-1">Creative Bento</span>
+                <h3 className="text-2xl sm:text-3xl font-black text-white group-hover:translate-x-1 transition-transform">
+                  Product Design & Founders
+                </h3>
+              </div>
+              <div className="flex items-center justify-between text-xs font-bold text-rose-300 pt-4">
+                <span>Open Bento Showcase</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Card 4 (Span 1) */}
+            <Link 
+              href="/cv/mazen"
+              className="bg-[#FAF8F5] border border-stone-300 text-stone-900 rounded-3xl p-8 min-h-[220px] flex flex-col justify-between group hover:shadow-xl transition-all relative overflow-hidden"
+            >
+              <div>
+                <span className="text-xs font-serif italic text-stone-500 uppercase tracking-wider block mb-1">Editorial</span>
+                <h3 className="text-2xl font-serif text-stone-900 group-hover:translate-x-1 transition-transform">
+                  Minimalist Swiss
+                </h3>
+              </div>
+              <div className="flex items-center justify-between text-xs font-serif font-bold text-stone-900 pt-4">
+                <span>Inspect Clean Layout</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform" />
+              </div>
+            </Link>
+
           </div>
         </div>
       </section>
 
-      {/* 8. FOOTER */}
-      <footer className="border-t border-slate-900 bg-slate-950 text-slate-400 text-xs py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2 font-bold text-white">
-            <span className="w-6 h-6 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-black text-xs">
-              CV
-            </span>
-            <span>CVtoWeb Platform</span>
-          </div>
-
-          <p className="text-slate-500 text-center sm:text-left">
-            © {new Date().getFullYear()} CVtoWeb. High-converting executive portfolio builder for leaders & specialists.
+      {/* 7. LIVE CANDIDATE SHOWCASE (With Verified Certificate Photos) */}
+      <section id="showcase" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center space-y-2 mb-14">
+          <h2 className="text-3xl sm:text-5xl font-black text-black uppercase tracking-tight">
+            TOP CANDIDATES
+          </h2>
+          <p className="text-black/60 text-sm">
+            Discover senior talent with authentic verified credentials and live portfolios
           </p>
+        </div>
 
-          <div className="flex items-center gap-4">
-            <Link href="/admin/login" className="hover:text-amber-400 transition-colors">
-              Admin Access
-            </Link>
-            <Link href="/login" className="hover:text-amber-400 transition-colors">
-              User Login
-            </Link>
-            <Link href="/profile" className="hover:text-amber-400 transition-colors">
-              My Profile
-            </Link>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {profiles.slice(0, 2).map((cand) => (
+            <div key={cand.id} className="border border-black/10 rounded-3xl p-6 sm:p-8 space-y-6 hover:shadow-xl transition-shadow bg-white">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <img 
+                    src={cand.avatarUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80"}
+                    alt={cand.fullName}
+                    className="w-16 h-16 rounded-2xl object-cover border border-black/10"
+                  />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-lg text-black">{cand.fullName}</h3>
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 fill-emerald-500" />
+                    </div>
+                    <p className="text-xs text-black/60">{cand.title}</p>
+                    <span className="text-[10px] font-mono text-black/40">/{cand.slug}</span>
+                  </div>
+                </div>
+
+                <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#F0EEED] text-black">
+                  {cand.viewCount || 142} Views
+                </span>
+              </div>
+
+              <p className="text-xs text-black/70 leading-relaxed line-clamp-2">
+                {cand.tagline || cand.summary}
+              </p>
+
+              {/* Verified Certificate Badges */}
+              {cand.certificates && cand.certificates.length > 0 && (
+                <div className="space-y-2 pt-2 border-t border-black/5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-black/40 block">
+                    Verified Certificate Records ({cand.certificates.length})
+                  </span>
+                  <div className="grid grid-cols-2 gap-3">
+                    {cand.certificates.slice(0, 2).map((c) => (
+                      <div key={c.id} className="bg-[#F0EEED] rounded-xl p-2.5 flex items-center gap-2">
+                        <Award className="w-4 h-4 text-amber-500 shrink-0" />
+                        <span className="text-xs font-semibold text-black truncate">{c.title}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center gap-3 pt-2">
+                <Link
+                  href={`/cv/${cand.slug}`}
+                  className="flex-1 py-3 text-center bg-black hover:bg-neutral-800 text-white rounded-full font-bold text-xs transition-colors"
+                >
+                  Open Live Website →
+                </Link>
+                <Link
+                  href="/profile"
+                  className="py-3 px-5 rounded-full border border-black/20 text-xs font-semibold hover:bg-neutral-50 transition-colors"
+                >
+                  Manage
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 8. OUR HAPPY CUSTOMERS (Shop.co Reviews) */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl sm:text-5xl font-black text-black uppercase tracking-tight text-center mb-12">
+          OUR HAPPY CUSTOMERS
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {REVIEWS.map((rev, idx) => (
+            <div key={idx} className="border border-black/10 rounded-3xl p-6 sm:p-8 space-y-4 bg-white shadow-sm">
+              <div className="flex text-amber-500">
+                {[...Array(rev.rating)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-amber-500 text-amber-500" />
+                ))}
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-base text-black">{rev.name}</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 fill-emerald-500" />
+              </div>
+              <p className="text-xs text-black/50 font-medium">{rev.role}</p>
+              <p className="text-xs text-black/70 leading-relaxed italic">
+                &ldquo;{rev.text}&rdquo;
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 9. FLOATING NEWSLETTER CONTAINER (Shop.co Exact Layout) */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mb-24">
+        <div className="bg-black text-white rounded-3xl p-8 sm:p-14 shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight uppercase max-w-lg">
+            STAY UP TO DATE ABOUT OUR LATEST TEMPLATES & OFFERS
+          </h2>
+
+          <div className="w-full lg:max-w-md space-y-3">
+            <div className="bg-white rounded-full px-4 py-3 flex items-center gap-3 text-black">
+              <Mail className="w-4 h-4 text-black/40" />
+              <input 
+                type="email" 
+                placeholder="Enter your email address..."
+                className="bg-transparent text-xs text-black placeholder:text-black/40 focus:outline-none w-full"
+              />
+            </div>
+            <button className="w-full bg-white hover:bg-neutral-200 text-black rounded-full py-3 text-xs sm:text-sm font-bold transition-colors">
+              Subscribe to Newsletter
+            </button>
           </div>
+        </div>
+      </div>
+
+      {/* 10. SHOP.CO FOOTER */}
+      <footer className="bg-[#F0F0F0] text-black pt-36 pb-12 border-t border-black/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+            {/* Brand Column */}
+            <div className="col-span-2 space-y-4">
+              <span className="font-black text-2xl tracking-tighter text-black uppercase">
+                CVTO.WEB
+              </span>
+              <p className="text-xs text-black/60 max-w-sm leading-relaxed">
+                We design high-converting, executive-grade portfolio websites that turn lifeless PDF resumes into interactive career opportunities.
+              </p>
+              <div className="flex items-center gap-2 pt-2">
+                <span className="w-8 h-8 rounded-full bg-white border border-black/10 flex items-center justify-center text-xs font-bold shadow-sm">
+                  𝕏
+                </span>
+                <span className="w-8 h-8 rounded-full bg-white border border-black/10 flex items-center justify-center text-xs font-bold shadow-sm">
+                  in
+                </span>
+                <span className="w-8 h-8 rounded-full bg-white border border-black/10 flex items-center justify-center text-xs font-bold shadow-sm">
+                  gh
+                </span>
+              </div>
+            </div>
+
+            {/* Column 1 */}
+            <div className="space-y-3">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-black">COMPANY</h4>
+              <ul className="space-y-2 text-xs text-black/60">
+                <li><a href="#templates" className="hover:text-black">About Us</a></li>
+                <li><a href="#showcase" className="hover:text-black">Features</a></li>
+                <li><a href="#templates" className="hover:text-black">Templates</a></li>
+                <li><a href="#how-it-works" className="hover:text-black">Career Blog</a></li>
+              </ul>
+            </div>
+
+            {/* Column 2 */}
+            <div className="space-y-3">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-black">HELP</h4>
+              <ul className="space-y-2 text-xs text-black/60">
+                <li><Link href="/upload" className="hover:text-black">Convert CV</Link></li>
+                <li><Link href="/profile" className="hover:text-black">Profile Editor</Link></li>
+                <li><Link href="/admin" className="hover:text-black">Admin Support</Link></li>
+                <li><a href="mailto:support@cvtoweb.com" className="hover:text-black">Contact Us</a></li>
+              </ul>
+            </div>
+
+            {/* Column 3 */}
+            <div className="space-y-3">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-black">RESOURCES</h4>
+              <ul className="space-y-2 text-xs text-black/60">
+                <li><Link href="/profile" className="hover:text-black">ATS Readiness</Link></li>
+                <li><Link href="/cv/mazen" className="hover:text-black">vCard Export</Link></li>
+                <li><Link href="/profile" className="hover:text-black">AI Co-Pilot</Link></li>
+                <li><Link href="/admin" className="hover:text-black">Visitor Analytics</Link></li>
+              </ul>
+            </div>
+
+          </div>
+
+          {/* Bottom Bar: Copyright & Payment Badges */}
+          <div className="pt-8 border-t border-black/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-black/60">
+            <p>© {new Date().getFullYear()} CVtoWeb.co. All Rights Reserved.</p>
+            
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-1 rounded bg-white border border-black/10 text-[10px] font-bold text-black">
+                Vodafone Cash
+              </span>
+              <span className="px-2.5 py-1 rounded bg-white border border-black/10 text-[10px] font-bold text-black">
+                InstaPay
+              </span>
+              <span className="px-2.5 py-1 rounded bg-white border border-black/10 text-[10px] font-bold text-black">
+                Fawry
+              </span>
+              <span className="px-2.5 py-1 rounded bg-white border border-black/10 text-[10px] font-bold text-black">
+                Visa / MC
+              </span>
+            </div>
+          </div>
+
         </div>
       </footer>
 
