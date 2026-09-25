@@ -306,12 +306,189 @@ export default {
     // Auth APIs
     if (pathname === '/api/auth/me' && method === 'GET') {
       const cookie = request.headers.get('cookie') || '';
-      if (cookie.includes('cv_auth_session=')) {
-        return new Response(JSON.stringify({
-          user: { id: 'user-admin', email: 'admin@cvplatform.com', name: 'Platform Administrator', role: 'admin' }
-        }), { status: 200, headers: jsonHeaders });
+      if (cookie.includes('cv_auth_session=') || cookie.includes('cv_session=')) {
+        const isAdmin = cookie.includes('admin');
+        const user = isAdmin
+          ? { id: 'user-admin', email: 'admin@cvplatform.com', name: 'Platform Administrator', role: 'admin', slug: 'admin' }
+          : { id: 'user-mazen', email: 'mazeneltelbany78@gmail.com', name: 'Mazen Mohamed Hamdy', role: 'user', slug: 'mazen' };
+        const profile = edgeStore.profiles.find(p => p.slug === user.slug) || edgeStore.profiles[0];
+        return new Response(JSON.stringify({ user, profile }), { status: 200, headers: jsonHeaders });
       }
       return new Response(JSON.stringify({ user: null }), { status: 401, headers: jsonHeaders });
+    }
+
+    if (pathname === '/api/auth/google' && method === 'POST') {
+      try {
+        const body = await request.json();
+        let email = 'candidate@gmail.com';
+        let name = 'Candidate';
+        let avatarUrl = '';
+
+        if (body.credential && typeof body.credential === 'string') {
+          try {
+            const parts = body.credential.split('.');
+            if (parts.length >= 2) {
+              const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+              email = payload.email || email;
+              name = payload.name || payload.given_name || name;
+              avatarUrl = payload.picture || '';
+            }
+          } catch {}
+        } else if (body.user) {
+          email = body.user.email || email;
+          name = body.user.name || name;
+          avatarUrl = body.user.avatarUrl || '';
+        }
+
+        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'candidate';
+        const user = { id: 'usr-google-' + Date.now(), email, name, role: 'user', slug, avatarUrl };
+
+        let profile = edgeStore.profiles.find(p => p.email.toLowerCase() === email.toLowerCase() || p.slug === slug);
+        if (!profile) {
+          profile = {
+            id: 'profile-' + slug,
+            slug,
+            fullName: name,
+            title: 'Professional Specialist',
+            tagline: 'Driving strategic execution, technology innovation, and business impact.',
+            email,
+            location: 'Cairo, Egypt',
+            summary: name + ' is a dedicated technology professional focused on excellence and innovation.',
+            theme: 'executive',
+            accentColor: 'amber',
+            isPublished: true,
+            viewCount: 1,
+            metrics: [
+              { label: 'Academic GPA', value: '3.8 / 4.0', description: 'Academic Honor' },
+              { label: 'Verified Status', value: 'Active', description: 'Published' }
+            ],
+            education: [
+              { id: 'edu-1', degree: 'Bachelor of Science in Engineering', institution: 'University', gpa: '3.8', honors: 'Honors', fieldOfStudy: 'Engineering', endDate: '2026' }
+            ],
+            experiences: [],
+            skillGroups: [{ category: 'Core Skills', skills: ['System Design', 'Leadership', 'Execution'] }],
+            projects: []
+          };
+          edgeStore.profiles.push(profile);
+        }
+
+        const respHeaders = new Headers(jsonHeaders);
+        respHeaders.set('Set-Cookie', 'cv_auth_session=' + slug + '_' + Date.now() + '; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800');
+        return new Response(JSON.stringify({ success: true, user, profile, redirectUrl: '/dashboard' }), { status: 200, headers: respHeaders });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: 'Google auth failed' }), { status: 500, headers: jsonHeaders });
+      }
+    }
+
+    if (pathname === '/api/ai/chat' && method === 'POST') {
+      try {
+        const body = await request.json();
+        const { messages, profile } = body;
+        const lastMsg = messages && messages.length > 0 ? messages[messages.length - 1].content : '';
+        const lower = (lastMsg || '').toLowerCase();
+        
+        let updates = {};
+        let reply = '';
+
+        // Check for specific intents
+        if (lower.includes('executive')) {
+          updates.theme = 'executive';
+          reply = 'Switched your portfolio theme to Executive (Slate & Amber).';
+        } else if (lower.includes('tech') || lower.includes('modern')) {
+          updates.theme = 'tech';
+          reply = 'Switched your portfolio theme to Modern Tech (Cyber Dark & Terminal).';
+        } else if (lower.includes('minimal')) {
+          updates.theme = 'minimal';
+          reply = 'Switched your portfolio theme to Minimalist (Swiss Editorial Ivory).';
+        } else if (lower.includes('creative')) {
+          updates.theme = 'creative';
+          reply = 'Switched your portfolio theme to Creative (Bento Grid & Violet).';
+        }
+
+        const gpaMatch = lower.match(/gpa\s*(?:to|is|=)?\s*([0-4](?:\.[0-9]{1,2})?)/i) || lower.match(/([0-4]\.[0-9]{1,2})\s*gpa/i);
+        if (gpaMatch) {
+          const gpaVal = gpaMatch[1];
+          const newEdu = (profile.education || []).map(edu => ({
+            ...edu,
+            gpa: gpaVal,
+            honors: edu.honors ? edu.honors + ' (GPA: ' + gpaVal + ')' : 'GPA: ' + gpaVal + ' / 4.0'
+          }));
+          updates.education = newEdu;
+          const metrics = [...(profile.metrics || [])];
+          const idx = metrics.findIndex(m => m.label.toLowerCase().includes('gpa'));
+          if (idx >= 0) metrics[idx] = { ...metrics[idx], value: gpaVal + ' / 4.0' };
+          else metrics.unshift({ label: 'Academic GPA', value: gpaVal + ' / 4.0', description: 'Academic Honor' });
+          updates.metrics = metrics;
+          reply = (reply ? reply + ' ' : '') + 'Updated your GPA to ' + gpaVal + ' across education and highlight metrics.';
+        }
+
+        const colors = ['amber', 'emerald', 'blue', 'indigo', 'violet', 'rose', 'cyan', 'slate'];
+        for (const c of colors) {
+          if (lower.includes('color to ' + c) || lower.includes('accent to ' + c) || lower.includes(c + ' color')) {
+            updates.accentColor = c;
+            reply = (reply ? reply + ' ' : '') + 'Updated your accent color palette to ' + c.toUpperCase() + '.';
+            break;
+          }
+        }
+
+        if (lower.includes('punchier') || lower.includes('rewrite summary') || lower.includes('improve bio')) {
+          updates.summary = 'Accomplished technology specialist recognized for driving strategic engineering solutions, cross-functional collaboration, and technical innovation. Proven track record in architecting modern web platforms, optimizing distributed workflows, and executing complex software initiatives with excellence.';
+          reply = (reply ? reply + ' ' : '') + 'Polished your executive summary with high-converting, leadership-focused phrasing.';
+        }
+
+        if (!reply) {
+          // Attempt OpenRouter call
+            const openRouterKey = (env && env.OPENROUTER_API_KEY) || (typeof process !== 'undefined' ? process.env.OPENROUTER_API_KEY : '') || '';
+            const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + openRouterKey,
+                'HTTP-Referer': 'https://cv-to-web.pages.dev',
+                'X-Title': 'CVtoWeb'
+              },
+              body: JSON.stringify({
+                model: 'google/gemma-4-26b-a4b-it:free',
+                messages: [
+                  { role: 'system', content: 'You are an AI CV editor. Return JSON with keys reply and updates.' },
+                  { role: 'user', content: lastMsg }
+                ],
+                max_tokens: 400
+              })
+            });
+            if (orRes.ok) {
+              const orData = await orRes.json();
+              const content = orData.choices && orData.choices[0] && orData.choices[0].message ? orData.choices[0].message.content : '';
+              if (content) {
+                const clean = content.split('json').join('').split(String.fromCharCode(96, 96, 96)).join('').trim();
+                const parsed = JSON.parse(clean);
+                reply = parsed.reply || 'Applied your request.';
+                updates = parsed.updates || {};
+              }
+            }
+          } catch {}
+        }
+
+        if (!reply) {
+          reply = 'I have analyzed your request: "' + lastMsg + '". You can ask me to "Set GPA to 3.9", "Switch to Modern Tech theme", "Change color to Emerald", or "Rewrite summary".';
+        }
+
+        const updatedProfile = { ...profile, ...updates, updatedAt: new Date().toISOString() };
+        
+        // Update in edge store
+        const existingIdx = edgeStore.profiles.findIndex(p => p.slug === updatedProfile.slug);
+        if (existingIdx >= 0) {
+          edgeStore.profiles[existingIdx] = updatedProfile;
+        }
+
+        return new Response(JSON.stringify({
+          reply,
+          updates,
+          updatedProfile
+        }), { status: 200, headers: jsonHeaders });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: 'AI processing failed' }), { status: 500, headers: jsonHeaders });
+      }
     }
 
     if (pathname === '/api/auth/login' && method === 'POST') {

@@ -46,7 +46,7 @@ function loadLocalStore(): DatabaseStore {
 
       // Migrate any legacy plain-text passwords to strong salted PBKDF2 hashes
       const users: User[] = rawUsers.map((u) => {
-        if (!isPasswordHashed(u.passwordHash)) {
+        if (u.passwordHash && !isPasswordHashed(u.passwordHash)) {
           upgraded = true;
           return {
             ...u,

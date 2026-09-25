@@ -18,6 +18,7 @@ export interface Education {
   startDate?: string;
   endDate?: string;
   honors?: string;
+  gpa?: string;
 }
 
 export interface Project {
@@ -58,6 +59,7 @@ export interface CVProfile {
   customDomain?: string; // e.g. "mohamed.com"
   customDomainStatus?: 'pending' | 'verified' | 'failed';
   theme: 'executive' | 'modern' | 'minimal' | 'tech' | 'creative';
+  accentColor?: 'amber' | 'emerald' | 'blue' | 'indigo' | 'violet' | 'rose' | 'cyan' | 'slate';
   metrics: HighlightMetric[];
   experiences: Experience[];
   education: Education[];
@@ -100,7 +102,9 @@ export interface User {
   name: string;
   role: 'admin' | 'user';
   slug?: string;
-  passwordHash: string;
+  passwordHash?: string;
+  googleId?: string;
+  avatarUrl?: string;
   createdAt: string;
 }
 
@@ -110,5 +114,6 @@ export interface UserSession {
   role: 'admin' | 'user';
   slug?: string;
   name: string;
+  avatarUrl?: string;
 }
 

@@ -77,6 +77,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
     }
 
+    if (!user.passwordHash) {
+      return NextResponse.json(
+        { error: 'This account was created with Google Sign-In. Please sign in with Google.' },
+        { status: 400 }
+      );
+    }
+
     const isMatch = verifyPassword(password, user.passwordHash);
     if (!isMatch) {
       const failStatus = recordFailedLogin(ip);
@@ -109,7 +116,7 @@ export async function POST(req: NextRequest) {
     clearLoginLockout(ip);
 
     // 7. Auto-upgrade legacy password hashes to PBKDF2 with unique cryptographic salt
-    if (!isPasswordHashed(user.passwordHash)) {
+    if (!isPasswordHashed(user.passwordHash || '')) {
       user.passwordHash = hashPassword(password);
       await dataStore.saveUser(user);
     }

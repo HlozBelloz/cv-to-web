@@ -80,6 +80,27 @@ export function ProfileViewer({ slug, initialProfile }: Props) {
     };
   }, [slug, initialProfile]);
 
+  const [isOwner, setIsOwner] = useState(false);
+  const [previewSwitching, setPreviewSwitching] = useState(false);
+
+  useEffect(() => {
+    // Check if the current user is the owner
+    async function checkOwner() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user && (data.user.slug === slug || data.user.role === 'admin')) {
+            setIsOwner(true);
+          }
+        }
+      } catch {
+        // Not logged in or error
+      }
+    }
+    checkOwner();
+  }, [slug]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center p-6 text-center space-y-4">
@@ -119,5 +140,38 @@ export function ProfileViewer({ slug, initialProfile }: Props) {
     );
   }
 
-  return <ThemeRenderer profile={profile} defaultTheme={profile.theme} />;
+  return (
+    <div className="relative">
+      {isOwner && (
+        <div className="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-amber-500/30 px-4 py-2.5 flex items-center justify-between text-xs text-slate-300">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            <span>
+              <strong className="text-white">Owner View:</strong> Public visitors see your chosen theme (
+              <span className="text-amber-400 uppercase font-semibold">{profile.theme || 'Executive'}</span>).
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setPreviewSwitching(!previewSwitching)}
+              className="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors border border-slate-700 text-[11px]"
+            >
+              {previewSwitching ? 'Hide Theme Switcher' : 'Test Other Themes'}
+            </button>
+            <Link
+              href="/dashboard"
+              className="px-3 py-1 rounded-md bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all text-[11px]"
+            >
+              Edit in Dashboard & AI Chat
+            </Link>
+          </div>
+        </div>
+      )}
+      <ThemeRenderer
+        profile={profile}
+        defaultTheme={profile.theme}
+        allowSwitching={isOwner && previewSwitching}
+      />
+    </div>
+  );
 }

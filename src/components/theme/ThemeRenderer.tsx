@@ -11,21 +11,28 @@ import { ThemeSwitcher, SupportedTheme } from './ThemeSwitcher';
 interface Props {
   profile: CVProfile;
   defaultTheme?: SupportedTheme;
+  allowSwitching?: boolean;
+  onThemeSelect?: (theme: SupportedTheme) => void;
 }
 
-export function ThemeRenderer({ profile, defaultTheme }: Props) {
+export function ThemeRenderer({ profile, defaultTheme, allowSwitching = false, onThemeSelect }: Props) {
+  // Use profile.theme locked by the owner as the primary theme
   const [theme, setTheme] = useState<SupportedTheme>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(`cv_theme_${profile.slug}`);
-      if (saved && ['executive', 'tech', 'modern', 'minimal', 'creative'].includes(saved)) {
-        return saved as SupportedTheme;
-      }
-    }
     return (defaultTheme || profile.theme || 'executive') as SupportedTheme;
   });
 
+  // Keep in sync if profile updates (e.g. live AI edit)
+  React.useEffect(() => {
+    if (profile.theme && profile.theme !== theme) {
+      setTheme(profile.theme as SupportedTheme);
+    }
+  }, [profile.theme, theme]);
+
   const handleThemeChange = (newTheme: SupportedTheme) => {
     setTheme(newTheme);
+    if (onThemeSelect) {
+      onThemeSelect(newTheme);
+    }
     if (typeof window !== 'undefined') {
       localStorage.setItem(`cv_theme_${profile.slug}`, newTheme);
     }
@@ -49,7 +56,9 @@ export function ThemeRenderer({ profile, defaultTheme }: Props) {
   return (
     <div className="relative">
       {renderActiveTheme()}
-      <ThemeSwitcher currentTheme={theme} onThemeChange={handleThemeChange} />
+      {allowSwitching && (
+        <ThemeSwitcher currentTheme={theme} onThemeChange={handleThemeChange} />
+      )}
     </div>
   );
 }
