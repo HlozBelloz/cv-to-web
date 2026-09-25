@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CVtoWeb — Automated Executive CV-to-Website Platform
 
-## Getting Started
+**CVtoWeb** is a high-converting, executive-grade portfolio generation SaaS that converts uploaded PDF CVs into customized, modern portfolio websites with dynamic subpaths (`/cv/username`), custom domain support, tiered pricing in Egyptian Pounds (EGP), Egyptian payment gateway integration (Paymob), and isolated role-based admin controls.
 
-First, run the development server:
+---
+
+## 🚀 Key Features
+
+- **Automated AI CV Extraction**: Converts PDF resumes into structured executive portfolio websites.
+- **Candidate Executive Portfolio**: Demonstrates quantified achievements, technical milestones, skill taxonomy, and 1-click PDF download (e.g. `/cv/mazen`).
+- **Dynamic EGP Monetization**: Base pricing set to 100 EGP, dynamically modifiable on-the-fly in the Admin Portal.
+- **Paymob Egyptian Payment Rails**: Supports Vodafone Cash, InstaPay, Meeza, and Card payments (running in test/mock mode for verification).
+- **Strict Role-Based Access Control**:
+  - SuperAdmin Gateway: `/admin/login` & `/admin`
+  - Candidate Dashboard: `/login` & `/dashboard`
+- **100% Free Cloud Edge Hosting**: Engineered for Cloudflare Pages with edge CDN caching and free automated SSL.
+
+---
+
+## ☁️ Deployment on Cloudflare Pages
+
+1. Navigate to **Cloudflare Dashboard** → **Compute (Workers & Pages)** → **Pages** → **Connect to Git**.
+2. Select repository: `HlozBelloz/cv-to-web`.
+3. Set Build Settings:
+   - **Framework preset**: `None` (or `Next.js`)
+   - **Build command**: `npx @opennextjs/cloudflare build`
+   - **Build output directory**: `.open-next/assets`
+   - **Root directory**: `/`
+4. Under **Environment variables (advanced)**, add:
+   - `NODE_VERSION` = `20`
+5. Click **Save and Deploy**.
+
+---
+
+## 💻 Local Development
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Run production build
+npm run build
+
+# Start production server
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open [http://localhost:3000](http://localhost:3000) to view the live site.
