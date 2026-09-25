@@ -1,5 +1,6 @@
 import { CVProfile, Plan, PaymentTransaction, User } from '@/types';
 import { DEFAULT_PLANS, DEMO_PROFILES } from './default-data';
+import { hashPassword, isPasswordHashed } from './security';
 import fs from 'fs';
 import path from 'path';
 
@@ -12,7 +13,8 @@ export const DEFAULT_USERS: User[] = [
     email: 'admin@cvplatform.com',
     name: 'Platform Administrator',
     role: 'admin',
-    passwordHash: 'admin123', // In production, bcrypt/argon2
+    // Strong PBKDF2 hash with unique cryptographic salt (password: 'admin123')
+    passwordHash: 'pbkdf2:sha512:100000:855a93300b42c9366c09f7a67fe8fa72:2b8f5e79e680153f9d333760e96420ad351c474d36969a67ee85b55f54ced576f13a3573c289e9de96a9aa4df737a74174d3e202570fcca3e47f4e0442caa522',
     createdAt: new Date().toISOString(),
   },
   {
@@ -21,7 +23,8 @@ export const DEFAULT_USERS: User[] = [
     name: 'Mazen Mohamed Hamdy',
     role: 'user',
     slug: 'mazen',
-    passwordHash: 'mazen123',
+    // Strong PBKDF2 hash with unique cryptographic salt (password: 'mazen123')
+    passwordHash: 'pbkdf2:sha512:100000:a5b0b711ee727f6e33f1f6b90e1f98e0:8d5d233c7ed7e42fa39b983b5a74ee1916a3fb8b5aac858013e0c6a950283067e9039bfb34c353bfa8b6f7eb34a2522beaef2bb8ed818adc6d572d5cbd897ae6',
     createdAt: new Date().toISOString(),
   }
 ];
@@ -38,12 +41,33 @@ function loadLocalStore(): DatabaseStore {
     if (fs.existsSync(DATA_FILE)) {
       const raw = fs.readFileSync(DATA_FILE, 'utf-8');
       const parsed = JSON.parse(raw);
-      return {
+      const rawUsers: User[] = parsed.users || DEFAULT_USERS;
+      let upgraded = false;
+
+      // Migrate any legacy plain-text passwords to strong salted PBKDF2 hashes
+      const users: User[] = rawUsers.map((u) => {
+        if (!isPasswordHashed(u.passwordHash)) {
+          upgraded = true;
+          return {
+            ...u,
+            passwordHash: hashPassword(u.passwordHash),
+          };
+        }
+        return u;
+      });
+
+      const store: DatabaseStore = {
         profiles: parsed.profiles || DEMO_PROFILES,
         plans: parsed.plans || DEFAULT_PLANS,
         payments: parsed.payments || [],
-        users: parsed.users || DEFAULT_USERS,
+        users,
       };
+
+      if (upgraded) {
+        saveLocalStore(store);
+      }
+
+      return store;
     }
   } catch (err) {
     console.warn('Could not read local data store, initializing defaults:', err);

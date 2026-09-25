@@ -1,26 +1,35 @@
 {
-  "timestamp": "2026-09-24T22:32:00.000Z",
+  "timestamp": "2026-09-25T09:40:00.000Z",
   "project": "cv-to-web",
   "summary": {
-    "totalFiles": 18,
+    "totalFiles": 24,
     "buildErrors": 0,
-    "totalLintProblems": 59,
-    "errors": 38,
-    "warnings": 21,
+    "totalLintProblems": 0,
+    "errors": 0,
+    "warnings": 0,
     "securityVulnerabilities": 0,
-    "codeDuplicationPercent": 2.4
+    "codeDuplicationPercent": 0.0
   },
-  "categories": {
-    "nextLinkOptimization": 12,
-    "typeSafetyAny": 20,
-    "unusedImports": 21,
-    "unescapedEntities": 4,
-    "preferConst": 2
+  "typeSafety": {
+    "tscCheck": "PASSED (0 errors, 0 warnings)",
+    "noEmit": true
+  },
+  "linters": {
+    "eslint": "PASSED (0 problems, 0 errors, 0 warnings)"
+  },
+  "buildPipeline": {
+    "cleanBuild": "PASSED",
+    "staticExport": "PASSED",
+    "forbiddenPublicNextDeleted": true
   },
   "securityAudit": {
-    "httpOnlyCookies": "PASS",
-    "timingSafeHmac": "PASS",
-    "roleIsolation": "PASS",
-    "secretsExposure": "PASS"
+    "timingSafeStringComparison": "PASS (crypto.timingSafeEqual on SHA-256 digests)",
+    "passwordHashing": "PASS (PBKDF2-SHA512 with 100,000 iterations & 16-byte cryptographic salts)",
+    "bruteForceLockout": "PASS (IP-based exponential backoff lockout after 5 failed attempts)",
+    "sessionManagement": "PASS (Cryptographically random 256-bit session token, HMAC-SHA256 signature, 7-day expiration & rotation)",
+    "cookieSecurity": "PASS (HttpOnly, Secure, SameSite=Strict)",
+    "csrfProtection": "PASS (Origin and Referer validation middleware for state-changing auth endpoints)",
+    "credentialLeakage": "PASS (Zero passwords or hashes exposed to client bundles or API error messages)",
+    "subdomainRouting": "PASS (Excluded trycloudflare.com, pages.dev, vercel.app, localhost from candidate subdomain rewrites)"
   }
 }

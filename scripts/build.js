@@ -24,16 +24,23 @@ function copyRecursiveSync(src, dest) {
 
 console.log('--- Starting CVtoWeb Build & Export Pipeline ---');
 
+// 0. Ensure public/_next is purged and never created (Next.js prohibits public/_next)
+const publicDir = 'public';
+const publicNextDir = path.join(publicDir, '_next');
+if (fs.existsSync(publicNextDir)) {
+  console.log('Removing forbidden public/_next directory...');
+  fs.rmSync(publicNextDir, { recursive: true, force: true });
+}
+
 // 1. Run standard Next.js build
 console.log('Compiling Next.js application...');
 const nextCmd = process.platform === 'win32' ? 'npx.cmd next build' : 'npx next build';
 execSync(nextCmd, { stdio: 'inherit' });
 
-// 2. Sync generated static HTML pages and static assets to public/
+// 2. Sync generated static HTML pages to public/
 console.log('Syncing prerendered static pages to public directory for Cloudflare Pages edge delivery...');
 
 const appServerDir = path.join('.next', 'server', 'app');
-const publicDir = 'public';
 
 if (fs.existsSync(appServerDir)) {
   // Map of generated HTML files to public destination paths
@@ -64,13 +71,10 @@ if (fs.existsSync(appServerDir)) {
   });
 }
 
-// 3. Copy Next.js static assets (_next/static) to public/_next/static
-const nextStaticSrc = path.join('.next', 'static');
-const nextStaticDest = path.join(publicDir, '_next', 'static');
-if (fs.existsSync(nextStaticSrc)) {
-  console.log('Syncing _next/static to public/_next/static...');
-  copyRecursiveSync(nextStaticSrc, nextStaticDest);
-  console.log('✓ Successfully synced Next.js static asset bundles.');
+// 3. Guarantee public/_next is NEVER created
+if (fs.existsSync(publicNextDir)) {
+  console.log('Cleaning up forbidden public/_next directory...');
+  fs.rmSync(publicNextDir, { recursive: true, force: true });
 }
 
 // 4. Create Cloudflare Pages Advanced Mode _worker.js
