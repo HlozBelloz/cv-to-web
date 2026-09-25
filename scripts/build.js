@@ -520,6 +520,7 @@ export default {
 
         if (!reply) {
           // Attempt OpenRouter call
+          try {
             const openRouterKey = (env && env.OPENROUTER_API_KEY) || (typeof process !== 'undefined' ? process.env.OPENROUTER_API_KEY : '') || '';
             const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
               method: 'POST',
