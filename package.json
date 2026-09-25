@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/build.js",
     "build:worker": "opennextjs-cloudflare build",
-    "build:pages": "opennextjs-cloudflare build && node -e \"const fs=require('fs'); fs.copyFileSync('.open-next/worker.js', '.open-next/assets/_worker.js');\"",
+    "build:pages": "node scripts/build.js --cloudflare",
     "start": "next start",
     "lint": "eslint"
   },
