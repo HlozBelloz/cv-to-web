@@ -11,8 +11,16 @@ import {
   MapPin, 
   Globe, 
   ArrowUpRight,
-  ExternalLink
+  ExternalLink,
+  Award,
+  QrCode,
+  Printer,
+  UserPlus
 } from 'lucide-react';
+import { CertificateItem } from '@/types';
+import { downloadVCard } from '@/lib/vcard';
+import { QRCodeModal } from '@/components/common/QRCodeModal';
+import { CertificateModal } from '@/components/common/CertificateModal';
 
 function LinkedInIcon({ className }: { className?: string }) {
   return (
@@ -38,6 +46,8 @@ export function MinimalistTheme({ profile }: Props) {
   const [copied, setCopied] = useState(false);
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+  const [isQrOpen, setIsQrOpen] = useState(false);
+  const [selectedCert, setSelectedCert] = useState<CertificateItem | null>(null);
 
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {
@@ -99,7 +109,7 @@ export function MinimalistTheme({ profile }: Props) {
             </div>
 
             {/* Actions */}
-            <div className="flex flex-wrap sm:flex-col gap-2 shrink-0">
+            <div className="flex flex-wrap sm:flex-col gap-2 shrink-0 print:hidden">
               {profile.originalPdfUrl && (
                 <a
                   href={profile.originalPdfUrl}
@@ -118,6 +128,32 @@ export function MinimalistTheme({ profile }: Props) {
                 {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <Share2 className="w-3.5 h-3.5" />}
                 <span>{copied ? 'Copied' : 'Share'}</span>
               </button>
+              <button
+                onClick={() => downloadVCard(profile)}
+                className="px-4 py-2 text-xs uppercase tracking-wider font-semibold rounded-lg border border-stone-300 hover:bg-stone-200/60 text-stone-800 flex items-center justify-center gap-2 transition-colors"
+                title="Save direct contact to phone contacts"
+              >
+                <UserPlus className="w-3.5 h-3.5 text-stone-700" />
+                <span>Save Contact</span>
+              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => setIsQrOpen(true)}
+                  className="px-3 py-1.5 text-[11px] uppercase tracking-wider font-semibold rounded-lg border border-stone-300 hover:bg-stone-200/60 text-stone-700 flex items-center justify-center gap-1.5 transition-colors"
+                  title="Open QR Code to scan on mobile"
+                >
+                  <QrCode className="w-3 h-3 text-stone-600" />
+                  <span>QR Code</span>
+                </button>
+                <button
+                  onClick={() => window.print()}
+                  className="px-3 py-1.5 text-[11px] uppercase tracking-wider font-semibold rounded-lg border border-stone-300 hover:bg-stone-200/60 text-stone-700 flex items-center justify-center gap-1.5 transition-colors"
+                  title="Print or Save as Clean PDF"
+                >
+                  <Printer className="w-3 h-3 text-stone-600" />
+                  <span>Print</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -363,7 +399,11 @@ export function MinimalistTheme({ profile }: Props) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {profile.certificates.map((cert) => (
-                <div key={cert.id} className="border border-stone-200 rounded-xl p-4 bg-stone-50 space-y-3">
+                <div 
+                  key={cert.id} 
+                  onClick={() => setSelectedCert(cert)}
+                  className="border border-stone-200 hover:border-stone-400 rounded-xl p-4 bg-stone-50 space-y-3 cursor-pointer transition-colors"
+                >
                   {cert.imageUrl && (
                     <div className="aspect-video w-full rounded-lg overflow-hidden bg-stone-200 border border-stone-200">
                       <img src={cert.imageUrl} alt={cert.title} className="w-full h-full object-cover" />
@@ -377,12 +417,16 @@ export function MinimalistTheme({ profile }: Props) {
                     <h3 className="text-sm font-serif font-medium text-stone-900 mt-1 line-clamp-2">
                       {cert.title}
                     </h3>
+                    <p className="text-[11px] text-stone-400 mt-1">
+                      Click to inspect record
+                    </p>
                   </div>
                   {cert.credentialUrl && (
                     <a
                       href={cert.credentialUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
                       className="text-xs text-stone-600 hover:text-stone-900 underline underline-offset-4 inline-flex items-center gap-1 font-sans"
                     >
                       <span>Verify Credential</span>
@@ -396,7 +440,7 @@ export function MinimalistTheme({ profile }: Props) {
         )}
 
         {/* RECRUITER INQUIRY */}
-        <section className="space-y-6">
+        <section className="space-y-6 print:hidden">
           <div className="max-w-xl mx-auto space-y-4 text-center">
             <h2 className="text-2xl font-serif text-stone-900">
               Direct Inquiry & Consultation
@@ -456,10 +500,23 @@ export function MinimalistTheme({ profile }: Props) {
         </section>
 
         {/* FOOTER */}
-        <footer className="text-center text-xs text-stone-500 border-t border-stone-200 pt-8">
+        <footer className="text-center text-xs text-stone-500 border-t border-stone-200 pt-8 print:hidden">
           <p>© {new Date().getFullYear()} {profile.fullName}. Professional Portfolio.</p>
         </footer>
       </div>
+
+      {/* QR Code & Certificate Modals */}
+      <QRCodeModal
+        isOpen={isQrOpen}
+        onClose={() => setIsQrOpen(false)}
+        url={typeof window !== 'undefined' ? window.location.href : `https://cv-to-web.pages.dev/cv/${profile.slug}`}
+        candidateName={profile.fullName}
+      />
+
+      <CertificateModal
+        certificate={selectedCert}
+        onClose={() => setSelectedCert(null)}
+      />
     </div>
   );
 }

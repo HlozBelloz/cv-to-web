@@ -32,6 +32,7 @@ import {
   Layout,
   Briefcase
 } from 'lucide-react';
+import { AtsAnalysisCard } from '@/components/profile/AtsAnalysisCard';
 
 const ACCENT_COLORS = [
   { name: 'amber', label: 'Gold Amber', bg: 'bg-amber-500', border: 'border-amber-500' },
@@ -58,7 +59,7 @@ export default function UserProfilePage() {
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'customize' | 'media' | 'ai'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'customize' | 'media' | 'ai' | 'ats'>('overview');
 
   // Form states for CV customizer
   const [selectedTheme, setSelectedTheme] = useState('executive');
@@ -512,6 +513,13 @@ export default function UserProfilePage() {
           >
             <Sparkles className="w-3.5 h-3.5" />
             AI Customizer
+          </button>
+          <button
+            onClick={() => setActiveTab('ats')}
+            className={`px-4 py-2 rounded-xl transition-all inline-flex items-center gap-1.5 ${activeTab === 'ats' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900'}`}
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            ATS Readiness
           </button>
         </div>
 
@@ -1008,6 +1016,26 @@ export default function UserProfilePage() {
               </button>
             </form>
           </div>
+        )}
+
+        {/* TAB 5: ATS READINESS & COMPATIBILITY AUDIT */}
+        {activeTab === 'ats' && profile && (
+          <AtsAnalysisCard
+            profile={{
+              ...profile,
+              fullName,
+              title,
+              tagline,
+              summary,
+              theme: selectedTheme as CVProfile['theme'],
+              accentColor: selectedAccent as CVProfile['accentColor'],
+              certificates
+            }}
+            onOptimizeWithAi={(prompt) => {
+              setActiveTab('ai');
+              setAiInput(prompt);
+            }}
+          />
         )}
 
       </main>

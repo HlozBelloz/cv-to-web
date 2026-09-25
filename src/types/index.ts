@@ -86,6 +86,7 @@ export interface CVProfile {
   experiences: Experience[];
   education: Education[];
   skillGroups: SkillGroup[];
+  skills?: string[];
   projects: Project[];
   certifications?: string[];
   certificates?: CertificateItem[];

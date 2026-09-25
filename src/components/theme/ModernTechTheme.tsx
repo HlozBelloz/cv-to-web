@@ -18,8 +18,15 @@ import {
   Globe, 
   Layers, 
   Award,
-  GraduationCap
+  GraduationCap,
+  QrCode,
+  Printer,
+  UserPlus
 } from 'lucide-react';
+import { CertificateItem } from '@/types';
+import { downloadVCard } from '@/lib/vcard';
+import { QRCodeModal } from '@/components/common/QRCodeModal';
+import { CertificateModal } from '@/components/common/CertificateModal';
 
 function LinkedInIcon({ className }: { className?: string }) {
   return (
@@ -45,6 +52,8 @@ export function ModernTechTheme({ profile }: Props) {
   const [copied, setCopied] = useState(false);
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+  const [isQrOpen, setIsQrOpen] = useState(false);
+  const [selectedCert, setSelectedCert] = useState<CertificateItem | null>(null);
 
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {
@@ -159,7 +168,7 @@ export function ModernTechTheme({ profile }: Props) {
                   href={profile.originalPdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/20"
+                  className="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/20 print:hidden"
                 >
                   <Download className="w-4 h-4" />
                   <span>DOWNLOAD_CV.PDF</span>
@@ -168,11 +177,39 @@ export function ModernTechTheme({ profile }: Props) {
 
               <button
                 onClick={handleCopyLink}
-                className="px-5 py-3 rounded-xl bg-[#131d35] hover:bg-[#1a2747] text-slate-200 border border-slate-700 font-mono text-xs flex items-center justify-center gap-2 transition-colors"
+                className="px-5 py-3 rounded-xl bg-[#131d35] hover:bg-[#1a2747] text-slate-200 border border-slate-700 font-mono text-xs flex items-center justify-center gap-2 transition-colors print:hidden"
               >
                 {copied ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-slate-400" />}
                 <span>{copied ? 'LINK_COPIED' : 'SHARE_PROFILE'}</span>
               </button>
+
+              <button
+                onClick={() => downloadVCard(profile)}
+                className="px-5 py-2.5 rounded-xl bg-[#131d35] hover:bg-[#1a2747] text-slate-200 border border-slate-750 font-mono text-xs flex items-center justify-center gap-2 transition-colors print:hidden"
+                title="Save direct contact to your phone address book"
+              >
+                <UserPlus className="w-3.5 h-3.5 text-emerald-400" />
+                <span>EXPORT_VCARD.VCF</span>
+              </button>
+
+              <div className="grid grid-cols-2 gap-2 font-mono text-xs print:hidden">
+                <button
+                  onClick={() => setIsQrOpen(true)}
+                  className="px-3 py-2 rounded-xl bg-[#090e1b] hover:bg-[#131d35] text-slate-300 border border-slate-800 flex items-center justify-center gap-1.5 transition-colors"
+                  title="Open QR Code to scan on mobile"
+                >
+                  <QrCode className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>QR_CODE</span>
+                </button>
+                <button
+                  onClick={() => window.print()}
+                  className="px-3 py-2 rounded-xl bg-[#090e1b] hover:bg-[#131d35] text-slate-300 border border-slate-800 flex items-center justify-center gap-1.5 transition-colors"
+                  title="Print or Save as Clean PDF"
+                >
+                  <Printer className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>PRINT_PDF</span>
+                </button>
+              </div>
 
               <div className="flex items-center justify-center gap-3 pt-2">
                 {profile.linkedinUrl && (
@@ -440,7 +477,8 @@ export function ModernTechTheme({ profile }: Props) {
               {profile.certificates.map((cert) => (
                 <div 
                   key={cert.id}
-                  className="group bg-[#0d1527]/80 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-4 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/5 flex flex-col justify-between"
+                  onClick={() => setSelectedCert(cert)}
+                  className="group bg-[#0d1527]/80 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-4 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/5 flex flex-col justify-between cursor-pointer"
                 >
                   <div className="space-y-3">
                     {cert.imageUrl ? (
@@ -470,6 +508,9 @@ export function ModernTechTheme({ profile }: Props) {
                       <h3 className="text-sm font-bold text-white mt-1 group-hover:text-emerald-300 transition-colors line-clamp-2 font-mono">
                         {cert.title}
                       </h3>
+                      <p className="text-[11px] font-mono text-slate-500 mt-1 flex items-center gap-1 group-hover:text-emerald-400">
+                        <span>{"// click_to_inspect"}</span>
+                      </p>
                     </div>
                   </div>
 
@@ -478,6 +519,7 @@ export function ModernTechTheme({ profile }: Props) {
                       href={cert.credentialUrl} 
                       target="_blank" 
                       rel="noopener noreferrer" 
+                      onClick={(e) => e.stopPropagation()}
                       className="mt-4 pt-3 border-t border-slate-800/80 inline-flex items-center justify-between text-xs font-mono text-slate-400 hover:text-emerald-400 transition-colors"
                     >
                       <span className="inline-flex items-center gap-1.5">
@@ -494,7 +536,7 @@ export function ModernTechTheme({ profile }: Props) {
         )}
 
         {/* RECRUITER CONTACT FORM */}
-        <section className="bg-gradient-to-br from-[#0d1527] to-[#070b14] border border-emerald-900/40 rounded-3xl p-8 sm:p-10 shadow-2xl">
+        <section className="bg-gradient-to-br from-[#0d1527] to-[#070b14] border border-emerald-900/40 rounded-3xl p-8 sm:p-10 shadow-2xl print:hidden">
           <div className="max-w-xl mx-auto space-y-6 text-center">
             <div className="space-y-2">
               <span className="font-mono text-xs text-emerald-400">{"// initialize_communication"}</span>
@@ -559,10 +601,23 @@ export function ModernTechTheme({ profile }: Props) {
         </section>
 
         {/* Footer */}
-        <footer className="text-center font-mono text-xs text-slate-600 pt-8 border-t border-slate-900">
+        <footer className="text-center font-mono text-xs text-slate-600 pt-8 border-t border-slate-900 print:hidden">
           <p>Generated by CVtoWeb Platform • Verified Candidate Dossier</p>
         </footer>
       </div>
+
+      {/* QR Code & Certificate Modals */}
+      <QRCodeModal
+        isOpen={isQrOpen}
+        onClose={() => setIsQrOpen(false)}
+        url={typeof window !== 'undefined' ? window.location.href : `https://cv-to-web.pages.dev/cv/${profile.slug}`}
+        candidateName={profile.fullName}
+      />
+
+      <CertificateModal
+        certificate={selectedCert}
+        onClose={() => setSelectedCert(null)}
+      />
     </div>
   );
 }

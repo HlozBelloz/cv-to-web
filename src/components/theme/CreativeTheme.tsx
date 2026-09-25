@@ -17,8 +17,15 @@ import {
   Globe, 
   Zap,
   Award,
-  GraduationCap
+  GraduationCap,
+  QrCode,
+  Printer,
+  UserPlus
 } from 'lucide-react';
+import { CertificateItem } from '@/types';
+import { downloadVCard } from '@/lib/vcard';
+import { QRCodeModal } from '@/components/common/QRCodeModal';
+import { CertificateModal } from '@/components/common/CertificateModal';
 
 function LinkedInIcon({ className }: { className?: string }) {
   return (
@@ -44,6 +51,8 @@ export function CreativeTheme({ profile }: Props) {
   const [copied, setCopied] = useState(false);
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+  const [isQrOpen, setIsQrOpen] = useState(false);
+  const [selectedCert, setSelectedCert] = useState<CertificateItem | null>(null);
 
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {
@@ -155,7 +164,7 @@ export function CreativeTheme({ profile }: Props) {
                   href={profile.originalPdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-400 hover:to-purple-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-rose-500/20"
+                  className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-400 hover:to-purple-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-rose-500/20 print:hidden"
                 >
                   <Download className="w-4 h-4" />
                   <span>Download Curriculum</span>
@@ -164,11 +173,39 @@ export function CreativeTheme({ profile }: Props) {
 
               <button
                 onClick={handleCopyLink}
-                className="w-full py-3 px-4 rounded-2xl bg-[#1e103d] hover:bg-[#281552] text-purple-200 border border-purple-700/50 text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-3 px-4 rounded-2xl bg-[#1e103d] hover:bg-[#281552] text-purple-200 border border-purple-700/50 text-xs font-semibold flex items-center justify-center gap-2 transition-colors print:hidden"
               >
                 {copied ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-purple-400" />}
                 <span>{copied ? 'Link Copied!' : 'Share Portfolio'}</span>
               </button>
+
+              <button
+                onClick={() => downloadVCard(profile)}
+                className="w-full py-3 px-4 rounded-2xl bg-[#1e103d] hover:bg-[#281552] text-purple-200 border border-purple-700/50 text-xs font-semibold flex items-center justify-center gap-2 transition-colors print:hidden"
+                title="Save contact directly to phone contacts"
+              >
+                <UserPlus className="w-3.5 h-3.5 text-rose-400" />
+                <span>Save Contact (vCard)</span>
+              </button>
+
+              <div className="grid grid-cols-2 gap-2 print:hidden">
+                <button
+                  onClick={() => setIsQrOpen(true)}
+                  className="py-2.5 px-3 rounded-2xl bg-[#100724] hover:bg-[#1e103d] text-purple-300 border border-purple-800/60 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                  title="Open QR Code to scan on mobile"
+                >
+                  <QrCode className="w-3.5 h-3.5 text-rose-400" />
+                  <span>QR Code</span>
+                </button>
+                <button
+                  onClick={() => window.print()}
+                  className="py-2.5 px-3 rounded-2xl bg-[#100724] hover:bg-[#1e103d] text-purple-300 border border-purple-800/60 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                  title="Print or Save as Clean PDF"
+                >
+                  <Printer className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Print</span>
+                </button>
+              </div>
 
               <div className="flex items-center justify-center gap-3 pt-2">
                 {profile.linkedinUrl && (
@@ -433,7 +470,8 @@ export function CreativeTheme({ profile }: Props) {
               {profile.certificates.map((cert) => (
                 <div 
                   key={cert.id}
-                  className="group bg-[#140b2b]/90 border border-purple-800/40 hover:border-rose-500/50 rounded-3xl p-5 transition-all duration-300 hover:shadow-2xl hover:shadow-rose-500/10 flex flex-col justify-between"
+                  onClick={() => setSelectedCert(cert)}
+                  className="group bg-[#140b2b]/90 border border-purple-800/40 hover:border-rose-500/50 rounded-3xl p-5 transition-all duration-300 hover:shadow-2xl hover:shadow-rose-500/10 flex flex-col justify-between cursor-pointer"
                 >
                   <div className="space-y-4">
                     {cert.imageUrl ? (
@@ -463,6 +501,9 @@ export function CreativeTheme({ profile }: Props) {
                       <h3 className="text-sm font-bold text-white mt-1 group-hover:text-rose-300 transition-colors line-clamp-2">
                         {cert.title}
                       </h3>
+                      <p className="text-[11px] text-purple-400/70 mt-1 flex items-center gap-1 group-hover:text-rose-300">
+                        <span>Click to view credential record</span>
+                      </p>
                     </div>
                   </div>
 
@@ -471,6 +512,7 @@ export function CreativeTheme({ profile }: Props) {
                       href={cert.credentialUrl} 
                       target="_blank" 
                       rel="noopener noreferrer" 
+                      onClick={(e) => e.stopPropagation()}
                       className="mt-4 pt-3 border-t border-purple-900/40 inline-flex items-center justify-between text-xs text-purple-300 hover:text-white transition-colors font-medium"
                     >
                       <span className="inline-flex items-center gap-1.5">
@@ -487,7 +529,7 @@ export function CreativeTheme({ profile }: Props) {
         )}
 
         {/* RECRUITER CONTACT FORM */}
-        <section className="bg-gradient-to-br from-[#1a0f38] to-[#120a26] border border-purple-700/50 rounded-3xl p-8 sm:p-12 shadow-2xl">
+        <section className="bg-gradient-to-br from-[#1a0f38] to-[#120a26] border border-purple-700/50 rounded-3xl p-8 sm:p-12 shadow-2xl print:hidden">
           <div className="max-w-xl mx-auto space-y-6 text-center">
             <div className="space-y-2">
               <span className="text-xs font-bold uppercase tracking-wider text-rose-400">Get in Touch</span>
@@ -552,10 +594,23 @@ export function CreativeTheme({ profile }: Props) {
         </section>
 
         {/* FOOTER */}
-        <footer className="text-center text-xs text-purple-400/60 pt-8 border-t border-purple-900/40">
+        <footer className="text-center text-xs text-purple-400/60 pt-8 border-t border-purple-900/40 print:hidden">
           <p>© {new Date().getFullYear()} {profile.fullName} • Powered by CVtoWeb</p>
         </footer>
       </div>
+
+      {/* QR Code & Certificate Modals */}
+      <QRCodeModal
+        isOpen={isQrOpen}
+        onClose={() => setIsQrOpen(false)}
+        url={typeof window !== 'undefined' ? window.location.href : `https://cv-to-web.pages.dev/cv/${profile.slug}`}
+        candidateName={profile.fullName}
+      />
+
+      <CertificateModal
+        certificate={selectedCert}
+        onClose={() => setSelectedCert(null)}
+      />
     </div>
   );
 }
