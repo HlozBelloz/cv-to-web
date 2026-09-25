@@ -117,12 +117,6 @@ export default function AdminLoginPage() {
           </div>
         </form>
 
-        <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-[11px] text-slate-400 space-y-1">
-          <div className="font-semibold text-slate-300">Default SuperAdmin Access:</div>
-          <div>Email: <code className="text-amber-400">admin@cvplatform.com</code></div>
-          <div>Password: <code className="text-amber-400">admin123</code></div>
-        </div>
-
         <div className="text-center pt-2">
           <Link href="/" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
             ← Return to Public Website

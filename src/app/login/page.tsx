@@ -167,12 +167,6 @@ export default function UserLoginPage() {
           </div>
         </form>
 
-        <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-[11px] text-slate-400 space-y-1">
-          <div className="font-semibold text-slate-300">Demo Candidate Account:</div>
-          <div>Email: <code className="text-amber-400">mazeneltelbany78@gmail.com</code></div>
-          <div>Password: <code className="text-amber-400">mazen123</code></div>
-        </div>
-
         <div className="flex items-center justify-between pt-2 text-xs text-slate-500">
           <Link href="/" className="hover:text-slate-300 transition-colors">
             ← Home
