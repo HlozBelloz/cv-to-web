@@ -19,6 +19,8 @@ export interface Education {
   endDate?: string;
   honors?: string;
   gpa?: string;
+  degreePortalUrl?: string;
+  coreModules?: string[];
 }
 
 export interface Project {
@@ -29,6 +31,9 @@ export interface Project {
   link?: string;
   technologies: string[];
   metrics?: string;
+  category?: string;
+  year?: string;
+  highlights?: string[];
 }
 
 export interface SkillGroup {
@@ -50,6 +55,14 @@ export interface CertificateItem {
   imageUrl?: string;
   credentialUrl?: string;
   badge?: string;
+  category?: string;
+  topics?: string[];
+}
+
+export interface LanguageItem {
+  name: string;
+  proficiency: string;
+  flag?: string;
 }
 
 export interface PlatformAnalytics {
@@ -64,7 +77,7 @@ export interface PlatformAnalytics {
 
 export interface CVProfile {
   id: string;
-  slug: string; // e.g. "mohamedcv" or "sarah-ahmed"
+  slug: string; // e.g. "mazen" or "mohamedcv"
   fullName: string;
   title: string; // e.g. "Senior Engineering Manager"
   tagline: string;
@@ -77,10 +90,23 @@ export interface CVProfile {
   githubUrl?: string;
   portfolioUrl?: string;
   summary: string;
+  objective?: string;
+  availabilityStatus?: string;
+  gpa?: string;
   originalPdfUrl?: string;
   customDomain?: string; // e.g. "mohamed.com"
   customDomainStatus?: 'pending' | 'verified' | 'failed';
-  theme: 'executive' | 'modern' | 'minimal' | 'tech' | 'creative';
+  theme: 
+    | 'portfolio-wp-pro'
+    | 'cyber-dark-glass'
+    | 'mechatronics-cobalt-emerald'
+    | 'editorial-luxury-warm'
+    | 'executive'
+    | 'modern'
+    | 'minimal'
+    | 'tech'
+    | 'creative'
+    | string;
   accentColor?: 'amber' | 'emerald' | 'blue' | 'indigo' | 'violet' | 'rose' | 'cyan' | 'slate';
   metrics: HighlightMetric[];
   experiences: Experience[];
@@ -90,6 +116,7 @@ export interface CVProfile {
   projects: Project[];
   certifications?: string[];
   certificates?: CertificateItem[];
+  languages?: LanguageItem[];
   planId?: string;
   isPublished: boolean;
   viewCount: number;

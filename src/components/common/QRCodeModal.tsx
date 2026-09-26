@@ -6,14 +6,19 @@ import { QrCode, X, Copy, Check, Download, ExternalLink, Smartphone } from 'luci
 interface QRCodeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  url: string;
-  candidateName: string;
+  url?: string;
+  slug?: string;
+  candidateName?: string;
+  name?: string;
 }
 
-export function QRCodeModal({ isOpen, onClose, url, candidateName }: QRCodeModalProps) {
+export function QRCodeModal({ isOpen, onClose, url: propUrl, slug, candidateName: propCandidateName, name }: QRCodeModalProps) {
   const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
+
+  const candidateName = propCandidateName || name || 'Candidate';
+  const url = propUrl || (typeof window !== 'undefined' ? window.location.href : `https://cvplatform.com/cv/${slug || 'profile'}`);
 
   // Use encoded high-res QR code service URL with SVG fallback
   const encodedUrl = encodeURIComponent(url);

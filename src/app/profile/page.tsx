@@ -46,10 +46,30 @@ const ACCENT_COLORS = [
 ];
 
 const THEMES = [
-  { id: 'executive', name: 'Executive Suite', desc: 'Dark slate, warm amber/gold, high-trust leadership design', preview: 'bg-gradient-to-r from-slate-900 to-amber-950/60' },
-  { id: 'tech', name: 'Modern Tech Cyber', desc: 'Cyber dark terminal, glowing emerald, metrics cards', preview: 'bg-gradient-to-r from-[#070b14] to-emerald-950/60' },
-  { id: 'minimal', name: 'Minimalist Swiss', desc: 'Warm ivory editorial, clean serif typography', preview: 'bg-gradient-to-r from-stone-100 to-stone-200 text-stone-900 border border-black/10' },
-  { id: 'creative', name: 'Creative Bento', desc: 'Vibrant violet-rose gradients with interactive bento modules', preview: 'bg-gradient-to-r from-purple-950 to-rose-950/60' },
+  { 
+    id: 'portfolio-wp-pro', 
+    name: 'Portfolio WP Pro (Editorial Light)', 
+    desc: 'Stone off-white canvas (#fcfbf9), Playfair Display serif headers, 3-column project archive & prominent GPA card', 
+    preview: 'bg-gradient-to-r from-stone-100 to-stone-200 text-stone-900 border border-stone-300' 
+  },
+  { 
+    id: 'cyber-dark-glass', 
+    name: 'Cyber Dark Glass (Cyber Neon)', 
+    desc: 'Slate-black canvas (#07090e), vibrant cyan/blue neon glowing accents, glassmorphic panels & floating GPA badge', 
+    preview: 'bg-gradient-to-r from-[#07090e] to-cyan-950 border border-cyan-500/40 text-cyan-300' 
+  },
+  { 
+    id: 'mechatronics-cobalt-emerald', 
+    name: 'Cobalt & Emerald (Mechatronics)', 
+    desc: 'Deep mechatronics dark cyan (#05131a), emerald green & cobalt accents with hardware competency grid', 
+    preview: 'bg-gradient-to-r from-[#05131a] to-emerald-950 border border-emerald-500/40 text-emerald-300' 
+  },
+  { 
+    id: 'editorial-luxury-warm', 
+    name: 'Editorial Luxury Warm (Slate & Gold)', 
+    desc: 'Warm ivory canvas (#faf8f5), warm stone panels, rose-gold accents, and refined serif typography', 
+    preview: 'bg-gradient-to-r from-stone-50 to-rose-50 border border-rose-200 text-rose-950' 
+  },
 ];
 
 export default function UserProfilePage() {

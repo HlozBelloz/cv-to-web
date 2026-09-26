@@ -187,8 +187,8 @@ export const DEMO_PROFILES: CVProfile[] = [
     id: 'profile-mazen',
     slug: 'mazen',
     fullName: 'Mazen Mohamed Hamdy',
-    title: 'Information Engineering & Technology Engineer | Networking & Cloud Systems',
-    tagline: 'GUC Engineering Student specializing in High-Performance Networking, Container Orchestration & Distributed Systems.',
+    title: 'Information Engineering & Technology Engineer | Networking & Systems Architecture',
+    tagline: 'GUC Engineering Student specializing in Cisco Enterprise Networking, Discrete Hardware Cryptography & Systems Architecture.',
     email: 'mazeneltelbany78@gmail.com',
     phone: '(+20) 102 199 2115',
     location: 'Nasr City, Cairo, Egypt',
@@ -196,48 +196,74 @@ export const DEMO_PROFILES: CVProfile[] = [
     githubUrl: 'https://github.com',
     avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
     coverUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
-    summary: 'Information Engineering & Technology scholar at the German University in Cairo (GUC) with an outstanding A- GPA (1.65). Proficient in Java, Python, Docker containerization, and foundational enterprise networking (TCP/IP, routing, switching, subnetting). Demonstrates hands-on engineering capability across hardware encryption breadboards, modular game engines, and production-grade self-hosted homelab infrastructure.',
-    originalPdfUrl: '/mazen-cv.pdf',
-    theme: 'executive',
+    summary: 'Information Engineering & Technology scholar at the German University in Cairo (GUC) with an outstanding A- GPA (1.65). Proficient in Java, Python, Docker containerization, and enterprise Cisco networking (TCP/IP, routing, switching, subnetting). Demonstrates hands-on engineering capability across hardware encryption breadboards, modular game engines, and production-grade self-hosted homelab infrastructure.',
+    objective: 'Information Engineering & Technology student at GUC focused on networking infrastructure, distributed systems, and low-level software architecture.',
+    availabilityStatus: 'Available for Opportunities',
+    gpa: '1.65 (A-)',
+    originalPdfUrl: '/Mazen_Mohamed_CV.pdf',
+    theme: 'portfolio-wp-pro',
     accentColor: 'amber',
     isPublished: true,
-    viewCount: 142,
+    viewCount: 284,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     certificates: [
       {
-        id: 'cert-m-1',
-        title: 'Cisco Certified Network Associate (CCNA Routing & Switching)',
+        id: 'cert-ccna-enterprise',
+        title: 'CCNA: Enterprise Networking, Security, and Automation',
         issuer: 'Cisco Networking Academy',
-        issueDate: '2025',
-        imageUrl: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80',
+        issueDate: 'September 2026',
+        imageUrl: '/certs/ccna_enterprise.jpg',
         credentialUrl: 'https://www.cisco.com',
-        badge: 'Enterprise Networking'
+        badge: 'Enterprise Networking & Security',
+        category: 'Cisco CCNA',
+        topics: [
+          'OSPFv2 Routing & Scalability',
+          'Network Security & Threat Mitigation',
+          'Access Control Lists (ACLs) & NAT',
+          'IPsec Site-to-Site VPNs',
+          'Network Automation & RESTful APIs'
+        ]
       },
       {
-        id: 'cert-m-2',
-        title: 'GUC Engineering Academic Excellence Distinction',
-        issuer: 'German University in Cairo (GUC)',
-        issueDate: '2024',
-        imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80',
-        credentialUrl: 'https://www.guc.edu.eg',
-        badge: 'GPA 1.65 (A-)'
+        id: 'cert-ccna-intro',
+        title: 'CCNA: Introduction to Networks',
+        issuer: 'Cisco Networking Academy',
+        issueDate: 'September 2026',
+        imageUrl: '/certs/ccna_intro_networks.jpg',
+        credentialUrl: 'https://www.cisco.com',
+        badge: 'Networking Core',
+        category: 'Cisco CCNA',
+        topics: [
+          'TCP/IP & OSI Architecture',
+          'IPv4 & IPv6 Subnetting & CIDR',
+          'Ethernet Switching Topologies',
+          'Initial Router & Switch Configuration'
+        ]
       },
       {
-        id: 'cert-m-3',
-        title: 'Docker Certified Associate & Homelab Infrastructure',
-        issuer: 'Docker Systems Engineering',
-        issueDate: '2025',
-        imageUrl: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=600&q=80',
-        credentialUrl: 'https://docker.com',
-        badge: 'Container Ops'
+        id: 'cert-ccna-switching',
+        title: 'CCNA: Switching, Routing, and Wireless Essentials',
+        issuer: 'Cisco Networking Academy',
+        issueDate: 'September 2026',
+        imageUrl: '/certs/ccna_switching_routing.jpg',
+        credentialUrl: 'https://www.cisco.com',
+        badge: 'Switching & Wireless',
+        category: 'Cisco CCNA',
+        topics: [
+          'VLANs, Trunking & Inter-VLAN Routing',
+          'Spanning Tree Protocol (STP)',
+          'EtherChannel Link Aggregation & FHRP',
+          'DHCPv4, SLAAC & Dynamic IPv6',
+          'WLAN Configuration & WPA3 Security'
+        ]
       }
     ],
     metrics: [
-      { label: 'Academic Standing', value: '1.65 (A-)', description: 'GUC Information Engineering' },
-      { label: 'Engineering Projects', value: '5+', description: 'Hardware, networks & software' },
+      { label: 'Academic Standing', value: '1.65 (A-)', description: 'German University in Cairo' },
+      { label: 'Cisco Certifications', value: '3 Official', description: 'CCNA Enterprise Core' },
       { label: 'Production Uptime', value: '99.9%', description: 'Homelab & container services' },
-      { label: 'Core Languages', value: '3', description: 'Arabic (Native), English, German' }
+      { label: 'Spoken Languages', value: '3', description: 'Arabic (Native), English, German' }
     ],
     experiences: [
       {
@@ -254,71 +280,106 @@ export const DEMO_PROFILES: CVProfile[] = [
           'Engineered and maintained dedicated technical studio infrastructure for online educational content production.',
           'Integrated audio/video recording hardware, configured OBS broadcast pipelines, and streamlined video export workflows.'
         ]
+      },
+      {
+        id: 'exp-mazen-2',
+        role: 'Studio Systems & Media Infrastructure Engineer',
+        company: 'Digital Educational Media Production',
+        location: 'Cairo, Egypt',
+        startDate: '2023',
+        endDate: 'Present',
+        current: true,
+        description: 'Designed and deployed dedicated technical recording studio infrastructure for educational broadcasting.',
+        bulletPoints: [
+          'Engineered OBS multi-camera routing, digital audio pipeline, and studio network infrastructure.',
+          'Automated media ingest, local backup redundancy, and high-bitrate streaming pipeline.'
+        ]
       }
     ],
     education: [
       {
         id: 'edu-mazen-1',
-        degree: 'Bachelor of Engineering (B.Sc.)',
-        fieldOfStudy: 'Information Engineering and Technology',
+        degree: 'Bachelor of Science (B.Sc.)',
+        fieldOfStudy: 'Information Engineering and Technology (IET)',
         institution: 'German University in Cairo (GUC)',
         startDate: '2024',
-        endDate: '2029 (Expected)',
-        honors: 'Current GPA: 1.65 (A-)'
+        endDate: '2029 (5th Semester)',
+        honors: 'Current Cumulative GPA: 1.65 (German Scale A- Grade Distinction)',
+        gpa: '1.65 (A-)',
+        degreePortalUrl: 'https://www.guc.edu.eg',
+        coreModules: [
+          'Digital Logic Design',
+          'Communication Networks & Protocols',
+          'Object-Oriented Programming (Java)',
+          'Data Structures & Algorithms',
+          'Boolean Logic Optimization',
+          'Discrete Electronic Circuits',
+          'Computer Architecture'
+        ]
       }
     ],
     skillGroups: [
       {
-        category: 'Programming & Systems',
-        skills: ['Java (Advanced OOP)', 'Python', 'Data Structures & Algorithms', 'Boolean Logic Optimization', 'Digital Logic Design']
+        category: 'Networking & Protocols',
+        skills: ['TCP/IP Architecture', 'Cisco Routing (OSPFv2)', 'VLANs & Switching', 'Subnetting & CIDR', 'Wireshark Packet Analysis', 'WireGuard VPN']
       },
       {
-        category: 'Networks & Protocols',
-        skills: ['TCP/IP Fundamentals', 'Routing & Switching', 'Subnetting & CIDR', 'WireGuard VPN', 'Wireshark Packet Analysis', 'Network Troubleshooting']
+        category: 'Software & Systems',
+        skills: ['Java (Advanced OOP)', 'Python', 'C / C++', 'Data Structures & Algorithms', 'Multithreaded Sockets', 'Event-Driven Architecture']
       },
       {
         category: 'DevOps & Infrastructure',
-        skills: ['Docker', 'Docker Compose', 'nginx Proxy Manager', 'Linux Server Administration', 'VirtualBox', 'PSPICE Simulation']
-      },
-      {
-        category: 'Languages',
-        skills: ['Arabic (Native)', 'English (Fluent)', 'German (A2 Level)']
+        skills: ['Docker', 'Docker Compose', 'Nginx Proxy Manager', 'Linux Server Admin (Ubuntu/Debian)', 'VirtualBox', 'PSPICE Circuit Simulation']
       }
+    ],
+    languages: [
+      { name: 'Arabic', proficiency: 'Native', flag: '🇪🇬' },
+      { name: 'English', proficiency: 'Fluent (Professional)', flag: '🇬🇧' },
+      { name: 'German', proficiency: 'A2 Level (GUC)', flag: '🇩🇪' }
     ],
     projects: [
       {
         id: 'proj-mazen-1',
         title: 'Hardware Encryption / Decryption System',
-        description: 'Designed and prototyped a physical hardware system on a breadboard to encrypt and decrypt binary data using Boolean algebra and fundamental logic gates.',
-        technologies: ['Digital Logic', 'Boolean Algebra', 'Logic Gates', 'Breadboard Prototyping'],
+        category: 'Hardware & Security',
+        year: '2025',
+        description: 'Designed and prototyped a physical hardware cryptographic circuit on a breadboard to encrypt and decrypt binary data in real-time using discrete logic gates and Boolean algebra.',
+        technologies: ['Logic Gates (74xx ICs)', 'Breadboard Prototyping', 'Boolean Algebra', 'Digital Logic Design'],
         metrics: 'Zero-latency hardware data processing pipeline'
       },
       {
         id: 'proj-mazen-2',
-        title: 'Self-Hosted Homelab Infrastructure',
-        description: 'Architected and deployed multi-container service infrastructure utilizing Docker and Docker Compose with reverse proxying and secure remote tunneling.',
-        technologies: ['Docker', 'Docker Compose', 'WireGuard VPN', 'nginx Proxy Manager', 'Linux'],
-        metrics: '100% encrypted remote access with automated media pipelines'
+        title: 'Modular OOP Java Game Engine',
+        category: 'Software Systems',
+        year: '2026',
+        description: 'Architected a layered object-oriented game engine in Java featuring energy management, role-based dynamics, event-driven cell interactions, and extensive JUnit test coverage.',
+        technologies: ['Java', 'OOP Design Patterns', 'Unit Testing (JUnit)', 'Event Architecture'],
+        metrics: 'Modular zero-leak lifecycle design'
       },
       {
         id: 'proj-mazen-3',
-        title: 'Java Socket Network Chat Application',
-        description: 'Engineered a concurrent client-server chat application over TCP sockets, validating packet delivery and analyzing stream traffic flows in Wireshark.',
-        technologies: ['Java', 'TCP/IP Sockets', 'Multithreading', 'Wireshark'],
-        metrics: 'Bidirectional multi-client communication over local networks'
+        title: 'Self-Hosted Production Homelab Stack',
+        category: 'Infrastructure & Cloud',
+        year: '2025 – Present',
+        description: 'Architected and maintain a resilient 12-container homelab cluster utilizing Docker Compose, encrypted WireGuard VPN mesh, and Nginx reverse proxying with custom domains.',
+        technologies: ['Docker', 'Docker Compose', 'WireGuard VPN', 'Nginx Proxy Manager', 'Linux'],
+        metrics: '99.9% Uptime across 12 containers'
       },
       {
         id: 'proj-mazen-4',
-        title: 'Modular OOP Java Game Engine',
-        description: 'Architected a layered object-oriented game engine in Java featuring energy management, role-based dynamics, and event-driven cell interactions.',
-        technologies: ['Java', 'OOP Design Patterns', 'Unit Testing', 'Exception Handling'],
-        metrics: 'Comprehensive unit test coverage and modular architecture'
+        title: 'Multi-Client Concurrent TCP Socket Network',
+        category: 'Software Systems',
+        year: '2025',
+        description: 'Engineered a concurrent client-server chat application over TCP sockets in Java, validating packet delivery and analyzing stream traffic flows in Wireshark.',
+        technologies: ['Java Sockets', 'TCP/IP', 'Multithreading', 'Wireshark'],
+        metrics: 'Sub-5ms local packet broadcast latency'
       }
     ],
     certifications: [
+      'Cisco Certified Network Associate (CCNA Enterprise, Intro & Switching)',
       'Digital Logic Design & Hardware Prototyping - GUC',
       'Communication Networks & Protocols - GUC',
-      'German Language Proficiency A2'
+      'German Language Proficiency A2 - GUC'
     ]
   }
 ];

@@ -542,72 +542,84 @@ export default async function HomePage() {
             BROWSE BY PORTFOLIO STYLE
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
-            {/* Card 1 (Span 1) */}
+            {/* Theme 1: Portfolio WP Pro */}
             <Link 
               href="/cv/mazen"
-              className="bg-white rounded-3xl p-8 min-h-[220px] flex flex-col justify-between group hover:shadow-xl transition-all relative overflow-hidden"
+              className="bg-white rounded-3xl p-7 min-h-[220px] flex flex-col justify-between group hover:shadow-xl transition-all border border-stone-200"
             >
               <div>
-                <span className="text-xs font-bold text-black/50 uppercase tracking-wider block mb-1">Executive</span>
-                <h3 className="text-2xl font-black text-black group-hover:translate-x-1 transition-transform">
-                  Leadership & Corporate
+                <span className="text-[11px] font-bold text-stone-500 uppercase tracking-wider block mb-1">Theme #1</span>
+                <h3 className="text-xl font-bold font-serif text-stone-900 group-hover:translate-x-1 transition-transform">
+                  Portfolio WP Pro (Editorial Light)
                 </h3>
+                <p className="text-xs text-stone-500 pt-2 leading-relaxed">
+                  Stone canvas (#fcfbf9), Playfair serif headers, 3-column project archive & prominent GPA card.
+                </p>
               </div>
-              <div className="flex items-center justify-between text-xs font-bold text-black pt-4">
+              <div className="flex items-center justify-between text-xs font-bold text-stone-900 pt-4 border-t border-stone-100">
                 <span>View Live Demo</span>
                 <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform" />
               </div>
             </Link>
 
-            {/* Card 2 (Span 2) */}
+            {/* Theme 2: Cyber Dark Glass */}
             <Link 
-              href="/cv/mohamedcv"
-              className="md:col-span-2 bg-[#0d1527] text-white rounded-3xl p-8 min-h-[220px] flex flex-col justify-between group hover:shadow-xl transition-all relative overflow-hidden"
+              href="/cv/mazen"
+              className="bg-[#07090e] text-white rounded-3xl p-7 min-h-[220px] flex flex-col justify-between group hover:shadow-xl transition-all border border-cyan-500/30"
             >
               <div>
-                <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-1">{"// devops_and_code"}</span>
-                <h3 className="text-2xl sm:text-3xl font-black text-white group-hover:translate-x-1 transition-transform">
-                  Modern Tech & Infrastructure
+                <span className="text-[11px] font-mono text-cyan-400 uppercase tracking-wider block mb-1">Theme #2</span>
+                <h3 className="text-xl font-black text-white group-hover:translate-x-1 transition-transform">
+                  Cyber Dark Glass (Cyber Neon)
                 </h3>
+                <p className="text-xs text-slate-400 pt-2 leading-relaxed">
+                  Slate-black canvas (#07090e), glowing cyan/blue accents, glassmorphic panels & floating GPA badge.
+                </p>
               </div>
-              <div className="flex items-center justify-between text-xs font-mono text-emerald-400 pt-4">
-                <span>EXPLORE_TERMINAL_DOSSIER()</span>
+              <div className="flex items-center justify-between text-xs font-mono text-cyan-400 pt-4 border-t border-slate-800">
+                <span>EXPLORE_TERMINAL()</span>
+                <ArrowUpRight className="w-4 h-4 text-cyan-400 group-hover:rotate-45 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Theme 3: Cobalt & Emerald */}
+            <Link 
+              href="/cv/mazen"
+              className="bg-[#05131a] text-white rounded-3xl p-7 min-h-[220px] flex flex-col justify-between group hover:shadow-xl transition-all border border-emerald-500/30"
+            >
+              <div>
+                <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block mb-1">Theme #3</span>
+                <h3 className="text-xl font-black text-white group-hover:translate-x-1 transition-transform">
+                  Cobalt & Emerald (Mechatronics)
+                </h3>
+                <p className="text-xs text-emerald-200/70 pt-2 leading-relaxed">
+                  Deep mechatronics slate (#05131a), emerald & cobalt accents with hardware competency grid.
+                </p>
+              </div>
+              <div className="flex items-center justify-between text-xs font-mono text-emerald-400 pt-4 border-t border-emerald-950">
+                <span>VIEW_HARDWARE_STACK()</span>
                 <ArrowUpRight className="w-4 h-4 text-emerald-400 group-hover:rotate-45 transition-transform" />
               </div>
             </Link>
 
-            {/* Card 3 (Span 2) */}
+            {/* Theme 4: Editorial Luxury Warm */}
             <Link 
               href="/cv/mazen"
-              className="md:col-span-2 bg-gradient-to-r from-[#1b0d38] to-[#120726] text-white rounded-3xl p-8 min-h-[220px] flex flex-col justify-between group hover:shadow-xl transition-all relative overflow-hidden"
+              className="bg-[#faf8f5] border border-rose-200 text-stone-900 rounded-3xl p-7 min-h-[220px] flex flex-col justify-between group hover:shadow-xl transition-all"
             >
               <div>
-                <span className="text-xs font-bold text-rose-400 uppercase tracking-wider block mb-1">Creative Bento</span>
-                <h3 className="text-2xl sm:text-3xl font-black text-white group-hover:translate-x-1 transition-transform">
-                  Product Design & Founders
+                <span className="text-[11px] font-serif text-rose-700 uppercase tracking-wider block mb-1">Theme #4</span>
+                <h3 className="text-xl font-serif text-stone-900 group-hover:translate-x-1 transition-transform">
+                  Editorial Luxury (Warm & Gold)
                 </h3>
+                <p className="text-xs text-stone-500 pt-2 leading-relaxed">
+                  Warm ivory canvas (#faf8f5), warm stone panels, rose-gold accents, and refined serif typography.
+                </p>
               </div>
-              <div className="flex items-center justify-between text-xs font-bold text-rose-300 pt-4">
-                <span>Open Bento Showcase</span>
-                <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform" />
-              </div>
-            </Link>
-
-            {/* Card 4 (Span 1) */}
-            <Link 
-              href="/cv/mazen"
-              className="bg-[#FAF8F5] border border-stone-300 text-stone-900 rounded-3xl p-8 min-h-[220px] flex flex-col justify-between group hover:shadow-xl transition-all relative overflow-hidden"
-            >
-              <div>
-                <span className="text-xs font-serif italic text-stone-500 uppercase tracking-wider block mb-1">Editorial</span>
-                <h3 className="text-2xl font-serif text-stone-900 group-hover:translate-x-1 transition-transform">
-                  Minimalist Swiss
-                </h3>
-              </div>
-              <div className="flex items-center justify-between text-xs font-serif font-bold text-stone-900 pt-4">
-                <span>Inspect Clean Layout</span>
+              <div className="flex items-center justify-between text-xs font-serif font-bold text-rose-900 pt-4 border-t border-rose-100">
+                <span>Inspect Warm Layout</span>
                 <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform" />
               </div>
             </Link>

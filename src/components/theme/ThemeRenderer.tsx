@@ -2,15 +2,15 @@
 
 import React, { useState } from 'react';
 import { CVProfile } from '@/types';
-import { ExecutiveTheme } from './ExecutiveTheme';
-import { ModernTechTheme } from './ModernTechTheme';
-import { MinimalistTheme } from './MinimalistTheme';
-import { CreativeTheme } from './CreativeTheme';
+import { PortfolioWpProTheme } from './PortfolioWpProTheme';
+import { CyberDarkGlassTheme } from './CyberDarkGlassTheme';
+import { MechatronicsCobaltEmeraldTheme } from './MechatronicsCobaltEmeraldTheme';
+import { EditorialLuxuryWarmTheme } from './EditorialLuxuryWarmTheme';
 import { ThemeSwitcher, SupportedTheme } from './ThemeSwitcher';
 
 interface Props {
   profile: CVProfile;
-  defaultTheme?: SupportedTheme;
+  defaultTheme?: SupportedTheme | string;
   allowSwitching?: boolean;
   onThemeSelect?: (theme: SupportedTheme) => void;
 }
@@ -18,7 +18,7 @@ interface Props {
 export function ThemeRenderer({ profile, defaultTheme, allowSwitching = false, onThemeSelect }: Props) {
   // Use profile.theme locked by the owner as the primary theme
   const [theme, setTheme] = useState<SupportedTheme>(() => {
-    return (defaultTheme || profile.theme || 'executive') as SupportedTheme;
+    return (defaultTheme || profile.theme || 'portfolio-wp-pro') as SupportedTheme;
   });
 
   // Keep in sync if profile updates (e.g. live AI edit)
@@ -40,16 +40,20 @@ export function ThemeRenderer({ profile, defaultTheme, allowSwitching = false, o
 
   const renderActiveTheme = () => {
     switch (theme) {
+      case 'cyber-dark-glass':
       case 'tech':
       case 'modern':
-        return <ModernTechTheme profile={profile} />;
-      case 'minimal':
-        return <MinimalistTheme profile={profile} />;
+        return <CyberDarkGlassTheme profile={profile} />;
+      case 'mechatronics-cobalt-emerald':
+        return <MechatronicsCobaltEmeraldTheme profile={profile} />;
+      case 'editorial-luxury-warm':
       case 'creative':
-        return <CreativeTheme profile={profile} />;
+        return <EditorialLuxuryWarmTheme profile={profile} />;
+      case 'portfolio-wp-pro':
+      case 'minimal':
       case 'executive':
       default:
-        return <ExecutiveTheme profile={profile} />;
+        return <PortfolioWpProTheme profile={profile} />;
     }
   };
 
